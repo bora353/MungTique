@@ -6,9 +6,10 @@ import lombok.Data;
 public class JoinDTO {
 
     private String username;
-    private String phone;
-    private String email;
     private String password;
     private String passwordCheck;
+
+    private String email;
+    private String phone;
 
 }

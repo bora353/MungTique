@@ -44,6 +44,9 @@ subprojects {
         implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
         implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
         implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+        // mapstruct
+        implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+        annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
     }
 
     tasks.named('test') {

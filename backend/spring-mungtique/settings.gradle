@@ -1,2 +1,2 @@
 rootProject.name = 'spring-mungtique'
-include 'member'
+include 'user'
