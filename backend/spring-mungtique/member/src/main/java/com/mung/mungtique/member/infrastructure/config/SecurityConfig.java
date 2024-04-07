@@ -7,20 +7,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class SecurityConfig {
 
-    public final AuthenticationConfiguration authenticationConfiguration;
+/*    public final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
+    }*/
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -47,6 +48,11 @@ public class SecurityConfig {
                         .requestMatchers("/","/login", "/join").permitAll() // 모든 사용자 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한을 가진 사용자만 허용
                         .anyRequest().authenticated()); // 기타는 인증된 사용자만 허용
+
+        // 세션 비활성화 (jwt 토큰 사용)
+        http
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
