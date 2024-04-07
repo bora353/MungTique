@@ -14,7 +14,7 @@ public class UserEntity {
 
     @Column(length = 20)
     private String username;
-    @Column(length = 20)
+    //@Column(length = 50)
     private String password;
 
     @Column(unique = true, length = 50)

@@ -11,8 +11,6 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    
-    // TODO : 권한 default로 ADMIN으로 했는데 수정 필요
     @Mapping(target = "id", ignore = true)
     UserEntity joinDtoToUserEntity(JoinDTO joinDTO, String role);
 }

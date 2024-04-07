@@ -1,5 +1,6 @@
 package com.mung.mungtique.member.infrastructure.config;
 
+import com.mung.mungtique.member.infrastructure.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,18 +11,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-/*    public final AuthenticationConfiguration authenticationConfiguration;
+    public final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }*/
+    }
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
@@ -53,6 +55,10 @@ public class SecurityConfig {
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // 로그인 필터는 UsernamePasswordAuthenticationFilter를 대체해서 실행
+        http
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
