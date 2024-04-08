@@ -30,7 +30,7 @@ export default function LoginSignInButton() {
         </Button>
       </div>
       <div className="my-1">
-        <Link to="/signup">
+        <Link to="/join">
           <Button color="primary">10초 회원가입</Button>
         </Link>
       </div>

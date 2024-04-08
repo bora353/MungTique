@@ -16,7 +16,7 @@ export default function LoginForm() {
   return (
     <div className="m-5">
       <MuiInput
-        placeholder="아이디"
+        placeholder="이메일을 입력해주세요"
         value={username}
         onChange={handleUsernameChange}
       />

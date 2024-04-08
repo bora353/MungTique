@@ -5,7 +5,7 @@ export default function LoginContainer() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-blue-100">
       <div className="text-center">
-        <h1 className="text-4xl text-blue-500 m-5">MungTique</h1>
+        <h1 className="text-4xl text-blue-500 m-5">뭉티끄</h1>
         <LoginForm />
         <LoginButton />
       </div>
