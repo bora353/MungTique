@@ -30,6 +30,7 @@ public class JoinServiceImpl implements JoinService {
         Boolean isExist = userPort.existsByEmail(email);
 
         if (isExist) {
+            // TODO : 존재하면 어떻게 처리할지 고민
             return null;
         }
 

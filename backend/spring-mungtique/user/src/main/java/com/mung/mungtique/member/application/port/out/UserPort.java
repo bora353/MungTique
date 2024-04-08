@@ -7,4 +7,6 @@ public interface UserPort {
     Boolean existsByEmail(String email);
 
     UserEntity save(UserEntity userEntity);
+
+    UserEntity findByEmail(String email);
 }

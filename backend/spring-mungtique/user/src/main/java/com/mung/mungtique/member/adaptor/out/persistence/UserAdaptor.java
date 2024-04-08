@@ -20,4 +20,9 @@ public class UserAdaptor implements UserPort {
     public UserEntity save(UserEntity userEntity) {
         return userJpaRepo.save(userEntity);
     }
+
+    @Override
+    public UserEntity findByEmail(String email) {
+        return userJpaRepo.findByEmail(email);
+    }
 }
