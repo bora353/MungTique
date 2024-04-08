@@ -1,6 +1,6 @@
 package com.mung.mungtique.member.application.service;
 
-import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetails;
+import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
 import com.mung.mungtique.member.adaptor.out.persistence.entity.UserEntity;
 import com.mung.mungtique.member.application.port.in.CustomUserDetailsService;
 import com.mung.mungtique.member.application.port.out.UserPort;
@@ -18,12 +18,11 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // TODO : email로 찾을건데...?
         UserEntity userEntity = userPort.findByEmail(email);
 
         if (userEntity == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        return new CustomUserDetails(userEntity);
+        return new CustomUserDetailsDTO(userEntity);
     }
 }

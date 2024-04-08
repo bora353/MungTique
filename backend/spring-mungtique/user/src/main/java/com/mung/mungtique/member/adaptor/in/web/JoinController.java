@@ -25,5 +25,4 @@ public class JoinController {
         return ResponseEntity.ok().body(userEntity);
     }
 
-
 }

@@ -1,6 +1,6 @@
 package com.mung.mungtique.member.infrastructure.jwt;
 
-import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetails;
+import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +21,12 @@ import java.util.Iterator;
 @RequiredArgsConstructor
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+
+    /**
+     * LoginFilter : 사용자가 로그인 시도할 때 가로채서 로그인 인증 수행
+     * 인증 성공하면 JWT 토큰 생성해서 클라이언트에게 전달
+     * 이 토큰으로 이후 클라이언트가 요청할 때 인증 정보로 사용됨
+     */
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -51,9 +57,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("성공!!");
 
         // CustomUserDetails 객체에서 사용자 이름과 역할 정보 추출
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUserDetailsDTO customUserDetailsDTO = (CustomUserDetailsDTO) authentication.getPrincipal();
 
-        String email = customUserDetails.getEmail();
+        String email = customUserDetailsDTO.getEmail();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
