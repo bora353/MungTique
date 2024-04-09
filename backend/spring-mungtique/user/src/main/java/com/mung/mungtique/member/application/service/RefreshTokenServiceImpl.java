@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
@@ -15,50 +18,51 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final JwtUtil jwtUtil;
 
     @Override
-    public String reissueToken(HttpServletRequest request) {
+    public Map<String, String> reissueToken(HttpServletRequest request) {
+        Map<String, String> tokens = new HashMap<>();
 
         //get refresh token
-        String refresh = null;
+        String refreshToken = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
+                refreshToken = cookie.getValue();
             }
         }
 
-        if (refresh == null) {
+        if (refreshToken == null) {
 
-            // response status code
-            //return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
-            return "refresh token null";
+            tokens.put("error", "refresh token null");
+            return tokens;
         }
 
         // expired check
         try {
-            jwtUtil.isExpired(refresh);
+            jwtUtil.isExpired(refreshToken);
         } catch (ExpiredJwtException e) {
 
-            // response status code
-            //return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
-            return "refresh token expired";
+            tokens.put("error", "refresh token expired");
+            return tokens;
         }
 
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(refresh);
+        String category = jwtUtil.getCategory(refreshToken);
 
         if (!category.equals("refresh")) {
 
-            // response status code
-            //return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
-            return "invalid refresh token";
+            tokens.put("error", "invalid refresh token");
+            return tokens;
         }
 
-        String email = jwtUtil.getEmail(refresh);
-        String role = jwtUtil.getRole(refresh);
+        String email = jwtUtil.getEmail(refreshToken);
+        String role = jwtUtil.getRole(refreshToken);
 
-        //make new JWT
-        String newAccessToken = jwtUtil.createJwt("access", email, role, 600000L); // 10분
-        return newAccessToken;
+        // make new JWT token
+        tokens.put("access", jwtUtil.createJwt("access", email, role, 600000L)); // 10분
+        // refresh rotate
+        tokens.put("refresh", jwtUtil.createJwt("refresh", email, role, 86400000L)); // 24시간
+
+        return tokens;
     }
 }

@@ -5,6 +5,7 @@ import com.mung.mungtique.member.infrastructure.jwt.JwtUtil;
 import com.mung.mungtique.member.infrastructure.jwt.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,9 @@ import java.util.Collections;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Value("${cors.allowedOrigins}")
+    private String allowedOrigins;
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
@@ -53,7 +57,7 @@ public class SecurityConfig {
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                 CorsConfiguration configuration = new CorsConfiguration();
 
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                                configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
                                 configuration.setAllowedMethods(Collections.singletonList("*")); // HTTP 메서드
                                 configuration.setAllowCredentials(true); // 자격 증명(쿠기, HTTP 인증) 사용
                                 configuration.setAllowedHeaders(Collections.singletonList("*")); // 요청 헤더 설정

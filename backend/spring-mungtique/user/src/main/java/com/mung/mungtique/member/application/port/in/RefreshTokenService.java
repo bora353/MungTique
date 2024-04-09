@@ -2,7 +2,9 @@ package com.mung.mungtique.member.application.port.in;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Map;
+
 public interface RefreshTokenService {
 
-    String reissueToken(HttpServletRequest request);
+    Map<String, String> reissueToken(HttpServletRequest request);
 }
