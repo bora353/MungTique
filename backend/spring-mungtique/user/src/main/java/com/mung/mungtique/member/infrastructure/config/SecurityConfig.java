@@ -75,7 +75,7 @@ public class SecurityConfig {
         // HTTP 요청에 대한 인가 설정
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/login", "/join").permitAll() // 모든 사용자 허용
+                        .requestMatchers("/","/login", "/api/v1/join").permitAll() // 모든 사용자 허용
                         .requestMatchers("/admin").hasRole("ADMIN") // ADMIN 권한을 가진 사용자만 허용
                         .anyRequest().authenticated()); // 기타는 인증된 사용자만 허용
 
