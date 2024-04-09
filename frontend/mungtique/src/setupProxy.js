@@ -5,7 +5,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://localhost:8082/api",
+      target: import.meta.env.VITE_BACKEND_SERVER,
       changeOrigin: true,
     })
   );
