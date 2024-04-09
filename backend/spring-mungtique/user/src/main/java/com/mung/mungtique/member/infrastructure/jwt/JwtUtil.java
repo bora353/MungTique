@@ -33,9 +33,14 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String email, String role, Long expiredMs) {
+    public String getCategory(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+    }
+
+    public String createJwt(String category, String email, String role, Long expiredMs) {
         // JWT 토큰 생성 및 서명하여 반환
         return Jwts.builder()
+                .claim("category", category) // access인지 refresh인지
                 .claim("email", email) // 페이로드에 username, role 정보를 담아서 토큰을 생성
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발급 시간 설정
