@@ -1,9 +1,9 @@
 package com.mung.mungtique.member.application.service;
 
 import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
-import com.mung.mungtique.member.adaptor.out.persistence.entity.UserEntity;
+import com.mung.mungtique.member.domain.User;
 import com.mung.mungtique.member.application.port.in.CustomUserDetailsService;
-import com.mung.mungtique.member.application.port.out.UserPort;
+import com.mung.mungtique.member.application.port.out.UserRepoPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,16 +13,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
-    private final UserPort userPort;
+    private final UserRepoPort userRepoPort;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserEntity userEntity = userPort.findByEmail(email);
+        User user = userRepoPort.findByEmail(email);
 
-        if (userEntity == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
-        return new CustomUserDetailsDTO(userEntity);
+        return new CustomUserDetailsDTO(user);
     }
 }

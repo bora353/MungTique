@@ -10,7 +10,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
      * 인증과 인가가 필요하지 않은 요청에 대해 CORS 적용
      */
 
-    @Value("${cors.allowedOrigins}")
+    @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
     @Override

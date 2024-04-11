@@ -27,7 +27,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${cors.allowedOrigins}")
+    @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
     private final AuthenticationConfiguration authenticationConfiguration;

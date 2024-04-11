@@ -6,8 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +36,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      * - Refresh Token : Access 토큰이 만료되었을 때 재발급 받기 위한 용도로만 사용되며 약 24시간 이상의 긴 생명주기를 가진다.
      *      ㄴ 쿠키에 발급
      */
+
+    @Value("${spring.jwt.access-expiration}")
+    private Long accessExpiration;
+    @Value("${spring.jwt.refresh-expiration}")
+    private Long refreshExpiration;
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -101,8 +106,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, 600000L); // 10분
-        String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L); // 24시간
+        String access = jwtUtil.createJwt("access", email, role, accessExpiration);
+        String refresh = jwtUtil.createJwt("refresh", email, role, refreshExpiration);
 
         //응답 설정
         response.setHeader("access", access); // access token : 응답 헤더에

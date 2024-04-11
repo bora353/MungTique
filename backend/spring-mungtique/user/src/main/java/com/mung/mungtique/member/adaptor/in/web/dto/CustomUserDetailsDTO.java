@@ -1,6 +1,6 @@
 package com.mung.mungtique.member.adaptor.in.web.dto;
 
-import com.mung.mungtique.member.adaptor.out.persistence.entity.UserEntity;
+import com.mung.mungtique.member.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomUserDetailsDTO implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -21,7 +21,7 @@ public class CustomUserDetailsDTO implements UserDetails {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return userEntity.getRole();
+                return user.getRole().name();
             }
         });
         return collection;
@@ -29,16 +29,16 @@ public class CustomUserDetailsDTO implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userEntity.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userEntity.getUsername();
+        return user.getUsername();
     }
 
     public String getEmail() {
-        return userEntity.getEmail();
+        return user.getEmail();
     }
 
     @Override

@@ -6,6 +6,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,6 +15,11 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
+
+    @Value("${spring.jwt.access-expiration}")
+    private Long accessExpiration;
+    @Value("${spring.jwt.refresh-expiration}")
+    private Long refreshExpiration;
 
     private final JwtUtil jwtUtil;
 
@@ -59,9 +65,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         String role = jwtUtil.getRole(refreshToken);
 
         // make new JWT token
-        tokens.put("access", jwtUtil.createJwt("access", email, role, 600000L)); // 10분
+        tokens.put("access", jwtUtil.createJwt("access", email, role, accessExpiration));
         // refresh rotate
-        tokens.put("refresh", jwtUtil.createJwt("refresh", email, role, 86400000L)); // 24시간
+        tokens.put("refresh", jwtUtil.createJwt("refresh", email, role, refreshExpiration));
 
         return tokens;
     }

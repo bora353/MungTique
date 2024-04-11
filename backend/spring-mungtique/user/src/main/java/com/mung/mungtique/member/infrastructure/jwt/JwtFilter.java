@@ -1,7 +1,8 @@
 package com.mung.mungtique.member.infrastructure.jwt;
 
 import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
-import com.mung.mungtique.member.adaptor.out.persistence.entity.UserEntity;
+import com.mung.mungtique.member.domain.Authority;
+import com.mung.mungtique.member.domain.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -77,10 +78,13 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtUtil.getEmail(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(email);
-        userEntity.setRole(role);
-        CustomUserDetailsDTO customUserDetails = new CustomUserDetailsDTO(userEntity);
+        User user = User.builder().username(email).role(Authority.valueOf(role)).build();
+
+//        User user = new User();
+//        user.setUsername(email);
+//        user.setRole(role);
+
+        CustomUserDetailsDTO customUserDetails = new CustomUserDetailsDTO(user);
 
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
