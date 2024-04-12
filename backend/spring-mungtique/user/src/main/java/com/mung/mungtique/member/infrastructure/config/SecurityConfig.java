@@ -79,7 +79,7 @@ public class SecurityConfig {
         // HTTP 요청에 대한 인가 설정
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/api/v1/", "/api/v1/login", "/api/v1/join").permitAll() // 모든 사용자 허용
+                        .requestMatchers("/", "/api/v1/", "/api/v1/login", "/api/v1/join", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 모든 사용자 허용
                         .requestMatchers("/api/v1/reissue").permitAll() // 모든 사용자 허용
                         .requestMatchers("/api/v1/admin").hasRole("ADMIN") // ADMIN 권한을 가진 사용자만 허용
                         .anyRequest().authenticated()); // 기타는 인증된 사용자만 허용
