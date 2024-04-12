@@ -3,12 +3,16 @@ import { useNavigate } from "react-router-dom";
 import MuiButton from "../../../components/atomic/buttons/MuiButton";
 import MuiInput from "../../../components/atomic/inputs/MuiInput";
 import { Join } from "../../../shared/types/join.interface";
+import MuiSnackbar from "../../../components/atomic/snackbar/MuiSnackbar";
+import { useForm } from "react-hook-form";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
 }
 
 export default function JoinForm({ onsubmit }: JoinProps) {
+  const { register, handleSubmit, errors } = useForm();
+
   const [joinForm, setJoinForm] = useState({
     username: "",
     password: "",
@@ -16,6 +20,12 @@ export default function JoinForm({ onsubmit }: JoinProps) {
     email: "",
     phone: "",
   });
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "error" | "warning" | "info" | "success"
+  >("error");
 
   const navigate = useNavigate();
 
@@ -44,6 +54,7 @@ export default function JoinForm({ onsubmit }: JoinProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // 참고 https://jisoo-log.tistory.com/17
     const joinDTO = {
       username: joinForm.username,
       password: joinForm.password,
@@ -52,20 +63,36 @@ export default function JoinForm({ onsubmit }: JoinProps) {
       phone: joinForm.phone,
     };
 
-    /* if (!(username && email && password && passwordCheck && phone)) {
-      return alert('모든 값을 입력해주세요');
+    if (
+      !(
+        joinForm.username &&
+        joinForm.email &&
+        joinForm.password &&
+        joinForm.passwordCheck &&
+        joinForm.phone
+      )
+    ) {
+      setSnackbarMessage("모든 값을 입력해주세요");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
     }
 
-    if (password !== passwordCheck) {
-      alert("비밀번호가 일치하지 않습니다.");
+    if (joinForm.password !== joinForm.passwordCheck) {
+      setSnackbarMessage("비밀번호가 일치하지 않습니다.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
       return;
-    } */
+    }
+
     try {
       console.log("joinDTO", joinDTO);
       onsubmit(joinDTO);
       navigate("/joinsuccess");
     } catch (error) {
-      alert("회원 가입에 실패했습니다.");
+      setSnackbarMessage("회원 가입에 실패했습니다.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     }
   };
 
@@ -129,6 +156,12 @@ export default function JoinForm({ onsubmit }: JoinProps) {
           />
         </div>
       </form>
+      <MuiSnackbar
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
+      />
     </div>
   );
 }
