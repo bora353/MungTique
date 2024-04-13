@@ -19,11 +19,7 @@ export default function LoginSignInButton() {
           </Link>
         </div>
       </div>
-      <div className="my-1">
-        <Button variant="contained" color="primary">
-          로그인
-        </Button>
-      </div>
+
       <div className="my-1">
         <Button variant="contained" color="success">
           카카오로 로그인

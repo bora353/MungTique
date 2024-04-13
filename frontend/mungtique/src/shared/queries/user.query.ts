@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Join } from "../types/join.interface";
-import { joinApi } from "../apis/join.api";
+import { userApi } from "../apis/user.api";
+import { Login } from "../types/login.interface";
 
 /* export const joinQuery = () => {
     return useQuery<Join[]>({
@@ -16,11 +17,20 @@ export const useJoinMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (joinDTO: Join) => {
-      const { data } = await joinApi.join(joinDTO);
+      const { data } = await userApi.join(joinDTO);
       return data;
     },
     /* onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["join"] });
     }, */
+  });
+};
+
+export const useLoginMutation = () => {
+  return useMutation({
+    mutationFn: async (loginDTO: Login) => {
+      const { data } = await userApi.login(loginDTO);
+      return data;
+    },
   });
 };

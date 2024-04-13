@@ -1,4 +1,4 @@
-import { useJoinMutation } from "../queries/join.query";
+import { useJoinMutation } from "../queries/user.query";
 
 export const useJoinViewModelHook = () => {
   const joinMutation = useJoinMutation();
