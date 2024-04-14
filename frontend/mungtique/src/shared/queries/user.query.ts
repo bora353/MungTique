@@ -29,8 +29,9 @@ export const useJoinMutation = () => {
 export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (loginDTO: Login) => {
-      const { data } = await userApi.login(loginDTO);
-      return data;
+      const response = await userApi.login(loginDTO);
+      console.log("response!", response);
+      return response;
     },
   });
 };
