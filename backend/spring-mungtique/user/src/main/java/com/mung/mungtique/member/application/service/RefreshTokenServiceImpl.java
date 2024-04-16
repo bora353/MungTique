@@ -16,12 +16,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
-    @Value("${spring.jwt.access-expiration}")
-    private Long accessExpiration;
-    @Value("${spring.jwt.refresh-expiration}")
-    private Long refreshExpiration;
-
     private final JwtUtil jwtUtil;
+
+    // TODO : expiration time 환경변수로
+/*    @Value("${spring.jwt.access-expiration}")
+    private final String accessExpireTime;
+
+    @Value("${spring.jwt.refresh-expiration}")
+    private final int refreshExpireTime;*/
 
     @Override
     public Map<String, String> reissueToken(HttpServletRequest request) {
@@ -65,9 +67,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         String role = jwtUtil.getRole(refreshToken);
 
         // make new JWT token
-        tokens.put("access", jwtUtil.createJwt("access", email, role, accessExpiration));
+        tokens.put("access", jwtUtil.createJwt("access", email, role, 600000L));
         // refresh rotate
-        tokens.put("refresh", jwtUtil.createJwt("refresh", email, role, refreshExpiration));
+        tokens.put("refresh", jwtUtil.createJwt("refresh", email, role, 86400000L));
 
         return tokens;
     }

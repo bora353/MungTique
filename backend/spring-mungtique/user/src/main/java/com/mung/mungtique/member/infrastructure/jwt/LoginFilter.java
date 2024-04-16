@@ -1,11 +1,13 @@
 package com.mung.mungtique.member.infrastructure.jwt;
 
 import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
+import com.mung.mungtique.member.application.port.out.TokenRepoPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -37,18 +39,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      *      ㄴ 쿠키에 발급
      */
 
-    @Value("${spring.jwt.access-expiration}")
-    private Long accessExpiration;
-    @Value("${spring.jwt.refresh-expiration}")
-    private Long refreshExpiration;
-
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final TokenRepoPort tokenRepoPort;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, TokenRepoPort tokenRepoPort) {
         setAuthenticationManager(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.tokenRepoPort = tokenRepoPort;
         setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/login", "POST")); // 로그인 경로 변경
     }
 
@@ -105,11 +104,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        //토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, accessExpiration);
-        String refresh = jwtUtil.createJwt("refresh", email, role, refreshExpiration);
+        // 토큰 생성
+        String access = jwtUtil.createJwt("access", email, role, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
 
-        //응답 설정
+        // Refresh Token DB 저장
+
+
+        // 응답 설정
         response.setHeader("access", access); // access token : 응답 헤더에
         response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
