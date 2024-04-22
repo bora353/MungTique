@@ -1,5 +1,7 @@
 package com.mung.mungtique.member.infrastructure.config;
 
+import com.mung.mungtique.member.application.port.out.TokenRepoPort;
+import com.mung.mungtique.member.infrastructure.jwt.CustomLogoutFilter;
 import com.mung.mungtique.member.infrastructure.jwt.JwtFilter;
 import com.mung.mungtique.member.infrastructure.jwt.JwtUtil;
 import com.mung.mungtique.member.infrastructure.jwt.LoginFilter;
@@ -16,10 +18,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Collection;
 import java.util.Collections;
 
 @Configuration
@@ -32,6 +34,8 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final TokenRepoPort tokenRepoPort;
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -79,7 +83,7 @@ public class SecurityConfig {
         // HTTP 요청에 대한 인가 설정
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/api/v1/", "/api/v1/login", "/api/v1/join", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 모든 사용자 허용
+                        .requestMatchers("/", "/api/v1/", "/api/v1/login", "/api/v1/join", "/swagger-ui/**", "/v3/api-docs/**", "/logout").permitAll() // 모든 사용자 허용
                         .requestMatchers("/api/v1/reissue").permitAll() // 모든 사용자 허용
                         .requestMatchers("/api/v1/admin").hasRole("ADMIN") // ADMIN 권한을 가진 사용자만 허용
                         .anyRequest().authenticated()); // 기타는 인증된 사용자만 허용
@@ -92,12 +96,16 @@ public class SecurityConfig {
 
         // 로그인 필터는 UsernamePasswordAuthenticationFilter를 대체해서 실행
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, tokenRepoPort), UsernamePasswordAuthenticationFilter.class);
 
         // 세션 비활성화 (jwt 토큰 사용)
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // 실제 logoutFilter 전에 customLogoutFilter가 먼저 실행됨
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, tokenRepoPort), LogoutFilter.class);
 
         return http.build();
     }

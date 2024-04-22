@@ -1,6 +1,28 @@
 package com.mung.mungtique.member.adaptor.out.persistence.userrepo;
 
 import com.mung.mungtique.member.application.port.out.TokenRepoPort;
+import com.mung.mungtique.member.domain.Token;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
-public class TokenRepoAdaptor extends TokenRepoPort {
+@Repository
+@RequiredArgsConstructor
+public class TokenRepoAdaptor implements TokenRepoPort {
+
+    private final TokenRepo tokenRepo;
+
+    @Override
+    public void save(Token token) {
+        tokenRepo.save(token);
+    }
+
+    @Override
+    public Boolean existByRefreshToken(String refreshToken) {
+        return tokenRepo.existsByRefreshToken(refreshToken);
+    }
+
+    @Override
+    public void deleteByRefreshToken(String refreshToken) {
+        tokenRepo.deleteByRefreshToken(refreshToken);
+    }
 }

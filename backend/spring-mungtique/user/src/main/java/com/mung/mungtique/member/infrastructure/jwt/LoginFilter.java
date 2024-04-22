@@ -2,6 +2,7 @@ package com.mung.mungtique.member.infrastructure.jwt;
 
 import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
 import com.mung.mungtique.member.application.port.out.TokenRepoPort;
+import com.mung.mungtique.member.domain.Token;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -21,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 @Slf4j
@@ -109,12 +111,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
 
         // Refresh Token DB 저장
-
+        addTokenEntity(email, refresh, 86400000L);
 
         // 응답 설정
         response.setHeader("access", access); // access token : 응답 헤더에
         response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
+    }
+
+    private void addTokenEntity(String email, String refreshToken, Long expiredMs) {
+
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        Token token = Token.builder()
+                .email(email)
+                .refreshToken(refreshToken)
+                .expiration(date.toString())
+                .build();
+
+        tokenRepoPort.save(token);
     }
 
     private Cookie createCookie(String key, String value) {

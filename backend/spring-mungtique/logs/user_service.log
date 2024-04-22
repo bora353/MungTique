@@ -1,0 +1,4 @@
+[INFO ] 2024-04-22 16:36:07.638 [http-nio-8082-exec-8][CustomLogoutFilter.java] CustomLogoutFilter - 로그아웃 성공!!
+[INFO ] 2024-04-22 16:36:20.041 [SpringApplicationShutdownHook][AbstractEntityManagerFactoryBean.java] LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+[INFO ] 2024-04-22 16:36:20.045 [SpringApplicationShutdownHook][HikariDataSource.java] HikariDataSource - HikariPool-1 - Shutdown initiated...
+[INFO ] 2024-04-22 16:36:20.052 [SpringApplicationShutdownHook][HikariDataSource.java] HikariDataSource - HikariPool-1 - Shutdown completed.
