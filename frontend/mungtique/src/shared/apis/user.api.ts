@@ -12,39 +12,29 @@ console.log(basePath);
 const join = async (joinDTO: Join) =>
   await axios.post<UserEntity>(basePath + "/join", joinDTO);
 
-/* function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift();
-} */
-
-const [cookies, setCookie] = useCookies(["refresh"]);
-
 const login = async (loginDTO: Login) => {
+  // const [cookies, setCookie] = useCookies(["refresh"]);
+
   const formData = new FormData();
   formData.append("email", loginDTO.email);
   formData.append("password", loginDTO.password);
 
   try {
-    const response = await axios.post(basePath + "/login", formData);
+    axios.defaults.withCredentials = true;
+    const response = await axios.post(`${basePath}/login`, formData, {
+      withCredentials: true,
+    });
 
-    // 응답에서 헤더와 쿠키 추출
-    const accessToken = response.headers["access"];
+    if (response.status === 200) {
+      console.log(response);
+      const accessToken = response.headers["access"];
+      console.log("Access Token:", accessToken);
 
-    //const cookies = new Cookies();
-    //const refreshToken = cookies.get("refresh");
-    //const refreshToken = getCookie("refresh");
-    const statusCode = response.status;
-
-    // 로그인 성공 시 처리 (예: 페이지 이동 등)
-    console.log("로그인 성공");
-    console.log("accessToken:", accessToken);
-    console.log("refreshToken:", cookies);
-    console.log("statusCode:", statusCode);
-
-    return response;
+      //const refreshCookieValue = cookies.refresh;
+      //console.log("Refresh Token from Cookie:", refreshCookieValue);
+    }
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 };
 
