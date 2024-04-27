@@ -114,7 +114,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         addTokenEntity(email, refresh, 86400000L);
 
         // 응답 설정
-        response.setHeader("access", access); // access token : 응답 헤더에
+        response.setHeader("access", access); // access token : 응답 헤더에 넣고 front에서 받아서 local storage에 저장
         response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
     }

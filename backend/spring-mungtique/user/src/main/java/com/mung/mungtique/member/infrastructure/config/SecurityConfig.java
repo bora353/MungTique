@@ -22,13 +22,12 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class CorsMvcConfig {
+public class SecurityConfig {
 
     @Value("${cors.allowed-origins}")
     private String allowedOrigins;
@@ -67,11 +66,9 @@ public class CorsMvcConfig {
                                 configuration.setAllowCredentials(true); // 자격 증명(쿠기, HTTP 인증) 사용
                                 configuration.setAllowedHeaders(Collections.singletonList("*")); // 요청 헤더 설정
 
-                                configuration.setExposedHeaders(Arrays.asList("Authorization", "access"));
-
                                 configuration.setMaxAge(3600L); // 요청을 캐시할 수 있는 시간 (1시간)
 
-                                configuration.setExposedHeaders(Collections.singletonList("Authorization")); // 응답헤더로 노출할 헤더
+                                configuration.setExposedHeaders(Collections.singletonList("access")); // 응답헤더로 노출할 헤더
                                 return configuration;
                             }
                         }));
