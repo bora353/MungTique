@@ -1,5 +1,7 @@
 application.yml
 
+*.log
+
 HELP.md
 .gradle
 build/
