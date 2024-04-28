@@ -30,7 +30,15 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (loginDTO: Login) => {
       const response = await userApi.login(loginDTO);
-      console.log("response!", response);
+      return response;
+    },
+  });
+};
+
+export const useLogoutMutation = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await userApi.logout();
       return response;
     },
   });
