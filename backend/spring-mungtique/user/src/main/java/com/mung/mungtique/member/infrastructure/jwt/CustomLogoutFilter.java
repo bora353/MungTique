@@ -28,7 +28,8 @@ public class CustomLogoutFilter extends GenericFilter {
         // 요청이 로그아웃인지 확인 (path verify)
         String requestUri = request.getRequestURI();
 
-        if (!requestUri.matches("\\/logout")) { // 참고. "^\\/logout$" 정확히 "/logout" 인 경우만 체크하려는게 아니면 ^랑 $ 제거하면 됨
+        //if (!requestUri.matches("\\/logout")) { // 참고. "^\\/logout$" 정확히 "/logout" 인 경우만 체크하려는게 아니면 ^랑 $ 제거하면 됨
+        if (!requestUri.matches("\\/api\\/v1\\/logout")) { // 참고. "^\\/logout$" 정확히 "/logout" 인 경우만 체크하려는게 아니면 ^랑 $ 제거하면 됨
             filterChain.doFilter(request, response);
             return;
         }
@@ -83,6 +84,7 @@ public class CustomLogoutFilter extends GenericFilter {
 
         // 로그아웃 진행
         // DB에서 Refresh 토큰을 제거
+        log.info("로그아웃 진행 시작");
         tokenRepoPort.deleteByRefreshToken(refreshToken);
 
         // Refresh 토큰 Cookie 삭제!
