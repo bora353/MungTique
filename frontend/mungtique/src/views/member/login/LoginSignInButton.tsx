@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
+import MuiButton from "../../../components/atomic/buttons/MuiButton";
 
 export default function LoginSignInButton() {
   const handleLogin = () => {};
@@ -27,7 +28,12 @@ export default function LoginSignInButton() {
       </div>
       <div className="my-1">
         <Link to="/join">
-          <Button color="primary">10초 회원가입</Button>
+          <MuiButton
+            color="primary"
+            type="button"
+            value="10초 회원가입"
+            variant="text"
+          />
         </Link>
       </div>
     </>

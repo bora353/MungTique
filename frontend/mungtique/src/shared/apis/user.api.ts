@@ -2,6 +2,7 @@ import axios from "axios";
 import { Join } from "../types/join.interface";
 import { UserEntity } from "../types/user.interface";
 import { Login } from "../types/login.interface";
+import { MailCheck } from "../types/mailcheck.interface";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER;
 console.log(basePath);
@@ -46,8 +47,20 @@ const logout = async () => {
   console.log(response);
 };
 
+const mailCheck = async (mailDTO: MailCheck): Promise<string> => {
+  try {
+    const response = await axios.post<string>(`${basePath}/mail-send`, mailDTO);
+    return response.data;
+  } catch (error) {
+    // 에러 처리
+    console.error("이메일 인증 요청 중 오류가 발생했습니다:", error);
+    throw new Error("이메일 인증 요청에 실패했습니다.");
+  }
+};
+
 export const userApi = {
   join,
   login,
   logout,
+  mailCheck,
 };

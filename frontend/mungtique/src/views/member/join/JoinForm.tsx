@@ -4,12 +4,16 @@ import MuiButton from "../../../components/atomic/buttons/MuiButton";
 import MuiInput from "../../../components/atomic/inputs/MuiInput";
 import { Join } from "../../../shared/types/join.interface";
 import MuiSnackbar from "../../../components/atomic/snackbar/MuiSnackbar";
+import { MailCheck } from "../../../shared/types/mailcheck.interface";
+import { userApi } from "../../../shared/apis/user.api";
+import axios from "axios";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
+  verifyEmail: (mailDTO: MailCheck) => void;
 }
 
-export default function JoinForm({ onsubmit }: JoinProps) {
+export default function JoinForm({ onsubmit, verifyEmail }: JoinProps) {
   const navigate = useNavigate();
 
   const [joinForm, setJoinForm] = useState({
@@ -17,6 +21,7 @@ export default function JoinForm({ onsubmit }: JoinProps) {
     password: "",
     passwordCheck: "",
     email: "",
+    emailVerify: "",
     phone: "",
   });
 
@@ -29,11 +34,39 @@ export default function JoinForm({ onsubmit }: JoinProps) {
   };
 
   // TODO : 비밀번호 시에 비밀번호 규칙확인, 일치하는지 확인 밑에 글씨
+  const [verifyNumber, setVerifyNumber] = useState(""); // verifyNumber 상태 추가
 
-  const handleEmailCheck = () => {
-    // TODO : 이메일 인증 (+ 이메일 중복확인도)
-    // https://suhyeon-developer.tistory.com/19
-    const email = joinForm.email;
+  const handleMailCheck = async () => {
+    const mailDTO: MailCheck = { mail: joinForm.email };
+    const result = await userApi.mailCheck(mailDTO);
+    console.log("이메일 인증 요청 완료", result);
+
+    setVerifyNumber(result);
+  };
+
+  const handleMailCheckOK = async () => {
+    // TODO : 인증 요청을 해야만 인증 코드 적는 곳 보이게
+    // TODO : 인증 완료되면 인증 코드 적는 곳 사라지게
+    const basePath = import.meta.env.VITE_BACKEND_SERVER;
+    const userNumber = joinForm.emailVerify;
+    const sentNumber = verifyNumber;
+
+    const response = await axios.get(`${basePath}/mail-check`, {
+      params: {
+        userNumber,
+        sentNumber,
+      },
+    });
+    // 서버로부터의 응답을 처리합니다.
+    if (response.data === true) {
+      console.log("메일 인증되었습니다 :)");
+      setSnackbarMessage("메일 인증되었습니다 :)");
+      setOpenSnackbar(true);
+    } else {
+      console.error("올바르지 않은 인증코드입니다.");
+      setSnackbarMessage("올바르지 않은 인증코드입니다.");
+      setOpenSnackbar(true);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,6 +100,8 @@ export default function JoinForm({ onsubmit }: JoinProps) {
       setOpenSnackbar(true);
       return;
     }
+
+    // TODO : 인증번호 성공한 상태에서만 회원가입 되게 추가!
 
     try {
       console.log("joinDTO", joinDTO);
@@ -103,11 +138,26 @@ export default function JoinForm({ onsubmit }: JoinProps) {
             onChange={handleChange}
           />
           <MuiButton
-            value="중복확인"
+            value="인증하기"
             variant="text"
             color="primary"
             type="button"
-            onClick={handleEmailCheck}
+            onClick={handleMailCheck}
+          />
+        </div>
+        <div className="flex">
+          <MuiInput
+            name="emailVerify"
+            placeholder="인증코드"
+            value={joinForm.emailVerify}
+            onChange={handleChange}
+          />
+          <MuiButton
+            value="확인"
+            variant="text"
+            color="primary"
+            type="button"
+            onClick={handleMailCheckOK}
           />
         </div>
         <MuiInput
