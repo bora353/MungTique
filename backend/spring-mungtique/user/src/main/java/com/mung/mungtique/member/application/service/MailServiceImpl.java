@@ -42,5 +42,6 @@ public class MailServiceImpl implements MailService {
 
     private static void createNumber() {
         number = (int) (Math.random() * (90000)) + 100000;
+        log.info("인증번호 : {} ", number);
     }
 }

@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-//@RequestMapping("/..")
+@RequestMapping("/api/v1")
 public class MailController {
 
     private final MailService mailService;
 
     @PostMapping("/mail-send")
-    public int sendMail(@RequestBody MailReq mail) throws MessagingException {
+    public String sendMail(@RequestBody MailReq mail) throws MessagingException {
 
         // TODO : advice controller 추가
+        // TODO : 인증번호 redis에 3분만 저장
         log.info(mail.getMail());
-        return mailService.sendMail(mail.getMail());
+        int verifyNumber = mailService.sendMail(mail.getMail());
+        return String.valueOf(verifyNumber);
     }
 
     @GetMapping("/mail-check")
-    public ResponseEntity<?> checkMail(@RequestParam String userNumber, int sentNumber) {
+    public ResponseEntity<?> checkMail(@RequestParam String userNumber, String sentNumber) {
 
-        boolean isMatch = userNumber.equals(Integer.toString(sentNumber));
+        boolean isMatch = userNumber.equals(sentNumber);
         return ResponseEntity.ok(isMatch);
     }
-
-
 }
