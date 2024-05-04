@@ -1,6 +1,7 @@
 package com.mung.mungtique.member.infrastructure.config;
 
 import com.mung.mungtique.member.application.port.out.TokenRepoPort;
+import com.mung.mungtique.member.application.service.CustomOauth2UserServiceImpl;
 import com.mung.mungtique.member.infrastructure.jwt.CustomLogoutFilter;
 import com.mung.mungtique.member.infrastructure.jwt.JwtFilter;
 import com.mung.mungtique.member.infrastructure.jwt.JwtUtil;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,6 +38,8 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final TokenRepoPort tokenRepoPort;
 
+    private final CustomOauth2UserServiceImpl customOauth2UserService;
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -49,7 +53,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // csrf disable
+        // csrf disable (jwt 방식으로 stateless로 관리할 것이기에 disable)
         http
                 .csrf((auth) -> auth.disable());
 
@@ -107,6 +111,12 @@ public class SecurityConfig {
         // 실제 logoutFilter 전에 customLogoutFilter가 먼저 실행됨
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, tokenRepoPort), LogoutFilter.class);
+
+        // oauth2 ------------------------------------
+        http
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOauth2UserService))));
 
         return http.build();
     }
