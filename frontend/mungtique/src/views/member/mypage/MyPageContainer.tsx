@@ -11,7 +11,7 @@ export default function MyPageContainer() {
   return (
     <div>
       <MuiAppBar />
-      <div className="flex justify-center items-center min-h-screen bg-blue-100">
+      <div className="flex justify-center items-center min-h-screen">
         <Link to="/login">
           <MuiButton
             color="info"

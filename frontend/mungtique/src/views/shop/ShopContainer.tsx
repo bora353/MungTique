@@ -1,13 +1,13 @@
 import MuiAppBar from "../../components/atomic/bar/MuiAppBar";
 
-export default function MainContainer() {
-  // TODO : 로그인 시에만 로그아웃이 가능하게 변경
+export default function ShopContainer() {
+  // TODO : Hook, mutate 사용
 
   return (
     <div>
       <MuiAppBar />
       <div className="flex justify-center items-center min-h-screen">
-        <h1 className="text-xl">메인 페이지</h1>
+        <p>쇼핑몰 기능을 넣을지 고민</p>
       </div>
     </div>
   );

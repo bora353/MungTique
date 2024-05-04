@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Link, Link as RouterLink } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -9,6 +9,9 @@ import {
   IconButton,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ContentCutIcon from "@mui/icons-material/ContentCut";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function MuiAppBar() {
   const customTheme = createTheme({
@@ -35,7 +38,11 @@ export default function MuiAppBar() {
 
   return (
     <ThemeProvider theme={customTheme}>
-      <AppBar position="static" color="inherit">
+      <AppBar
+        position="static"
+        color="inherit"
+        sx={{ backgroundColor: "#FAF9F1" }}
+      >
         <Container maxWidth="lg">
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
@@ -46,28 +53,34 @@ export default function MuiAppBar() {
                 aria-label="open drawer"
                 sx={{ mr: 2 }}
               ></IconButton>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ flexGrow: 1, color: "primary.main" }}
-              >
-                뭉티끄
-              </Typography>
+              <div>
+                <Link to="/">
+                  <img
+                    src="/images/logo.png"
+                    alt="뭉티끄"
+                    width="130"
+                    height="80"
+                  />
+                </Link>
+              </div>
             </Box>
-            {["/", "/reservation", "/shopping", "/mypage"].map(
-              (path, index) => (
-                <Button
-                  key={index}
-                  color="inherit"
-                  component={RouterLink}
-                  to={path}
-                  sx={{ color: "primary.main" }}
-                >
-                  {["홈", "예약", "쇼핑", "마이뭉"][index]}
-                </Button>
-              )
-            )}
+            {["/care", "/shop", "/mypage"].map((path, index) => (
+              <Button
+                key={index}
+                color="inherit"
+                component={RouterLink}
+                to={path}
+                sx={{ fontSize: "1rem", color: "#333" }}
+              >
+                {index === 0 ? (
+                  <ContentCutIcon sx={{ color: "#F7B5D8" }} />
+                ) : index === 1 ? (
+                  <StorefrontIcon sx={{ color: "skyblue" }} />
+                ) : (
+                  <AccountCircleIcon sx={{ color: "#AF69EE" }} />
+                )}
+              </Button>
+            ))}
           </Toolbar>
         </Container>
       </AppBar>
