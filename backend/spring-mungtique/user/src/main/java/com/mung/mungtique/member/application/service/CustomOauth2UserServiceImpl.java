@@ -55,7 +55,7 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
             UserDTO userDTO = UserDTO.builder()
                     .username(username)
                     .name(oAuth2Res.getName())
-                    .role("ROLE_USER")
+                    .role(Authority.ROLE_USER)
                     .build();
 
             // 꼭 정해진 타입으로 반환 필요
