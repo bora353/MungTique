@@ -1,11 +1,14 @@
 package com.mung.mungtique.member.infrastructure.jwt;
 
+import com.mung.mungtique.member.adaptor.in.web.dto.CustomOAuth2User;
 import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
+import com.mung.mungtique.member.adaptor.in.web.dto.UserDTO;
 import com.mung.mungtique.member.domain.Authority;
 import com.mung.mungtique.member.domain.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +38,68 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            OAuthProcess(request, response, filterChain, cookies);
+        }
+
         // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("access");
 
+        if (accessToken != null) {
+            StandardProcess(request, response, filterChain, accessToken);
+        }
+
+        /*-------이전코드----------// request에서 Authorization 헤더를 찾음
+        String authorization = request.getHeader("Authorization");
+
+        // Authorization 헤더 검증
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+
+            log.info("token null");
+            filterChain.doFilter(request, response); // 다음 필터로 넘김
+
+            // 조건이 해당되면 메서드 종료 (필수)
+            return;
+        }
+
+        log.info("authorization now");
+
+        // Bearer 부분 제거 후 순수 토큰만 획득
+        String token = authorization.split(" ")[1];
+
+        // 토큰 소멸 시간 검증
+        if (jwtUtil.isExpired(token)) {
+            log.info("token expired");
+            filterChain.doFilter(request, response);
+
+            // 조건 해당되면 메서드 종료 (필수)
+            return;
+        }
+
+        // 토큰에서 username과 role 획득
+        String email = jwtUtil.getEmail(token);
+        String role = jwtUtil.getRole(token);
+
+        // userEntity를 생성하여 값 set
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(email);
+        userEntity.setPassword(null); // JwtFilter에서는 비밀번호를 사용하지 않음
+        userEntity.setRole(role);
+
+        // UserDetails에 회원 정보 객체 담기
+        CustomUserDetailsDTO customUserDetailsDTO = new CustomUserDetailsDTO(userEntity);
+
+        // 스프링 시큐리티 인증 토큰 생성
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetailsDTO, null, customUserDetailsDTO.getAuthorities());
+        // 세션에 사용자 등록
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        filterChain.doFilter(request, response);*/
+    }
+
+    private void StandardProcess(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken) throws IOException, ServletException {
         // 토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {
 
@@ -90,52 +152,46 @@ public class JwtFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+    }
 
-        /*// request에서 Authorization 헤더를 찾음
-        String authorization = request.getHeader("Authorization");
+    private void OAuthProcess(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, Cookie[] cookies) throws ServletException, IOException {
+        // cookie 불러온 후 Authorization Key에 담긴 쿠키 찾음
+        String authorization = null;
+        //Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+
+            log.info(cookie.getName());
+            if (cookie.getName().equals("Authorization")) {
+
+                authorization = cookie.getValue();
+            }
+        }
 
         // Authorization 헤더 검증
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-
-            log.info("token null");
-            filterChain.doFilter(request, response); // 다음 필터로 넘김
-
-            // 조건이 해당되면 메서드 종료 (필수)
-            return;
-        }
-
-        log.info("authorization now");
-
-        // Bearer 부분 제거 후 순수 토큰만 획득
-        String token = authorization.split(" ")[1];
-
-        // 토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
-            log.info("token expired");
+        if (authorization == null) {
             filterChain.doFilter(request, response);
-
-            // 조건 해당되면 메서드 종료 (필수)
             return;
         }
 
-        // 토큰에서 username과 role 획득
-        String email = jwtUtil.getEmail(token);
-        String role = jwtUtil.getRole(token);
+        String token = authorization;
 
-        // userEntity를 생성하여 값 set
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(email);
-        userEntity.setPassword(null); // JwtFilter에서는 비밀번호를 사용하지 않음
-        userEntity.setRole(role);
+        if (jwtUtil.isExpired(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        // UserDetails에 회원 정보 객체 담기
-        CustomUserDetailsDTO customUserDetailsDTO = new CustomUserDetailsDTO(userEntity);
+        String username = jwtUtil.getUsername(token);
+        String role1 = jwtUtil.getRole(token);
 
-        // 스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetailsDTO, null, customUserDetailsDTO.getAuthorities());
-        // 세션에 사용자 등록
+        UserDTO userDTO = UserDTO.builder()
+                        .username(username)
+                        .role(Authority.valueOf(role1))
+                        .build();
+
+        CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
+
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        filterChain.doFilter(request, response);*/
+        filterChain.doFilter(request, response);
     }
 }

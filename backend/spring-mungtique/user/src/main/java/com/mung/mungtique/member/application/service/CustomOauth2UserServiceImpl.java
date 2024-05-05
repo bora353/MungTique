@@ -4,9 +4,9 @@ import com.mung.mungtique.member.adaptor.in.web.dto.CustomOAuth2User;
 import com.mung.mungtique.member.adaptor.in.web.dto.NaverRes;
 import com.mung.mungtique.member.adaptor.in.web.dto.OAuth2Res;
 import com.mung.mungtique.member.adaptor.in.web.dto.UserDTO;
-import com.mung.mungtique.member.application.port.out.UserKakaoRepoPort;
+import com.mung.mungtique.member.application.port.out.UserOAuth2RepoPort;
 import com.mung.mungtique.member.domain.Authority;
-import com.mung.mungtique.member.domain.UserKakao;
+import com.mung.mungtique.member.domain.UserOAuth2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
 
-    private final UserKakaoRepoPort userKakaoRepoPort;
+    private final UserOAuth2RepoPort userOAuth2RepoPort;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -40,17 +40,17 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
         String username = oAuth2Res.getProvider() + " " + oAuth2Res.getProviderId();
 
         // DB
-        UserKakao existData = userKakaoRepoPort.findByUsername(username);
+        UserOAuth2 existData = userOAuth2RepoPort.findByUsername(username);
 
         if (existData == null) {
-            UserKakao userKakao = UserKakao.builder()
+            UserOAuth2 userOAuth2 = UserOAuth2.builder()
                     .username(username)
                     .email(oAuth2Res.getEmail())
                     .name(oAuth2Res.getName())
                     .role(Authority.ROLE_USER)
                     .build();
 
-            userKakaoRepoPort.save(userKakao);
+            userOAuth2RepoPort.save(userOAuth2);
 
             UserDTO userDTO = UserDTO.builder()
                     .username(username)
@@ -62,14 +62,14 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
             return new CustomOAuth2User(userDTO);
 
         } else {
-            UserKakao updateUser = UserKakao.builder()
+            UserOAuth2 updateUser = UserOAuth2.builder()
                     .username(existData.getUsername())
                     .email(oAuth2Res.getEmail())
                     .name(oAuth2Res.getName())
                     .role(Authority.ROLE_USER)
                     .build();
 
-            userKakaoRepoPort.save(updateUser);
+            userOAuth2RepoPort.save(updateUser);
 
             UserDTO userDTO = UserDTO.builder()
                     .username(updateUser.getUsername())

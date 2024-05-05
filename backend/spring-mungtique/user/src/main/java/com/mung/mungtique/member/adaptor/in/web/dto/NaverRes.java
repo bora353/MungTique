@@ -4,10 +4,14 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
 public class NaverRes implements OAuth2Res {
 
     private final Map<String, Object> attribute;
+
+    public NaverRes(Map<String, Object> attribute) {
+
+        this.attribute = (Map<String, Object>) attribute.get("response");
+    }
 
     @Override
     public String getProvider() {

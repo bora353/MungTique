@@ -6,13 +6,13 @@ import com.mung.mungtique.member.infrastructure.jwt.CustomLogoutFilter;
 import com.mung.mungtique.member.infrastructure.jwt.JwtFilter;
 import com.mung.mungtique.member.infrastructure.jwt.JwtUtil;
 import com.mung.mungtique.member.infrastructure.jwt.LoginFilter;
+import com.mung.mungtique.member.infrastructure.oauth2.CustomSuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +39,7 @@ public class SecurityConfig {
     private final TokenRepoPort tokenRepoPort;
 
     private final CustomOauth2UserServiceImpl customOauth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
 
 
     @Bean
@@ -73,6 +74,8 @@ public class SecurityConfig {
                                 configuration.setMaxAge(3600L); // 요청을 캐시할 수 있는 시간 (1시간)
 
                                 configuration.setExposedHeaders(Collections.singletonList("access")); // 응답헤더로 노출할 헤더
+                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                                configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
                                 return configuration;
                             }
                         }));
@@ -115,8 +118,12 @@ public class SecurityConfig {
         // oauth2 ------------------------------------
         http
                 .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOauth2UserService))));
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                    .userService(customOauth2UserService))
+                                .successHandler(customSuccessHandler));
+
+        http
+                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

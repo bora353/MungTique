@@ -7,18 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_kakao")
+@Table(name = "user_oauth2")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserKakao extends BaseTime {
+public class UserOAuth2 extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 100)
     private String username;
 
     @Column(length = 20)

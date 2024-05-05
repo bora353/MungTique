@@ -1,9 +1,13 @@
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import MuiButton from "../../../components/atomic/buttons/MuiButton";
+import axios from "axios";
 
 export default function LoginSignInButton() {
   const handleLogin = () => {};
+  const onNaverLogin = () => {
+    window.location.href = "http://localhost:8082/oauth2/authorization/naver";
+  };
 
   // TODO : 추후 SNS 로그인
 
@@ -22,8 +26,8 @@ export default function LoginSignInButton() {
       </div>
 
       <div className="my-1">
-        <Button variant="contained" color="success">
-          카카오로 로그인
+        <Button onClick={onNaverLogin} variant="contained" color="success">
+          Naver Login
         </Button>
       </div>
       <div className="my-1">
