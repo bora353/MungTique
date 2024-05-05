@@ -37,6 +37,19 @@ public class JwtFilter extends OncePerRequestFilter {
     // 인증된 사용자에게 접근 허용
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // 재로그인 무한 루프 오류 해결 (재로그인 -> JWT 만료시 거절 -> OAuth2 로그인 실패 -> 재요청의 무한루프)
+        String requestUri = request.getRequestURI();
+
+        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 시작
 
         Cookie[] cookies = request.getCookies();
 

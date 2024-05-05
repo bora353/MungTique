@@ -1,7 +1,5 @@
 package com.mung.mungtique.member.adaptor.in.web.dto;
 
-import lombok.RequiredArgsConstructor;
-
 import java.util.Map;
 
 public class NaverRes implements OAuth2Res {
