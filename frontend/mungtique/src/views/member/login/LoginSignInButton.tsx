@@ -4,12 +4,12 @@ import MuiButton from "../../../components/atomic/buttons/MuiButton";
 import axios from "axios";
 
 export default function LoginSignInButton() {
-  const handleLogin = () => {};
   const onNaverLogin = () => {
     window.location.href = "http://localhost:8082/oauth2/authorization/naver";
   };
-
-  // TODO : 추후 SNS 로그인
+  const onKakaoLogin = () => {
+    window.location.href = "http://localhost:8082/oauth2/authorization/kakao";
+  };
 
   return (
     <>
@@ -25,10 +25,23 @@ export default function LoginSignInButton() {
         </div>
       </div>
 
-      <div className="my-1">
-        <Button onClick={onNaverLogin} variant="contained" color="success">
-          Naver Login
-        </Button>
+      <div className="flex justify-center my-1">
+        <div className="mx-1">
+          <img
+            src="/images/naver_login.png"
+            alt="Naver Login"
+            onClick={onNaverLogin}
+            style={{ cursor: "pointer", width: "170px", height: "50px" }}
+          />
+        </div>
+        <div className="mx-1">
+          <img
+            src="/images/kakao_login.png"
+            alt="Kakao Login"
+            onClick={onKakaoLogin}
+            style={{ cursor: "pointer", width: "170px", height: "50px" }}
+          />
+        </div>
       </div>
       <div className="my-1">
         <Link to="/join">

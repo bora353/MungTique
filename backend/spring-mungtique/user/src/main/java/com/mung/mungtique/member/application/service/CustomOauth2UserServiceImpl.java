@@ -1,9 +1,6 @@
 package com.mung.mungtique.member.application.service;
 
-import com.mung.mungtique.member.adaptor.in.web.dto.CustomOAuth2User;
-import com.mung.mungtique.member.adaptor.in.web.dto.NaverRes;
-import com.mung.mungtique.member.adaptor.in.web.dto.OAuth2Res;
-import com.mung.mungtique.member.adaptor.in.web.dto.UserDTO;
+import com.mung.mungtique.member.adaptor.in.web.dto.*;
 import com.mung.mungtique.member.application.port.out.UserOAuth2RepoPort;
 import com.mung.mungtique.member.domain.Authority;
 import com.mung.mungtique.member.domain.UserOAuth2;
@@ -32,6 +29,8 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
         if (registrationId.equals("naver")) {
             oAuth2Res = new NaverRes(oAuth2User.getAttributes());
 
+        } else if (registrationId.equals("kakao")) {
+            oAuth2Res = new KakaoRes(oAuth2User.getAttributes());
         } else {
             return null;
         }

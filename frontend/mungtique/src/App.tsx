@@ -6,8 +6,8 @@ import MainContainer from "./views/main/MainContainer";
 import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";
 import JoinContainer from "./views/member/join/JoinContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
-import ReservationContainer from "./views/reservation/ReservationContainer";
 import ShopContainer from "./views/shop/ShopContainer";
+import CareContainer from "./views/care/CareContainer";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
           <Route path="/findinfo" element={<FindInfoContainer />} />
           <Route path="/mypage" element={<MyPageContainer />} />
-          <Route path="/care" element={<ReservationContainer />} />
+          <Route path="/care" element={<CareContainer />} />
           <Route path="/shop" element={<ShopContainer />} />
         </Routes>
       </BrowserRouter>
