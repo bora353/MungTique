@@ -97,7 +97,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()); // 기타는 인증된 사용자만 허용
 
 
-        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가 
+        // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
         // JWT 토큰이 유효하지 않으면 불필요한 로그인 시도 방지
         http
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
@@ -122,8 +122,8 @@ public class SecurityConfig {
                                     .userService(customOauth2UserService))
                                 .successHandler(customSuccessHandler));
 
-        http
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+ /*   잠깐만 주석    http
+                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);*/
 
         return http.build();
     }
