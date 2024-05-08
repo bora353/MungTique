@@ -55,14 +55,14 @@ export default function LoginForm({ onsubmit }: LoginProps) {
       <form onSubmit={handleSubmit}>
         <MuiInput
           name="email"
-          placeholder="이메일을 입력해주세요"
+          placeholder="email"
           value={email}
           onChange={handleEmailChange}
         />
         <MuiInput
           name="password"
           type="password"
-          placeholder="비밀번호를 입력해주세요"
+          placeholder="password"
           value={password}
           onChange={handlePasswordChange}
         />

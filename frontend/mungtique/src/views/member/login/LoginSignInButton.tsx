@@ -43,7 +43,7 @@ export default function LoginSignInButton() {
           />
         </div>
       </div>
-      <div className="my-1">
+      <div className="my-5">
         <Link to="/join">
           <MuiButton
             color="primary"

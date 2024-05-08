@@ -5,7 +5,6 @@ import { Login } from "../types/login.interface";
 import { MailCheck } from "../types/mailcheck.interface";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER;
-console.log(basePath);
 
 // TODO : 반환타입 백엔드에서 dto로 변경해야함 (UserEntity X)
 
