@@ -40,6 +40,11 @@ public class JwtFilter extends OncePerRequestFilter {
         // 재로그인 무한 루프 오류 해결 (재로그인 -> JWT 만료시 거절 -> OAuth2 로그인 실패 -> 재요청의 무한루프)
         String requestUri = request.getRequestURI();
 
+        if (requestUri.matches("^\\/api\\/v1\\/(join|login|reissue|logout|mail-check|mail-send)(?:\\/.*)?$")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
@@ -48,7 +53,6 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
 
         // 시작
 

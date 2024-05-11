@@ -62,7 +62,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String email = obtainUsername(request);
         String password = obtainPassword(request);
 
-        log.info("email : {}, password : {}", email, password);
+        log.info("email : {}", email);
 
         // 스프링 시큐리티에서 user, pass 검증하기 위해서는 token에 담아야 함
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
@@ -92,8 +92,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 생성된 JWT 토큰을 Response Header에 담아서 클라이언트에 전달
         response.addHeader("Authorization", "Bearer " + token);*/
 
-        log.info("access, refresh 토큰 발급 성공!!");
-
         // 유저 정보
         CustomUserDetailsDTO customUserDetailsDTO = (CustomUserDetailsDTO) authentication.getPrincipal();
         String email = customUserDetailsDTO.getEmail();
@@ -115,6 +113,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", access); // access token : 응답 헤더에 넣고 front에서 받아서 local storage에 저장
         response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
+
+        log.info("access, refresh 토큰 후 front 전송");
+
     }
 
     private void addTokenEntity(String email, String refreshToken, Long expiredMs) {

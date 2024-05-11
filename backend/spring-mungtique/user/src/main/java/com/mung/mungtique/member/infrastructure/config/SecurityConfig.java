@@ -24,6 +24,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -73,9 +74,8 @@ public class SecurityConfig {
 
                                 configuration.setMaxAge(3600L); // 요청을 캐시할 수 있는 시간 (1시간)
 
-                                configuration.setExposedHeaders(Collections.singletonList("access")); // 응답헤더로 노출할 헤더
-                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-                                configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+                                configuration.setExposedHeaders(Arrays.asList("access", "Authorization", "Set-Cookie"));
+
                                 return configuration;
                             }
                         }));
