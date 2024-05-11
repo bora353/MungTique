@@ -52,13 +52,21 @@ export default function LoginForm({ onsubmit }: LoginProps) {
 
   return (
     <div className="m-5">
+      <MuiSnackbar
+        message={snackbarMessage}
+        severity={"error"}
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
+      />
       <form onSubmit={handleSubmit}>
-        <MuiInput
-          name="email"
-          placeholder="email"
-          value={email}
-          onChange={handleEmailChange}
-        />
+        <div className="mb-3">
+          <MuiInput
+            name="email"
+            placeholder="email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+        </div>
         <MuiInput
           name="password"
           type="password"
@@ -75,12 +83,6 @@ export default function LoginForm({ onsubmit }: LoginProps) {
           />
         </div>
       </form>
-      <MuiSnackbar
-        message={snackbarMessage}
-        severity={"error"}
-        open={openSnackbar}
-        onClose={() => setOpenSnackbar(false)}
-      />
     </div>
   );
 }

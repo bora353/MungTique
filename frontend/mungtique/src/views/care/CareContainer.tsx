@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { MungShop } from "../../shared/types/mungshop.interface";
 
 export default function CareContainer() {
+  // TODO : hook으로 빼고 전체적으로 정리하기!!
   const mapRef = useRef<HTMLDivElement>(null);
   const [selectedMarker, setSelectedMarker] = useState<string | null>(null);
   const [mungShops, setMungShops] = useState<MungShop[]>([]);
@@ -17,7 +18,7 @@ export default function CareContainer() {
   const [currentLongitude, setCurrentLongitude] = useState<number | null>(null);
 
   function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371e3; // 지구의 반지름 (단위: 미터)
+    const R = 6371e3;
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
     const a =
@@ -27,7 +28,7 @@ export default function CareContainer() {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // 거리 (단위: 미터)
+    const distance = R * c;
     return Math.round(distance);
   }
 
@@ -119,21 +120,14 @@ export default function CareContainer() {
       }
     }
   }, [mungShops]);
+
   return (
     <div>
       <MuiAppBar />
-      <div className="flex">
-        <div
-          ref={mapRef}
-          style={{
-            width: "70%",
-            height: "550px",
-          }}
-        ></div>
-
+      <div style={{ display: "flex" }}>
         {selectedMarker && (
-          <>
-            <Card sx={{ maxWidth: "30%" }}>
+          <div style={{ width: "30%", overflowY: "auto", maxHeight: "700px" }}>
+            <Card>
               <CardMedia
                 component="img"
                 alt="green iguana"
@@ -178,8 +172,18 @@ export default function CareContainer() {
                 <p style={{ color: "pink" }}>❤️ (DB? localStorage?)</p>
               </CardActions>
             </Card>
-          </>
+          </div>
         )}
+
+        <div style={{ width: selectedMarker ? "70%" : "100%" }}>
+          <div
+            ref={mapRef}
+            style={{
+              width: "100%",
+              height: "700px",
+            }}
+          ></div>
+        </div>
       </div>
     </div>
   );

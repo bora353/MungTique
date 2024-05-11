@@ -12,7 +12,7 @@ export default function MyPageContainer() {
     <div>
       <MuiAppBar />
       <div className="flex justify-center items-center min-h-screen">
-        <Link to="/login">
+        {/* <Link to="/login">
           <MuiButton
             color="info"
             type="button"
@@ -21,7 +21,7 @@ export default function MyPageContainer() {
           />
         </Link>
         <p>로그인은 로그인 상태일때 안 보이게~~</p>
-        <p>로그아웃은 로그인 상태일 때만 보이게!</p>
+        <p>로그아웃은 로그인 상태일 때만 보이게!</p> */}
         <MuiButton
           value="로그아웃"
           color="success"

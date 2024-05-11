@@ -38,6 +38,7 @@ const logout = async () => {
 
   console.log("access 삭제 예정 : " + localStorage.getItem("access"));
   localStorage.removeItem("access");
+  localStorage.clear();
 
   const response = await axios.post(`${basePath}/logout`, null, {
     withCredentials: true,

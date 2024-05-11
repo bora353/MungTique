@@ -12,17 +12,15 @@ export default function LoginContainer() {
   return (
     <div>
       <MuiAppBar />
-      <div className="flex justify-center items-center m-10">
+      <div className="flex justify-center items-center mt-3">
         <div className="text-center">
-          <div className="text-4xl text-blue-500 m-5 ">
-            <img
-              src="/images/logo2.png"
-              alt="뭉티끄"
-              width="250"
-              height="250"
-              className="mx-auto"
-            />
-          </div>
+          <img
+            src="/images/logo2.png"
+            alt="뭉티끄"
+            width="250"
+            className="mx-auto"
+          />
+
           <LoginForm onsubmit={handleLoginSubmit} />
           <LoginButton />
         </div>

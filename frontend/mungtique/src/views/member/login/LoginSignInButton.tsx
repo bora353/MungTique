@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import MuiButton from "../../../components/atomic/buttons/MuiButton";
-import axios from "axios";
 
 export default function LoginSignInButton() {
   const onNaverLogin = () => {
@@ -13,14 +12,19 @@ export default function LoginSignInButton() {
 
   return (
     <>
-      <div className="flex my-3 text-sm">
+      <div className="flex my-3 items-center">
         <div className="mx-8">
           <input type="checkbox" />
-          로그인 상태 유지
+          <span style={{ fontSize: "0.85rem" }}> 로그인 상태 유지</span>
         </div>
         <div>
           <Link to="/findinfo">
-            <Button color="primary">아이디/비밀번호 찾기</Button>
+            <Button color="primary" style={{ fontSize: "0.75rem" }}>
+              아이디 찾기
+            </Button>
+            <Button color="primary" style={{ fontSize: "0.75rem" }}>
+              비밀번호 찾기
+            </Button>
           </Link>
         </div>
       </div>
@@ -48,7 +52,7 @@ export default function LoginSignInButton() {
           <MuiButton
             color="primary"
             type="button"
-            value="10초 회원가입"
+            value="뭉티끄 10초 회원가입"
             variant="text"
           />
         </Link>
