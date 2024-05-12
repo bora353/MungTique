@@ -1,31 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useCareInfoQuery } from "../queries/care.query";
 
-export const useNaverMapHook = (lat1, lon1, lat2, lon2) => {
-  const [distance, setDistance] = useState(0);
+export const useNaverMapHook = () => {
+  const { isLoading, isError, data } = useCareInfoQuery();
 
-  function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371e3;
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return Math.round(distance);
-  }
+  const [currentPosition, setCurrentPosition] =
+    useState<GeolocationPosition | null>(null);
 
-  function deg2rad(deg) {
-    return deg * (Math.PI / 180);
-  }
+  const getCurrentPosition = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentPosition(position);
+        },
+        (error) => {
+          console.error("Error getting current position:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported.");
+    }
+  };
 
-  useEffect(() => {
-    const calculatedDistance = calculateDistance(lat1, lon1, lat2, lon2);
-    setDistance(calculatedDistance);
-  }, [lat1, lon1, lat2, lon2]);
-
-  return { distance };
+  return { mungShops: data, currentPosition, getCurrentPosition };
 };
