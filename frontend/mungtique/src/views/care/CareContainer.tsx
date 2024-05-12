@@ -8,35 +8,31 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { MungShop } from "../../shared/types/mungshop.interface";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Button } from "@mui/material";
+import { useNaverMapHook } from "../../shared/hooks/useNaverMap.hook";
+import NaverMap from "./NaverMap";
 
 export default function CareContainer() {
   // TODO : hook으로 빼고 전체적으로 정리하기!!
-  const mapRef = useRef<HTMLDivElement>(null);
   const [selectedMarker, setSelectedMarker] = useState<string | null>(null);
   const [mungShops, setMungShops] = useState<MungShop[]>([]);
-  const [currentLatitude, setCurrentLatitude] = useState<number | null>(null);
-  const [currentLongitude, setCurrentLongitude] = useState<number | null>(null);
+  const [currentPosition, setCurrentPosition] =
+    useState<GeolocationPosition | null>(null);
 
-  function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371e3;
-    const dLat = deg2rad(lat2 - lat1);
-    const dLon = deg2rad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return Math.round(distance);
-  }
+  const { distance } = useNaverMapHook(
+    selectedMarker?.latitude,
+    selectedMarker?.longitude,
+    currentPosition?.coords.latitude,
+    currentPosition?.coords.longitude
+  );
 
-  function deg2rad(deg) {
-    return deg * (Math.PI / 180);
-  }
+  const shopLikeHandler = () => {
+    alert("조아욧!");
+    // api 연결 및 하트 색 있고 없게 변경 필요
+  };
 
-  // TODO : 지도 로딩 시 default 위치에 있다가 현재 위치로 넘어가는 것 수정 필요
   const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
 
   const getMungShops = async () => {
@@ -48,85 +44,32 @@ export default function CareContainer() {
     }
   };
 
+  const getCurrentPosition = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentPosition(position);
+        },
+        (error) => {
+          console.error("Error getting current position:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported.");
+    }
+  };
+
   useEffect(() => {
     getMungShops();
+    getCurrentPosition();
   }, []);
-
-  useEffect(() => {
-    if (mapRef.current) {
-      const map = new naver.maps.Map(mapRef.current, {
-        center: new naver.maps.LatLng(37.5666805, 126.9784147),
-        zoom: 16,
-        mapTypeId: naver.maps.MapTypeId.NORMAL,
-      });
-
-      mungShops.forEach((shop) => {
-        const marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(shop.latitude, shop.longitude),
-          map: map,
-          title: shop.storeName,
-        });
-
-        naver.maps.Event.addListener(marker, "click", function (e) {
-          setSelectedMarker(shop);
-        });
-      });
-
-      const infowindow = new naver.maps.InfoWindow();
-
-      function onSuccessGeolocation(position: GeolocationPosition) {
-        const location = new naver.maps.LatLng(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-        map.setCenter(location);
-        map.setZoom(16);
-
-        setCurrentLatitude(position.coords.latitude);
-        setCurrentLongitude(position.coords.longitude);
-
-        infowindow.setContent(
-          '<div style="padding:10px;">' + "현재 위치" + "</div>"
-        );
-        infowindow.open(map, location);
-        console.log("Coordinates: " + location.toString());
-      }
-
-      function onErrorGeolocation() {
-        const center = map.getCenter();
-
-        infowindow.setContent(
-          '<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation failed!</h5>' +
-            "latitude: " +
-            center.lat() +
-            "<br />longitude: " +
-            center.lng() +
-            "</div>"
-        );
-        infowindow.open(map, center);
-      }
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          onSuccessGeolocation,
-          onErrorGeolocation
-        );
-      } else {
-        const center = map.getCenter();
-        infowindow.setContent(
-          '<div style="padding:20px;"><h5 style="margin-bottom:5px;color:#f00;">Geolocation not supported</h5></div>'
-        );
-        infowindow.open(map, center);
-      }
-    }
-  }, [mungShops]);
 
   return (
     <div>
       <MuiAppBar />
-      <div style={{ display: "flex" }}>
+      <div style={{ height: "91vh", display: "flex" }}>
         {selectedMarker && (
-          <div style={{ width: "30%", overflowY: "auto", maxHeight: "700px" }}>
+          <div style={{ width: "25%", overflowY: "auto", maxHeight: "100%" }}>
             <Card>
               <CardMedia
                 component="img"
@@ -139,13 +82,7 @@ export default function CareContainer() {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   <p style={{ fontWeight: "bold", color: "skyblue" }}>
-                    {calculateDistance(
-                      selectedMarker.latitude,
-                      selectedMarker.longitude,
-                      currentLatitude,
-                      currentLongitude
-                    )}
-                    m
+                    {distance}m
                   </p>
                   <p>{selectedMarker.starRating} ⭐⭐⭐⭐⭐ 하지말까</p>
                   <p style={{ fontWeight: "bold" }}>
@@ -169,20 +106,21 @@ export default function CareContainer() {
                   variant="contained"
                   value="예약하기"
                 />
-                <p style={{ color: "pink" }}>❤️ (DB? localStorage?)</p>
+                <Button onClick={shopLikeHandler}>
+                  <FavoriteIcon sx={{ color: "tomato" }} />
+                </Button>
+                <FavoriteBorderIcon sx={{ color: "tomato" }} />
               </CardActions>
             </Card>
           </div>
         )}
 
-        <div style={{ width: selectedMarker ? "70%" : "100%" }}>
-          <div
-            ref={mapRef}
-            style={{
-              width: "100%",
-              height: "700px",
-            }}
-          ></div>
+        <div style={{ width: selectedMarker ? "75%" : "100%" }}>
+          <NaverMap
+            currentPosition={currentPosition}
+            mungShops={mungShops}
+            setSelectedMarker={setSelectedMarker}
+          />
         </div>
       </div>
     </div>

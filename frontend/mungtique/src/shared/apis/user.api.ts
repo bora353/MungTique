@@ -25,6 +25,7 @@ const login = async (loginDTO: Login) => {
     if (response.status === 200) {
       console.log(response);
       const accessToken = response.headers["access"];
+      const authToken = response.headers["Authorization"];
       console.log("access Token:", accessToken);
       localStorage.setItem("access", accessToken);
     }

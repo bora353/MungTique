@@ -11,6 +11,7 @@ import MyPageContainer from "./views/member/mypage/MyPageContainer";
 
 function App() {
   // TODO : zustand로 변경!
+  // TODO : 지금 새로고침 해야만 적용이 됨...
   const isLoggedIn = !!localStorage.getItem("access");
   console.log("App.tsx 로그인체크 :" + isLoggedIn);
 
