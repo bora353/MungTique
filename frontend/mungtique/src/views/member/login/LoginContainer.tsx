@@ -2,7 +2,6 @@ import LoginButton from "./LoginSignInButton";
 import LoginForm from "./LoginForm";
 import { Login } from "../../../shared/types/login.interface";
 import { useLoginViewModelHook } from "../../../shared/hooks/useLoginViewModel.hook";
-import MuiAppBar from "../../../components/atomic/bar/MuiAppBar";
 
 export default function LoginContainer() {
   // TODO : Hook, mutate 사용
@@ -11,7 +10,6 @@ export default function LoginContainer() {
 
   return (
     <div>
-      <MuiAppBar />
       <div className="flex justify-center items-center mt-3">
         <div className="text-center">
           <img

@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import MuiAppBar from "../../../components/atomic/bar/MuiAppBar";
 import MuiButton from "../../../components/atomic/buttons/MuiButton";
 import { useLogoutViewModelHook } from "../../../shared/hooks/useLogoutViewModel.hook";
 
@@ -10,7 +8,6 @@ export default function MyPageContainer() {
 
   return (
     <div>
-      <MuiAppBar />
       <div className="flex justify-center items-center min-h-screen">
         {/* <Link to="/login">
           <MuiButton

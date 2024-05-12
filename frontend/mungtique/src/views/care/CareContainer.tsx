@@ -1,6 +1,4 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import MuiAppBar from "../../components/atomic/bar/MuiAppBar";
 import { useCalculateDistance } from "../../shared/hooks/useCalculateDistance.hook";
 import { useNaverMapHook } from "../../shared/hooks/useNaverMap.hook";
 import { MungShop } from "../../shared/types/mungshop.interface";
@@ -29,7 +27,6 @@ export default function CareContainer() {
 
   return (
     <div>
-      <MuiAppBar />
       <div style={{ height: "91vh", display: "flex" }}>
         {selectedMarker && (
           <MapMarkerInfo

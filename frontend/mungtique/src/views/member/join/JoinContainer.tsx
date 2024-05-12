@@ -1,4 +1,3 @@
-import MuiAppBar from "../../../components/atomic/bar/MuiAppBar";
 import { useJoinViewModelHook } from "../../../shared/hooks/useJoinViewModel.hook";
 import { Join } from "../../../shared/types/join.interface";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
@@ -12,7 +11,6 @@ export default function JoinContainer() {
 
   return (
     <div>
-      <MuiAppBar />
       <div className="flex justify-center items-center min-h-screen bg-blue-100">
         <div className="text-center">
           <h1 className="text-4xl text-blue-500">회원가입</h1>
