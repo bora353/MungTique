@@ -3,6 +3,7 @@ import { Join } from "../types/join.interface";
 import { UserEntity } from "../types/user.interface";
 import { Login } from "../types/login.interface";
 import { MailCheck } from "../types/mailcheck.interface";
+import { useLoginStore } from "../stores/login.store";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER;
 
@@ -12,6 +13,8 @@ const join = async (joinDTO: Join) =>
   await axios.post<UserEntity>(basePath + "/join", joinDTO);
 
 const login = async (loginDTO: Login) => {
+  console.log("로그인api");
+
   const formData = new FormData();
   formData.append("email", loginDTO.email);
   formData.append("password", loginDTO.password);
@@ -25,7 +28,6 @@ const login = async (loginDTO: Login) => {
     if (response.status === 200) {
       console.log(response);
       const accessToken = response.headers["access"];
-      const authToken = response.headers["Authorization"];
       console.log("access Token:", accessToken);
       localStorage.setItem("access", accessToken);
     }

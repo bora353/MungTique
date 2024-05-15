@@ -41,7 +41,7 @@ export default function NaverMap({
         map.setZoom(16);
 
         infowindow.setContent(
-          '<div style="padding:10px;">' + "현재 위치" + "</div>"
+          '<div style="padding:10px;">' + "현위치" + "</div>"
         );
         infowindow.open(map, location);
         console.log("Coordinates: " + location.toString());

@@ -20,13 +20,14 @@ export default function MapMarkerInfo({
   distance,
   shopLikeHandler,
 }: MarkerInfoProps) {
+  console.log(selectedMarker);
   return (
     <div style={{ width: "25%", overflowY: "auto", maxHeight: "100%" }}>
       <Card>
         <CardMedia
           component="img"
-          alt="green iguana"
-          image="/images/mungtique.jpg"
+          image={selectedMarker?.filePath}
+          sx={{ height: 420 }}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

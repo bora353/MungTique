@@ -1,13 +1,19 @@
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import MuiButton from "../../../components/atomic/buttons/MuiButton";
+import { useLoginStore } from "../../../shared/stores/login.store";
 
 export default function LoginSignInButton() {
+  const { setIsLogin } = useLoginStore();
+
+  // TODO : url 환경변수로 빼기
   const onNaverLogin = () => {
     window.location.href = "http://localhost:8082/oauth2/authorization/naver";
+    setIsLogin(true);
   };
   const onKakaoLogin = () => {
     window.location.href = "http://localhost:8082/oauth2/authorization/kakao";
+    setIsLogin(true);
   };
 
   return (

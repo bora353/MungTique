@@ -4,6 +4,7 @@ import MuiButton from "../../../components/atomic/buttons/MuiButton";
 import { Login } from "../../../shared/types/login.interface";
 import MuiSnackbar from "../../../components/atomic/snackbar/MuiSnackbar";
 import { useNavigate } from "react-router-dom";
+import { useLoginStore } from "../../../shared/stores/login.store";
 
 interface LoginProps {
   onsubmit: (loginDTO: Login) => void;
@@ -11,6 +12,7 @@ interface LoginProps {
 
 export default function LoginForm({ onsubmit }: LoginProps) {
   const navigate = useNavigate();
+  const { setIsLogin } = useLoginStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,6 +45,7 @@ export default function LoginForm({ onsubmit }: LoginProps) {
     try {
       console.log("loginDTO", loginDTO);
       onsubmit(loginDTO);
+      setIsLogin(true); // 로그인 상태 유지
       navigate("/");
     } catch (error) {
       setSnackbarMessage("로그인에 실패했습니다.");

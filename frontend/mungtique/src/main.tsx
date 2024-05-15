@@ -17,15 +17,13 @@ const queryClient = new QueryClient();
 // TODO : SnackbarProvider도 여기에 적용할 수 있으니 알아볼 것
 
 root.render(
-  <React.StrictMode>
-    {/*     <ThemeProvider theme={theme}>
-     */}{" "}
-    <QueryClientProvider client={queryClient}>
-      <CookiesProvider>
-        <App />
-      </CookiesProvider>
-    </QueryClientProvider>
-    {/*     </ThemeProvider>
-     */}{" "}
-  </React.StrictMode>
+  //  <React.StrictMode>
+  //<ThemeProvider theme={theme}>
+  <QueryClientProvider client={queryClient}>
+    <CookiesProvider>
+      <App />
+    </CookiesProvider>
+  </QueryClientProvider>
+  // </ThemeProvider>
+  //  </React.StrictMode>
 );
