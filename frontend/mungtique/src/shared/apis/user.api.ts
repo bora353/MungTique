@@ -3,7 +3,6 @@ import { Join } from "../types/join.interface";
 import { UserEntity } from "../types/user.interface";
 import { Login } from "../types/login.interface";
 import { MailCheck } from "../types/mailcheck.interface";
-import { useLoginStore } from "../stores/login.store";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER;
 
@@ -13,8 +12,6 @@ const join = async (joinDTO: Join) =>
   await axios.post<UserEntity>(basePath + "/join", joinDTO);
 
 const login = async (loginDTO: Login) => {
-  console.log("로그인api");
-
   const formData = new FormData();
   formData.append("email", loginDTO.email);
   formData.append("password", loginDTO.password);
@@ -30,6 +27,10 @@ const login = async (loginDTO: Login) => {
       const accessToken = response.headers["access"];
       console.log("access Token:", accessToken);
       localStorage.setItem("access", accessToken);
+
+      // 서버 응답에서 userId 추출
+      const userId = response.data.userId;
+      localStorage.setItem("userId", userId);
     }
   } catch (error) {
     console.log(error);
@@ -41,6 +42,7 @@ const logout = async () => {
 
   console.log("access 삭제 예정 : " + localStorage.getItem("access"));
   localStorage.removeItem("access");
+  localStorage.removeItem("userId");
   localStorage.clear();
 
   const response = await axios.post(`${basePath}/logout`, null, {

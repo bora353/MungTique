@@ -1,26 +1,23 @@
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { Button } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import MuiButton from "../../components/atomic/buttons/MuiButton";
-import { MungShop } from "../../shared/types/mungshop.interface";
+import MuiButton from "../../../components/atomic/buttons/MuiButton";
+import { MungShop } from "../../../shared/types/mungshop.interface";
+import ShopLike from "./ShopLike";
 
 interface MarkerInfoProps {
-  selectedMarker: MungShop | null;
+  selectedMarker: MungShop;
   distance: number;
-  shopLikeHandler: () => void;
 }
 
 export default function MapMarkerInfo({
   selectedMarker,
   distance,
-  shopLikeHandler,
 }: MarkerInfoProps) {
   console.log(selectedMarker);
+
   return (
     <div style={{ width: "25%", overflowY: "auto", maxHeight: "100%" }}>
       <Card>
@@ -44,7 +41,7 @@ export default function MapMarkerInfo({
             </p>
             <p style={{ fontWeight: "bold" }}>
               휴무일: {selectedMarker?.closingDays}
-            </p>{" "}
+            </p>
             <p>가능한 견종: {selectedMarker?.breeds}</p>
             <p>실제 강아지들 미용한 사진 / 후기</p>
             <p>가격(따로 DB??)</p>
@@ -57,10 +54,8 @@ export default function MapMarkerInfo({
             variant="contained"
             value="예약하기"
           />
-          <Button onClick={shopLikeHandler}>
-            <FavoriteIcon sx={{ color: "tomato" }} />
-          </Button>
-          <FavoriteBorderIcon sx={{ color: "tomato" }} />
+
+          <ShopLike mungShopId={selectedMarker.id} />
         </CardActions>
       </Card>
     </div>

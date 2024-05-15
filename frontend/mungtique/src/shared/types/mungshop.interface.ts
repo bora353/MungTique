@@ -1,4 +1,5 @@
 export interface MungShop {
+  id?: number;
   latitude: number;
   longitude: number;
   storeName: string;
@@ -7,4 +8,10 @@ export interface MungShop {
   businessHours: string;
   closingDays: string;
   filePath: string;
+}
+
+export interface MungShopLike {
+  mungShopLikeId: number;
+  mungShopId: number;
+  userId: number;
 }

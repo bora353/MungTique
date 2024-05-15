@@ -1,16 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-/* interface UserState {
-  isLoggedIn: boolean;
-}
-
-const useStore = createStore<UserState>((set) => ({
-  isLoggedIn: !!localStorage.getItem("access"),
-}));
-
-export default useStore; */
-
 /**
  * Store Interface는 State/Reducer로 작성해 주세요.
  

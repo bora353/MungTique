@@ -13,7 +13,7 @@ interface JoinProps {
   verifyEmail: (mailDTO: MailCheck) => void;
 }
 
-export default function JoinForm({ onsubmit, verifyEmail }: JoinProps) {
+export default function JoinForm({ onsubmit }: JoinProps) {
   const navigate = useNavigate();
 
   const [joinForm, setJoinForm] = useState({

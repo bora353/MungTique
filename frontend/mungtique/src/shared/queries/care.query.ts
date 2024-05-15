@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { MungShop } from "../types/mungshop.interface";
 import { careApi } from "../apis/care.api";
 
@@ -13,3 +13,12 @@ export const useCareInfoQuery = () => {
     },
   });
 };
+
+/* export const useLikeMungShopMutation = () => {
+  return useMutation({
+    mutationFn: async (mungShopId: number, userId: number) => {
+      const { data } = await careApi.postLikeMungShop(mungShopId, userId);
+      return data;
+    },
+  });
+}; */

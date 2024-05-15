@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useCalculateDistance } from "../../shared/hooks/useCalculateDistance.hook";
-import { useNaverMapHook } from "../../shared/hooks/useNaverMap.hook";
-import { MungShop } from "../../shared/types/mungshop.interface";
+import { useCalculateDistance } from "../../../shared/hooks/useCalculateDistance.hook";
+import { useNaverMapHook } from "../../../shared/hooks/useNaverMap.hook";
+import { MungShop } from "../../../shared/types/mungshop.interface";
 import MapMarkerInfo from "./MapMarkerInfo";
 import NaverMap from "./NaverMap";
 
@@ -16,11 +16,6 @@ export default function CareContainer() {
     currentPosition?.coords.longitude
   );
 
-  const shopLikeHandler = () => {
-    alert("조아욧!");
-    // api 연결 및 하트 색 있고 없게 변경 필요
-  };
-
   useEffect(() => {
     getCurrentPosition();
   }, [mungShops]);
@@ -29,11 +24,7 @@ export default function CareContainer() {
     <div>
       <div style={{ height: "91vh", display: "flex" }}>
         {selectedMarker && (
-          <MapMarkerInfo
-            selectedMarker={selectedMarker}
-            distance={distance}
-            shopLikeHandler={shopLikeHandler}
-          />
+          <MapMarkerInfo selectedMarker={selectedMarker} distance={distance} />
         )}
 
         <div style={{ width: selectedMarker ? "75%" : "100%" }}>

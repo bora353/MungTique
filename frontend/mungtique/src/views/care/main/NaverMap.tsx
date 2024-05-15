@@ -1,10 +1,17 @@
 import { useEffect, useRef } from "react";
+import { MungShop } from "../../../shared/types/mungshop.interface";
+
+interface NaverMapProps {
+  currentPosition: GeolocationPosition | null;
+  mungShops: MungShop[] | undefined;
+  setSelectedMarker: (shop: MungShop) => void;
+}
 
 export default function NaverMap({
   currentPosition,
   mungShops,
   setSelectedMarker,
-}) {
+}: NaverMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

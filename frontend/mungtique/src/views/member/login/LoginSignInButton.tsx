@@ -28,6 +28,8 @@ export default function LoginSignInButton() {
             <Button color="primary" style={{ fontSize: "0.75rem" }}>
               아이디 찾기
             </Button>
+          </Link>
+          <Link to="/findinfo">
             <Button color="primary" style={{ fontSize: "0.75rem" }}>
               비밀번호 찾기
             </Button>
