@@ -37,6 +37,10 @@ public class CustomUserDetailsDTO implements UserDetails {
         return user.getUsername();
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
     public String getEmail() {
         return user.getEmail();
     }

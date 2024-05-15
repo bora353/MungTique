@@ -1,5 +1,6 @@
 package com.mung.mungtique.member.infrastructure.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mung.mungtique.member.adaptor.in.web.dto.CustomUserDetailsDTO;
 import com.mung.mungtique.member.application.port.out.TokenRepoPort;
 import com.mung.mungtique.member.domain.Token;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -95,6 +98,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 유저 정보
         CustomUserDetailsDTO customUserDetailsDTO = (CustomUserDetailsDTO) authentication.getPrincipal();
         String email = customUserDetailsDTO.getEmail();
+        Long userId = customUserDetailsDTO.getUserId();
 
         // role
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -113,6 +117,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", access); // access token : 응답 헤더에 넣고 front에서 받아서 local storage에 저장
         response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
+
+        // TODO : 맞는 방법인지 고민 (userId 보냄)
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(Collections.singletonMap("userId", userId));
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(jsonResponse);
 
         log.info("access, refresh 토큰 후 front 전송");
 

@@ -39,5 +39,7 @@ public class MungShop {
     @Column(length = 30)
     private String longitude;
 
+    @Column(length = 200)
+    private String filePath;
 
 }
