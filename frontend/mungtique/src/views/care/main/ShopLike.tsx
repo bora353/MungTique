@@ -20,7 +20,6 @@ export default function ShopLike({ mungShopId }) {
           }
         );
         setIsLiked(response.data);
-        console.log("과연? " + isLiked);
       } catch (error) {
         console.error("Error fetching like status:", error);
       }

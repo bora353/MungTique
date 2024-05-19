@@ -10,7 +10,6 @@ import axios from "axios";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
-  verifyEmail: (mailDTO: MailCheck) => void;
 }
 
 export default function JoinForm({ onsubmit }: JoinProps) {
@@ -181,7 +180,7 @@ export default function JoinForm({ onsubmit }: JoinProps) {
         />
         <div className="m-3">
           <MuiButton
-            value="회원가입"
+            value="완료"
             variant={"contained"}
             color={"primary"}
             type={"submit"}

@@ -52,7 +52,7 @@ const logout = async () => {
   console.log(response);
 };
 
-const mailCheck = async (mailDTO: MailCheck): Promise<string> => {
+const mailCheck = async (mailDTO: MailCheck) => {
   try {
     const response = await axios.post<string>(`${basePath}/mail-send`, mailDTO);
     return response.data;

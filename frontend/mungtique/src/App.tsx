@@ -30,7 +30,7 @@ function App() {
             <Route path="/shop" element={<ShopContainer />} />
 
             {/* <Route path="/mypage" element={<MyPageContainer />} /> */}
-            <Route path="/mymung" element={<MyMungContainer />} />
+            {/* <Route path="/mymung" element={<MyMungContainer />} /> */}
             <Route path="/reservation" element={<ReservationContainer />} />
 
             {isLogin ? (
@@ -38,7 +38,7 @@ function App() {
                 <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
                 <Route path="/findinfo" element={<FindInfoContainer />} />
                 {<Route path="/mypage" element={<MyPageContainer />} />}
-                {/* <Route path="/mymung" element={<MyMungContainer />} /> */}
+                <Route path="/mymung" element={<MyMungContainer />} />
                 {/* <Route path="/reservation" element={<ReservationContainer />} /> */}
               </>
             ) : null}
