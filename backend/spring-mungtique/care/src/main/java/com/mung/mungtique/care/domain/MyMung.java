@@ -40,4 +40,7 @@ public class MyMung {
     @Column(length = 20)
     private Long userId;
 
+    @OneToOne(mappedBy = "myMung", fetch = FetchType.LAZY)
+    private Image image;
+
 }

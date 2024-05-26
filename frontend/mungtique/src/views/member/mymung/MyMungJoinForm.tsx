@@ -84,6 +84,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        <p>첨부파일로 강아지 이미지 등록도 가능하게!</p>
         <MuiInput
           name="mungName"
           placeholder="반려뭉 이름"
