@@ -12,6 +12,7 @@ import ShopContainer from "./views/shop/ShopContainer";
 import { useLoginStore } from "./shared/stores/login.store";
 import MyMungContainer from "./views/member/mymung/MyMungContainer";
 import ReservationContainer from "./views/care/reservation/ReservationContainer";
+import MyMungImageContainer from "./views/member/mymung/MyMungImageContainer";
 
 function App() {
   const { isLogin } = useLoginStore();
@@ -32,6 +33,7 @@ function App() {
             {/* <Route path="/mypage" element={<MyPageContainer />} /> */}
             {/* <Route path="/mymung" element={<MyMungContainer />} /> */}
             <Route path="/reservation" element={<ReservationContainer />} />
+            <Route path="/mungimage" element={<MyMungImageContainer />} />
 
             {isLogin ? (
               <>
@@ -40,6 +42,7 @@ function App() {
                 {<Route path="/mypage" element={<MyPageContainer />} />}
                 <Route path="/mymung" element={<MyMungContainer />} />
                 {/* <Route path="/reservation" element={<ReservationContainer />} /> */}
+                {/* <Route path="/mungimage" element={<MyMungImageContainer />} /> */}
               </>
             ) : null}
           </Route>
