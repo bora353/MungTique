@@ -1,0 +1,32 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+  #    defer-datasource-initialization: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: password
+
+  #  sql:
+  #    init:
+  #      mode: always
+
+#  kafka:
+#    producer:
+#      bootstrap-servers: localhost:9092
+#    consumer:
+#      auto-offset-reset: earliest
+#      bootstrap-servers: localhost:9092
+#      enable-auto-commit: true
+#    bootstrap-servers: localhost:9092
+
+logging:
+  config: classpath:log4j2.yml
