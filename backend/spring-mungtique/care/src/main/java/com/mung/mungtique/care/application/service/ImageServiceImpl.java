@@ -32,13 +32,13 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageUploadRes upload(ImageUploadReq imageUploadReq) throws IOException {
         Long mungId = imageUploadReq.mungId();
+        MultipartFile file = imageUploadReq.file();
         Optional<MyMung> myMung = mungPort.findByid(mungId);
 
         if (myMung.isEmpty()) {
             throw new IllegalArgumentException("Invalid mungId");
         }
 
-        MultipartFile file = imageUploadReq.file();
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + file.getOriginalFilename();
 
