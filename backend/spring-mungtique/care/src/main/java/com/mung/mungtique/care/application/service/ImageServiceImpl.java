@@ -1,7 +1,7 @@
 package com.mung.mungtique.care.application.service;
 
-import com.mung.mungtique.care.adaptor.in.web.dto.ImageUploadReq;
-import com.mung.mungtique.care.adaptor.in.web.dto.ImageUploadRes;
+import com.mung.mungtique.care.adaptor.in.web.dto.image.ImageUploadReq;
+import com.mung.mungtique.care.adaptor.in.web.dto.image.ImageUploadRes;
 import com.mung.mungtique.care.application.port.in.ImageService;
 import com.mung.mungtique.care.application.port.out.ImagePort;
 import com.mung.mungtique.care.application.port.out.MungPort;
@@ -42,6 +42,7 @@ public class ImageServiceImpl implements ImageService {
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + file.getOriginalFilename();
 
+        // TODO : S3 서버 사용하자
         File destinationFile = new File(uploadFolder + imageFileName);
         log.info("destinationFile : {}", destinationFile);
 

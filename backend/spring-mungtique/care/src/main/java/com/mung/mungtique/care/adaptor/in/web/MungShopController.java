@@ -1,7 +1,7 @@
 package com.mung.mungtique.care.adaptor.in.web;
 
-import com.mung.mungtique.care.adaptor.in.web.dto.MungShopLikeReq;
-import com.mung.mungtique.care.adaptor.in.web.dto.MungShopRes;
+import com.mung.mungtique.care.adaptor.in.web.dto.mungshop.MungShopLikeReq;
+import com.mung.mungtique.care.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.care.application.port.in.MungShopService;
 import com.mung.mungtique.care.domain.MungShopLike;
 import lombok.RequiredArgsConstructor;

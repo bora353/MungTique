@@ -5,21 +5,27 @@ import com.mung.mungtique.care.domain.MyMung;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class MungRepoAdaptor implements MungPort {
 
-    private final MungJoinRepo mungJoinRepo;
+    private final MungRepo mungRepo;
 
     @Override
     public MyMung join(MyMung myMung) {
-        return mungJoinRepo.save(myMung);
+        return mungRepo.save(myMung);
     }
 
     @Override
     public Optional<MyMung> findByid(Long mungId) {
-        return mungJoinRepo.findById(mungId);
+        return mungRepo.findById(mungId);
+    }
+
+    @Override
+    public List<MyMung> findByUserId(Long userId) {
+        return mungRepo.findByUserId(userId);
     }
 }

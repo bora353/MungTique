@@ -1,4 +1,4 @@
-package com.mung.mungtique.care.adaptor.in.web.dto;
+package com.mung.mungtique.care.adaptor.in.web.dto.image;
 
 import lombok.Builder;
 

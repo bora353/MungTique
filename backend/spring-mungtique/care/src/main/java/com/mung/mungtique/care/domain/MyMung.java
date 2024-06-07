@@ -40,7 +40,7 @@ public class MyMung {
     @Column(length = 20)
     private Long userId;
 
-    @OneToOne(mappedBy = "myMung", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "myMung", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Image image;
 
 }

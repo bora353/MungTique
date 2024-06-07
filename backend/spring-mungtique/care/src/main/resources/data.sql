@@ -8,4 +8,5 @@ VALUES
 
 INSERT INTO mymung (mungName, breed, weight, age, gender, fixed, userId)
 VALUES
-    ('싼쵸', '치와와', 4, 5, '수컷', 'Yes', 1);
+    ('싼쵸', '치와와', 4, 5, '수컷', 'Yes', 1),
+    ('코코', '말티푸', 2, 1, '암컷', 'No', 1);
