@@ -55,7 +55,7 @@ export default function MapMarkerInfo({
             value="예약하기"
           />
 
-          <ShopLike mungShopId={selectedMarker.id} />
+          <ShopLike mungShopId={selectedMarker?.mungShopId} />
         </CardActions>
       </Card>
     </div>

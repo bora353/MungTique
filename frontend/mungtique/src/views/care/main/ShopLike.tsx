@@ -5,7 +5,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { MungShopLike } from "../../../shared/types/mungshop.interface";
 
-export default function ShopLike({ mungShopId }) {
+interface ShopLikeProps {
+  mungShopId: number;
+}
+
+export default function ShopLike({ mungShopId }: ShopLikeProps) {
   const [isLiked, setIsLiked] = useState(false);
   const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
   const userId = localStorage.getItem("userId");

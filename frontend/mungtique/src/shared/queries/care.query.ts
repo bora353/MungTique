@@ -9,6 +9,7 @@ export const useCareInfoQuery = () => {
     // 서버에 API 요청하는 코드
     queryFn: async () => {
       const { data } = await careApi.getMungShops();
+      console.log(data);
       return data;
     },
   });

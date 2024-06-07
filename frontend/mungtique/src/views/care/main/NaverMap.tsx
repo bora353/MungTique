@@ -25,7 +25,7 @@ export default function NaverMap({
         mapTypeId: naver.maps.MapTypeId.NORMAL,
       });
 
-      mungShops.forEach((shop) => {
+      mungShops?.forEach((shop) => {
         const marker = new naver.maps.Marker({
           position: new naver.maps.LatLng(shop.latitude, shop.longitude),
           map: map,
