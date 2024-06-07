@@ -39,7 +39,12 @@ export default function MyMungImageForm() {
     try {
       const response = await axios.post(
         `${basePath}/care/upload-image`,
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       setMessage("Image uploaded successfully");
       console.log(response.data);
