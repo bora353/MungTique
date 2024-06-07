@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import MuiButton from "../../../components/atomic/buttons/MuiButton";
 import { useLogoutViewModelHook } from "../../../shared/hooks/useLogoutViewModel.hook";
 import { useLoginStore } from "../../../shared/stores/login.store";
+import MyMungContainer from "../mymung/MyMungContainer";
 
 export default function MyPageContainer() {
   // TODO : Hook, mutate 사용
@@ -19,7 +20,9 @@ export default function MyPageContainer() {
     <div>
       <div className="flex justify-center items-center min-h-screen">
         <div className="flex flex-col items-center">
-          <p>등록한 강아지 목록 Card로</p>
+          <div>
+            <MyMungContainer />
+          </div>
           <Link to="/mymung">
             <MuiButton
               value="반려뭉 등록"

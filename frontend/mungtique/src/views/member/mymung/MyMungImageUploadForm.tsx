@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function MyMungImageForm() {
+export default function MyMungImageUploadForm() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");

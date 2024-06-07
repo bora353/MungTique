@@ -1,6 +1,6 @@
-import MyMungImageForm from "./MyMungImageForm";
+import MyMungImageForm from "./MyMungImageUploadForm";
 
-export default function MyMungImageContainer() {
+export default function MyMungImageUploadContainer() {
   // TODO : Hook, mutate 사용
 
   return (
