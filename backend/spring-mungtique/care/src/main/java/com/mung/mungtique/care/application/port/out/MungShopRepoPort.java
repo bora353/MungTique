@@ -11,7 +11,9 @@ public interface MungShopRepoPort {
 
     MungShopLike save(MungShopLike mungShopLike);
 
-    Optional<MungShopLike> findByMungShopIdAndUserId(Long mungShopId, Long userId);
+    Optional<MungShopLike> findByMungShopMungShopIdAndUserId(Long mungShopId, Long userId);
 
     void delete(MungShopLike mungShopLike);
+
+    Optional<MungShop> findById(Long mungShopId);
 }

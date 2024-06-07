@@ -37,7 +37,7 @@ public class MungServiceImpl implements MungService {
         List<MungRes> mungResList = mapper.domainListToDtoList(byUserId);
 
         for (MungRes mungRes : mungResList) {
-            if (mungRes.getImage() == null) continue;
+            if (mungRes.getImage() == null) continue; // TODO : default image 나오게
 
             String[] split = mungRes.getImage().url().split("/");
             String realImageUrl = split[split.length - 1];

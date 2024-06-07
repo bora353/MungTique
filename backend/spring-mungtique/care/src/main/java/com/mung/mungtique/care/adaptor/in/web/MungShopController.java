@@ -1,6 +1,7 @@
 package com.mung.mungtique.care.adaptor.in.web;
 
 import com.mung.mungtique.care.adaptor.in.web.dto.mungshop.MungShopLikeReq;
+import com.mung.mungtique.care.adaptor.in.web.dto.mungshop.MungShopLikeRes;
 import com.mung.mungtique.care.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.care.application.port.in.MungShopService;
 import com.mung.mungtique.care.domain.MungShopLike;
@@ -34,7 +35,7 @@ public class MungShopController {
     }
 
     @PostMapping("/care/mungshop-like")
-    public ResponseEntity<MungShopLike> likeMungShop(@RequestBody MungShopLikeReq mungShopLikeReq) {
+    public ResponseEntity<MungShopLikeRes> likeMungShop(@RequestBody MungShopLikeReq mungShopLikeReq) {
 
         log.info("Like MungShop" + mungShopLikeReq);
         return ResponseEntity.ok(mungShopService.likeMungShop(mungShopLikeReq));

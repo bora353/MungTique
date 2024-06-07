@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "mung_shop")
 @Getter
@@ -16,7 +18,7 @@ public class MungShop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long mungShopId;
 
     @Column(length = 20)
     private String storeName;
@@ -42,4 +44,9 @@ public class MungShop {
     @Column(length = 200)
     private String filePath;
 
+    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL)
+    private List<MungShopPrice> prices;
+
+    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL)
+    private List<MungShopLike> likes;
 }

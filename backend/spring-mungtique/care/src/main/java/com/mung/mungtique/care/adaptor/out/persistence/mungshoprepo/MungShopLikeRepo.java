@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface MungShopLikeRepo extends JpaRepository<MungShopLike, Long> {
 
-    Optional<MungShopLike> findByMungShopIdAndUserId(Long mungShopId, Long userId);
+    Optional<MungShopLike> findByMungShopMungShopIdAndUserId(Long mungShopId, Long userId);
 
 }

@@ -16,7 +16,6 @@ public class MungShopRepoAdaptor implements MungShopRepoPort {
     private final MungShopRepo mungShopRepo;
     private final MungShopLikeRepo mungShopLikeRepo;
 
-
     @Override
     public List<MungShop> findAll() {
         return mungShopRepo.findAll();
@@ -28,12 +27,17 @@ public class MungShopRepoAdaptor implements MungShopRepoPort {
     }
 
     @Override
-    public Optional<MungShopLike> findByMungShopIdAndUserId(Long mungShopId, Long userId) {
-        return mungShopLikeRepo.findByMungShopIdAndUserId(mungShopId, userId);
+    public Optional<MungShopLike> findByMungShopMungShopIdAndUserId(Long mungShopId, Long userId) {
+        return mungShopLikeRepo.findByMungShopMungShopIdAndUserId(mungShopId, userId);
     }
 
     @Override
     public void delete(MungShopLike mungShopLike) {
         mungShopLikeRepo.delete(mungShopLike);
+    }
+
+    @Override
+    public Optional<MungShop> findById(Long mungShopId) {
+        return mungShopRepo.findById(mungShopId);
     }
 }

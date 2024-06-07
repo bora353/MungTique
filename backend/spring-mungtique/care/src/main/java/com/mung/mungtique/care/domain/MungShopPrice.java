@@ -7,22 +7,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "mung_shop_like")
+@Table(name = "mung_shop_price")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MungShopLike {
+public class MungShopPrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mungShopLikeId;
+    private Long mungShopPriceId;
+
+    @Column(length = 100)
+    private String breeds;
+
+    @Column(length = 50)
+    private String serviceType;
+
+    @Column(length = 20)
+    private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mung_shop_id")
     private MungShop mungShop;
-
-    @Column(name = "user_id")
-    private Long userId;
-
 }
