@@ -1,10 +1,11 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
-import com.mung.mungtique.user.adaptor.in.web.dto.JoinDTO;
-import com.mung.mungtique.user.domain.User;
+import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
+import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
 import com.mung.mungtique.user.application.port.in.JoinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,13 @@ public class JoinController {
     private final JoinService joinService;
 
     @PostMapping("/join")
-    public ResponseEntity<User> joinProcess(@RequestBody JoinDTO joinDTO){
-        User user = joinService.joinProcess(joinDTO);
-        return ResponseEntity.ok().body(user);
-    }
+    public ResponseEntity<JoinRes> registerUser(@RequestBody JoinReq joinReq){
+        JoinRes joinRes = joinService.registerUser(joinReq);
 
+        if (joinRes == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        } else {
+            return ResponseEntity.ok(joinRes);
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
-import com.mung.mungtique.user.adaptor.in.web.dto.JoinDTO;
+import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class JoinControllerTest {
     @DisplayName("/join으로 JoinDTO를 Post방식으로 보내면 회원가입할 수 있다")
     void joinProcessTest() {
         // given
-        JoinDTO joinDTO = JoinDTO.builder()
+        JoinReq joinReq = JoinReq.builder()
                             .username("bora")
                             .password("1234")
                             .passwordCheck("1234")
@@ -35,7 +35,7 @@ public class JoinControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<JoinDTO> requestEntity = new HttpEntity<>(joinDTO, headers);
+        HttpEntity<JoinReq> requestEntity = new HttpEntity<>(joinReq, headers);
 
         // when
         ResponseEntity<User> responseEntity = restTemplate.postForEntity("/api/v1/join", requestEntity, User.class);
