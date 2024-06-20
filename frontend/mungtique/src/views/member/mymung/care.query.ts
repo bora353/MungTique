@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { MungShop } from "../types/mungshop.interface";
-import { careApi } from "../apis/care.api";
+import { MungShop } from "../../../shared/types/mungshop.interface";
+import { careApi } from "./care.api";
 
-export const useCareInfoQuery = () => {
+/* export const useCareInfoQuery = () => {
   return useQuery<MungShop[]>({
     // useQuery마다 부여되는 고유 Key
     queryKey: ["mungShop"],
@@ -13,7 +13,7 @@ export const useCareInfoQuery = () => {
       return data;
     },
   });
-};
+}; */
 
 /* export const useLikeMungShopMutation = () => {
   return useMutation({

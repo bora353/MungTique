@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import MuiInput from "../../../components/atomic/inputs/MuiInput";
-import MuiButton from "../../../components/atomic/buttons/MuiButton";
+import MuiInput from "../../../components/inputs/MuiInput";
+import MuiButton from "../../../components/buttons/MuiButton";
 import { Login } from "../../../shared/types/login.interface";
-import MuiSnackbar from "../../../components/atomic/snackbar/MuiSnackbar";
+import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 import { useNavigate } from "react-router-dom";
-import { useLoginStore } from "../../../shared/stores/login.store";
+import { useLoginStore } from "./hook/login.store";
 
 interface LoginProps {
   onsubmit: (loginDTO: Login) => void;

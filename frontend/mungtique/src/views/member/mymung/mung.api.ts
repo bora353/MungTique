@@ -1,6 +1,6 @@
 import axios from "axios";
-import { MyMung } from "../types/mungjoin.interface";
-import { UserEntity } from "../types/user.interface";
+import { MyMung } from "../../../shared/types/mungjoin.interface";
+import { UserEntity } from "../../../shared/types/user.interface";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
 

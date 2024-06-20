@@ -1,12 +1,11 @@
-import { useMungJoinViewModelHook } from "../../../shared/hooks/useMungJoinViewModel.hook";
+import { useMungJoinViewModelHook } from "./hook/useMungJoinViewModel.hook";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
 import MyMungJoinForm from "./MyMungJoinForm";
 
 export default function MyMungJoinContainer() {
-  // TODO : Hook, mutate 사용
-  const { mungJoinMutation } = useMungJoinViewModelHook();
+  const { mungJoinData } = useMungJoinViewModelHook();
   const handleMungJoinSubmit = (mungJoinDTO: MyMung) =>
-    mungJoinMutation.mutate(mungJoinDTO);
+    mungJoinData(mungJoinDTO);
 
   return (
     <div>

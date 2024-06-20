@@ -1,12 +1,12 @@
 import LoginButton from "./LoginSignInButton";
 import LoginForm from "./LoginForm";
 import { Login } from "../../../shared/types/login.interface";
-import { useLoginViewModelHook } from "../../../shared/hooks/useLoginViewModel.hook";
+import { useLoginViewModelHook } from "./hook/useLoginViewModel.hook";
 
 export default function LoginContainer() {
   // TODO : Hook, mutate 사용
-  const { loginMutation } = useLoginViewModelHook();
-  const handleLoginSubmit = (loginDTO: Login) => loginMutation.mutate(loginDTO);
+  const { loginData } = useLoginViewModelHook();
+  const handleLoginSubmit = (loginDTO: Login) => loginData(loginDTO);
 
   return (
     <div>

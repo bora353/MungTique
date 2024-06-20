@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import MuiButton from "../../../components/atomic/buttons/MuiButton";
-import { useLoginStore } from "../../../shared/stores/login.store";
+import MuiButton from "../../../components/buttons/MuiButton";
+import { useLoginStore } from "./hook/login.store";
 
 export default function LoginSignInButton() {
   const { setIsLogin } = useLoginStore();

@@ -1,11 +1,10 @@
-import { useJoinViewModelHook } from "../../../shared/hooks/useJoinViewModel.hook";
-import { Join } from "../../../shared/types/join.interface";
+import { useJoinViewModelHook } from "./useJoinViewModel.hook";
+import { Join } from "./join.interface";
 import JoinForm from "./JoinForm";
 
 export default function JoinContainer() {
-  // TODO : Hook, mutate 사용
-  const { joinMutation } = useJoinViewModelHook();
-  const handleJoinSubmit = (joinDTO: Join) => joinMutation.mutate(joinDTO);
+  const { joinData } = useJoinViewModelHook();
+  const handleJoinSubmit = (joinDTO: Join) => joinData(joinDTO);
 
   return (
     <div>

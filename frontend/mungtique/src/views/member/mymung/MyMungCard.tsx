@@ -6,7 +6,7 @@ import { Button, CardActionArea } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
-import MuiButton from "../../../components/atomic/buttons/MuiButton";
+import MuiButton from "../../../components/buttons/MuiButton";
 import { Link } from "react-router-dom";
 
 export default function MyMungCard() {

@@ -1,5 +1,8 @@
 import axios from "axios";
-import { MungShop, MungShopLike } from "../types/mungshop.interface";
+import {
+  MungShop,
+  MungShopLike,
+} from "../../../shared/types/mungshop.interface";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
 

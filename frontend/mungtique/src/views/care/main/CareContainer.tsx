@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useCalculateDistance } from "../../../shared/hooks/useCalculateDistance.hook";
-import { useNaverMapHook } from "../../../shared/hooks/useNaverMap.hook";
+import { useCalculateDistance } from "./hook/useCalculateDistance.hook";
+import { useNaverMapHook } from "./hook/useNaverMap.hook";
 import { MungShop } from "../../../shared/types/mungshop.interface";
 import MapMarkerInfo from "./MapMarkerInfo";
 import NaverMap from "./NaverMap";

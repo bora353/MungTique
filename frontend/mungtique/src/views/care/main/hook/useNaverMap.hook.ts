@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { useCareInfoQuery } from "../queries/care.query";
+import { careApi } from "../../../member/mymung/care.api";
 
 export const useNaverMapHook = () => {
-  const { isLoading, isError, data } = useCareInfoQuery();
+  const mungShops = async () => {
+    const response = await careApi.getMungShops();
+    return response.data;
+  };
 
   const [currentPosition, setCurrentPosition] =
     useState<GeolocationPosition | null>(null);
@@ -22,5 +25,5 @@ export const useNaverMapHook = () => {
     }
   };
 
-  return { mungShops: data, currentPosition, getCurrentPosition };
+  return { mungShops, currentPosition, getCurrentPosition };
 };

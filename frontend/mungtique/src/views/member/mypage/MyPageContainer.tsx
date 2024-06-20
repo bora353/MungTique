@@ -1,16 +1,15 @@
 import { Link } from "react-router-dom";
-import MuiButton from "../../../components/atomic/buttons/MuiButton";
-import { useLogoutViewModelHook } from "../../../shared/hooks/useLogoutViewModel.hook";
-import { useLoginStore } from "../../../shared/stores/login.store";
+import MuiButton from "../../../components/buttons/MuiButton";
+import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
+import { useLoginStore } from "../login/hook/login.store";
 import MyMungContainer from "../mymung/MyMungContainer";
 
 export default function MyPageContainer() {
-  // TODO : Hook, mutate 사용
-  const { logoutMutation } = useLogoutViewModelHook();
+  const { logoutData } = useLogoutViewModelHook();
   const { setIsLogin } = useLoginStore();
 
   const handleLogout = () => {
-    logoutMutation.mutate();
+    logoutData();
     setIsLogin(false); // 로그인 상태유지
   };
 

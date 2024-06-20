@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Join } from "../types/join.interface";
-import { UserEntity } from "../types/user.interface";
-import { Login } from "../types/login.interface";
-import { MailCheck } from "../types/mailcheck.interface";
+import { Join } from "./join.interface";
+import { UserEntity } from "../../../shared/types/user.interface";
+import { Login } from "../../../shared/types/login.interface";
+import { MailCheck } from "../../../shared/types/mailcheck.interface";
 
 const basePath = import.meta.env.VITE_BACKEND_SERVER;
 
@@ -50,6 +50,7 @@ const logout = async () => {
   });
 
   console.log(response);
+  return response.data;
 };
 
 const mailCheck = async (mailDTO: MailCheck) => {

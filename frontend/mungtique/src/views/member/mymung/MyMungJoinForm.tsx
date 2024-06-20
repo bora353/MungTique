@@ -1,10 +1,10 @@
 import { useState } from "react";
-import MuiInput from "../../../components/atomic/inputs/MuiInput";
+import MuiInput from "../../../components/inputs/MuiInput";
 import { useNavigate } from "react-router-dom";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
-import MuiSnackbar from "../../../components/atomic/snackbar/MuiSnackbar";
-import MuiButton from "../../../components/atomic/buttons/MuiButton";
-import OptionSelect from "../../../components/atomic/inputs/OptionSelect";
+import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
+import MuiButton from "../../../components/buttons/MuiButton";
+import OptionSelect from "../../../components/inputs/OptionSelect";
 
 interface MyMungJoinProps {
   onsubmit: (mungJoinDTO: MyMung) => void;

@@ -1,10 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomeAppBar from "./HomeAppBar";
-import { useLoginStore } from "./shared/stores/login.store";
+import { useLoginStore } from "./views/member/login/hook/login.store";
 import CareContainer from "./views/care/main/CareContainer";
 import ReservationContainer from "./views/care/reservation/ReservationContainer";
-import MainContainer from "./views/main/MainContainer";
+import MainContainer from "./views/mungtiqueMain/MainContainer";
 import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
 import JoinContainer from "./views/member/join/JoinContainer";
 import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";

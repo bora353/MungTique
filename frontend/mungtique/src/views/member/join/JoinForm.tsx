@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MuiButton from "../../../components/atomic/buttons/MuiButton";
-import MuiInput from "../../../components/atomic/inputs/MuiInput";
-import { Join } from "../../../shared/types/join.interface";
-import MuiSnackbar from "../../../components/atomic/snackbar/MuiSnackbar";
+import MuiButton from "../../../components/buttons/MuiButton";
+import MuiInput from "../../../components/inputs/MuiInput";
+import { Join } from "./join.interface";
+import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
-import { userApi } from "../../../shared/apis/user.api";
+import { userApi } from "./user.api";
 import axios from "axios";
 
 interface JoinProps {
