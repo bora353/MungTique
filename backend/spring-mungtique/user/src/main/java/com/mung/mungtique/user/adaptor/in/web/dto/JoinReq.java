@@ -1,7 +1,6 @@
 package com.mung.mungtique.user.adaptor.in.web.dto;
 
 import lombok.Builder;
-import lombok.Data;
 
 @Builder
 public record JoinReq (

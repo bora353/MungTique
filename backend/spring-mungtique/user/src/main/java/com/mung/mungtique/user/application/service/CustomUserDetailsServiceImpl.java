@@ -1,9 +1,9 @@
 package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.CustomUserDetailsDTO;
-import com.mung.mungtique.user.domain.User;
 import com.mung.mungtique.user.application.port.in.CustomUserDetailsService;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
+import com.mung.mungtique.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

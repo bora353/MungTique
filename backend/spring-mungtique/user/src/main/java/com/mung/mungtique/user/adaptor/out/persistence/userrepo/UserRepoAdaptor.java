@@ -1,7 +1,7 @@
 package com.mung.mungtique.user.adaptor.out.persistence.userrepo;
 
-import com.mung.mungtique.user.domain.User;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
+import com.mung.mungtique.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

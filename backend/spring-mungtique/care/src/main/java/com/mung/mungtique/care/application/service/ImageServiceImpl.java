@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -33,29 +33,25 @@ public class ImageServiceImpl implements ImageService {
     public ImageUploadRes upload(ImageUploadReq imageUploadReq) throws IOException {
         Long mungId = imageUploadReq.mungId();
         MultipartFile file = imageUploadReq.file();
-        Optional<MyMung> myMung = mungPort.findByid(mungId);
-
-        if (myMung.isEmpty()) {
-            throw new IllegalArgumentException("Invalid mungId");
-        }
+        MyMung myMung = mungPort.findByid(mungId).orElseThrow(() -> new NoSuchElementException("Could not find Mung with the given ID"));
 
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + "_" + file.getOriginalFilename();
 
-        // TODO : S3 서버 사용하자
+        // TODO : Object Storage 사용하자
         File destinationFile = new File(uploadFolder + imageFileName);
         log.info("destinationFile : {}", destinationFile);
 
         file.transferTo(destinationFile);
 
-        Image image = imagePort.findByMyMung(myMung.get());
+        Image image = imagePort.findByMyMung(myMung);
         log.info("image : {} ", image);
 
         if (image != null) {
             image.updateUrl("/mungImages/" + imageFileName);
         } else {
             image = Image.builder()
-                    .myMung(myMung.get())
+                    .myMung(myMung)
                     .url("/mungImages/" + imageFileName)
                     .build();
         }
