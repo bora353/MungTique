@@ -19,7 +19,6 @@ public class JoinServiceImpl implements JoinService {
 
     private final UserRepoPort userRepoPort;
     private final UserMapper userMapper;
-    // TODO : 추후 단방향 암호화로 변경? (SHA256)
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override

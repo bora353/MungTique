@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  user:
+    container_name: user
+    image: mungtique/user:v1
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../mount/user:/data/user
+    depends_on:
+      - user-db
+
+  user-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - ../mount/user-db:/data/postgres
+    ports:
+      - "54323:5432"
