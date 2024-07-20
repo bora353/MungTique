@@ -1,15 +1,17 @@
 version: '3.8'
 
 services:
-  user:
-    container_name: user
-    image: mungtique/user:v1
-    ports:
-      - "8080:8080"
-    volumes:
-      - ../mount/user:/data/user
-    depends_on:
-      - user-db
+#  user:
+#    container_name: user
+#    image: mungtique/user:v1
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ../mount/user:/data/user
+#    depends_on:
+#      - user-db
+#    networks:
+#      - mungtique
 
   user-db:
     image: postgres:latest
@@ -20,3 +22,9 @@ services:
       - ../mount/user-db:/data/postgres
     ports:
       - "54323:5432"
+    networks:
+      - mungtique
+
+networks:
+  mungtique:
+    driver: bridge

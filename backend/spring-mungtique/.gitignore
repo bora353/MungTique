@@ -1,4 +1,6 @@
 application.yml
+application-prod.yml
+application-test.yml
 
 **/mount/**
 .env
