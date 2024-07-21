@@ -1,5 +1,0 @@
-**/prometheus-volume/**
-**/grafana-volume/**
-/postgresql/**
-/grafana/grafana-volume/**
-/prometheus/prometheus-volume/**
