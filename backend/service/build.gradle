@@ -10,6 +10,8 @@ jar { enabled = false }
 allprojects {
     repositories {
         mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/release" }
     }
 }
 
@@ -24,6 +26,13 @@ subprojects {
 
     bootJar { enabled = true }
     jar { enabled = false }
+    ext { set('springCloudVersion', "2023.0.0")}
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
 
     configurations {
         compileOnly {
@@ -56,6 +65,8 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         // postgres
         implementation 'org.postgresql:postgresql'
+        // eureka
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     }
 
     tasks.named('test') {
