@@ -18,10 +18,24 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
+      POSTGRES_DB: user
     volumes:
-      - ../mount/user-db:/data/postgres
+      - ../mount/user-db:/data/postgres/user
     ports:
       - "54323:5432"
+    networks:
+      - mungtique
+
+  care-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: care
+    volumes:
+      - ../mount/care-db:/data/postgres/care
+    ports:
+      - "54324:5432"
     networks:
       - mungtique
 
