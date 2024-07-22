@@ -1,44 +1,10 @@
 version: '3.8'
 
-services:
-#  user:
-#    container_name: user
-#    image: mungtique/user:v1
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ../mount/user:/data/user
-#    depends_on:
-#      - user-db
-#    networks:
-#      - mungtique
-
-  user-db:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: user
-    volumes:
-      - ../mount/user-db:/data/postgres/user
-    ports:
-      - "54323:5432"
-    networks:
-      - mungtique
-
-  care-db:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: care
-    volumes:
-      - ../mount/care-db:/data/postgres/care
-    ports:
-      - "54324:5432"
-    networks:
-      - mungtique
+include:
+  - ./user/docker-compose.yml
+  - ./care/docker-compose.yml
 
 networks:
   mungtique:
     driver: bridge
+    external: true

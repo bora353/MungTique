@@ -4,6 +4,7 @@
 
 **/mount/**
 .env
+.env.cpy
 
 *.log
 logs/**

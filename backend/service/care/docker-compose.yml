@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  care-service:
+    container_name: care-service
+    image: mungtique/care:0.1
+    restart: always
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - DB_URL=${NAVIGATE_DB_URL}
+      - KAFKA_URI=${KAFKA_URI}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
+      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
+      - PG_ID=${PG_ID}
+      - PG_PW=${PG_PW}
+    ports:
+      - "8083:8080"
+    volumes:
+      - ../mount/care/logs:/logs
+    depends_on:
+      care-db:
+        condition: service_healthy
+    networks:
+      - mungtique
+
+  care-db:
+    image: postgres:latest
+    container_name: care-db
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: care
+    ports:
+      - "54324:5432"
+    volumes:
+      - ../mount/care/sql-init:/docker-entrypoint-initdb.d
+      - ../mount/care/db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mungtique
+
+networks:
+  mungtique:
+    driver: bridge
+    external: true
