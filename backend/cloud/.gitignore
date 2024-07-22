@@ -1,6 +1,8 @@
 **/application.yml
 **/application-prod.yml
 
+.env
+
 HELP.md
 .gradle
 build/

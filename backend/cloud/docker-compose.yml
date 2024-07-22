@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  eureka-1:
+    image: mungtique/eureka:${PRODUCT_VERSION}
+    container_name: eureka-1
+    restart: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_2}
+    networks:
+      - aegis_network
+    healthcheck:
+      test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
+      interval: 10s
+      timeout: 2s
+      retries: 10
+
+  eureka-2:
+    image: mungtique/eureka:${PRODUCT_VERSION}
+    container_name: eureka-2
+    restart: always
+    ports:
+      - "8762:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_1}
+    networks:
+      - aegis_network
+    healthcheck:
+      test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
+      interval: 10s
+      timeout: 2s
+      retries: 10
+
+  gateway:
+    image: mungtique/gateway:${PRODUCT_VERSION}
+    container_name: gateway
+    restart: always
+    depends_on:
+      eureka-1:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
+    networks:
+      - mungtique
+
+networks:
+  mungtique:
+    driver: bridge
+    external: true
