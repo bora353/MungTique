@@ -1,4 +1,5 @@
 FROM ibm-semeru-runtimes:open-21.0.2_13-jre-jammy
+LABEL authors="ge.lee"
 LABEL type=cloud
 LABEL product=mungtique
 VOLUME /tmp

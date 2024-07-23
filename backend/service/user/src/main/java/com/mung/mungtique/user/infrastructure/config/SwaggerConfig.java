@@ -1,3 +1,4 @@
+/*
 package com.mung.mungtique.user.infrastructure.config;
 
 import io.swagger.v3.oas.models.Components;
@@ -17,3 +18,4 @@ public class SwaggerConfig {
         return new Info().title("Mungtique API").description("Mungtique API").version("1.0.0"); }
 
 }
+*/
