@@ -9,9 +9,9 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_2}
+      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_1}
     networks:
-      - aegis_network
+      - mungtique
     healthcheck:
       test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
       interval: 10s
@@ -26,9 +26,9 @@ services:
       - "8762:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_1}
+      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_2}
     networks:
-      - aegis_network
+      - mungtique
     healthcheck:
       test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
       interval: 10s
