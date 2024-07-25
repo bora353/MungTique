@@ -10,9 +10,9 @@ services:
       - CARE_DB_URL=${CARE_DB_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
-#      - KAFKA_URI=${KAFKA_URI}
-#      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
-#      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
+      - KAFKA_URI=${KAFKA_URI}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
+      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
 
     ports:
       - "8083:8080"
