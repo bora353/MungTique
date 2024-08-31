@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   eureka-1:
@@ -18,22 +18,22 @@ services:
       timeout: 2s
       retries: 10
 
-  eureka-2:
-    image: mungtique/eureka:${PRODUCT_VERSION}
-    container_name: eureka-2
-    restart: always
-    ports:
-      - "8762:8761"
-    environment:
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_2}
-    networks:
-      - mungtique
-    healthcheck:
-      test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
-      interval: 10s
-      timeout: 2s
-      retries: 10
+#  eureka-2:
+#    image: mungtique/eureka:${PRODUCT_VERSION}
+#    container_name: eureka-2
+#    restart: always
+#    ports:
+#      - "8762:8761"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+#      - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_2}
+#    networks:
+#      - mungtique
+#    healthcheck:
+#      test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
+#      interval: 10s
+#      timeout: 2s
+#      retries: 10
 
   gateway:
     image: mungtique/gateway:${PRODUCT_VERSION}
