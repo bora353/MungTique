@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomeAppBar from "./HomeAppBar";
-import { useLoginStore } from "./views/member/login/hook/login.store";
+import { useAuthStore } from "./views/member/login/hook/login.store";
 import CareContainer from "./views/care/main/CareContainer";
 import ReservationContainer from "./views/care/reservation/ReservationContainer";
 import MainContainer from "./views/mungtiqueMain/MainContainer";
@@ -15,7 +15,7 @@ import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import ShopContainer from "./views/shop/ShopContainer";
 
 function App() {
-  const { isLogin } = useLoginStore();
+  const isLogin = useAuthStore((state) => state.isLogin);
   console.log("현재 로그인 상태:", isLogin);
 
   return (
@@ -30,19 +30,19 @@ function App() {
             <Route path="/care" element={<CareContainer />} />
             <Route path="/shop" element={<ShopContainer />} />
 
-            {/* <Route path="/mypage" element={<MyPageContainer />} /> */}
-            {/* <Route path="/mymung" element={<MyMungJoinContainer />} /> */}
-            <Route path="/reservation" element={<ReservationContainer />} />
-            <Route path="/mungimage" element={<MyMungImageUploadContainer />} />
-
             {isLogin ? (
               <>
                 <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
                 <Route path="/findinfo" element={<FindInfoContainer />} />
                 {<Route path="/mypage" element={<MyPageContainer />} />}
                 <Route path="/mymung" element={<MyMungJoinContainer />} />
-                {/* <Route path="/reservation" element={<ReservationContainer />} /> */}
-                {/* <Route path="/mungimage" element={<MyMungImageContainer />} /> */}
+                {
+                  <Route
+                    path="/reservation"
+                    element={<ReservationContainer />}
+                  />
+                }
+                {<Route path="/mungimage" element={<MyMungImageUploadContainer />} />}
               </>
             ) : null}
           </Route>

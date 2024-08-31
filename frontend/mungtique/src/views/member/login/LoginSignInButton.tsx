@@ -1,10 +1,10 @@
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 import MuiButton from "../../../components/buttons/MuiButton";
-import { useLoginStore } from "./hook/login.store";
+import { useAuthStore } from "./hook/login.store";
 
 export default function LoginSignInButton() {
-  const { setIsLogin } = useLoginStore();
+  const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
   // TODO : url 환경변수로 빼기
   const onNaverLogin = () => {

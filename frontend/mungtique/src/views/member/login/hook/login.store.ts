@@ -1,31 +1,22 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-/**
- * Store Interface는 State/Reducer로 작성해 주세요.
- 
-* State    명명법 -> 이름State
- *      store property가 정의되는 구간입니다.
- *
- * Reducer  명명법 -> 이름Reducer
- *      store의 기능 및 함수가 정의 되는 구간입니다.
- */
-export interface LoginState {
+interface AuthState {
   isLogin: boolean;
+  setIsLogin: (loggedIn: boolean) => void;
 }
 
-export interface LoginReducer {
-  setIsLogin: (value: boolean) => void;
-}
+const AUTH_TOKEN_KEY = "auth_token";
 
-export const useLoginStore = create(
-  persist<LoginState & LoginReducer>(
-    (set) => ({
-      isLogin: false,
-      setIsLogin: (value: boolean) => set({ isLogin: value }),
-    }),
-    {
-      name: "login_state", // 로컬 스토리지에 사용될 키 이름
+export const useAuthStore = create<AuthState>((set) => ({
+  isLogin: !!localStorage.getItem(AUTH_TOKEN_KEY),
+
+  setIsLogin: (logIn: boolean) => {
+    if (logIn) {
+      const token = "example-token";
+      localStorage.setItem(AUTH_TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
     }
-  )
-);
+    set({ isLogin: logIn });
+  },
+}));

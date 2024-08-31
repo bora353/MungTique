@@ -4,15 +4,15 @@ import MuiButton from "../../../components/buttons/MuiButton";
 import { Login } from "../../../shared/types/login.interface";
 import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 import { useNavigate } from "react-router-dom";
-import { useLoginStore } from "./hook/login.store";
+import { useAuthStore } from "./hook/login.store";
 
 interface LoginProps {
   onsubmit: (loginDTO: Login) => void;
 }
 
 export default function LoginForm({ onsubmit }: LoginProps) {
+  const setIsLogin = useAuthStore((state) => state.setIsLogin);
   const navigate = useNavigate();
-  const { setIsLogin } = useLoginStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

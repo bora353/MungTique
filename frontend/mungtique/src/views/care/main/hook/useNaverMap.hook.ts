@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { careApi } from "../care.api";
+import { MungShop } from "../../../../shared/types/mungshop.interface";
 
 export const useNaverMapHook = () => {
   const [mungShops, setMungShops] = useState<MungShop[]>([]);

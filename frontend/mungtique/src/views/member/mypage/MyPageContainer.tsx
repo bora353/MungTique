@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import MuiButton from "../../../components/buttons/MuiButton";
 import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
-import { useLoginStore } from "../login/hook/login.store";
 import MyMungContainer from "../mymung/MyMungContainer";
+import { useAuthStore } from "../login/hook/login.store";
 
 export default function MyPageContainer() {
   const { logoutData } = useLogoutViewModelHook();
-  const { setIsLogin } = useLoginStore();
+  const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
   const handleLogout = () => {
     logoutData();
