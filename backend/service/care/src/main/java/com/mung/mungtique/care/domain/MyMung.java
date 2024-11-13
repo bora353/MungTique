@@ -19,22 +19,22 @@ public class MyMung {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long myMungId;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String mungName;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String breed;
 
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     private int weight;
 
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     private int age;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String gender; // enum 타입?
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String fixed; // enum 타입?
 
     @Column(length = 20)

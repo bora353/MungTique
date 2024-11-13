@@ -20,7 +20,7 @@ public class MungShop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mungShopId;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String storeName;
 
     @Column(length = 100)

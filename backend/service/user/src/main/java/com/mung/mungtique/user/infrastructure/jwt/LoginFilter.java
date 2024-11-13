@@ -52,7 +52,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //this.tokenRepoPort = tokenRepoPort;
         this.joinService = joinService;
         this.env = env;
-        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/user/login", "POST")); // 로그인 경로 변경 TODO: gateway에서 변경
+        //setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/login", "POST")); // 로그인 경로 변경
     }
 
     @Override
