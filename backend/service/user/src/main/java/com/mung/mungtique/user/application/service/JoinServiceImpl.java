@@ -6,11 +6,16 @@ import com.mung.mungtique.user.application.port.in.JoinService;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import com.mung.mungtique.user.application.service.mapper.UserMapper;
 import com.mung.mungtique.user.domain.Authority;
-import com.mung.mungtique.user.domain.User;
+import com.mung.mungtique.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +27,30 @@ public class JoinServiceImpl implements JoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public JoinRes registerUser(JoinReq joinReq) {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepoPort.findByEmail(email);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        
+        return new User(userEntity.getEmail(), userEntity.getPassword()
+        , true, true, true, true
+                , new ArrayList<>()); // 권한 추가 작업 넣을 수 있음
+    }
+
+    @Override
+    public JoinRes createUser(JoinReq joinReq) {
         String encodedPassword = bCryptPasswordEncoder.encode(joinReq.password());
         Boolean isExist = userRepoPort.existsByEmail(joinReq.email());
 
         if (isExist) return null;
 
-        User user = userMapper.toUserEntity(joinReq, Authority.ROLE_ADMIN.name());
-        user.setPassword(encodedPassword);
-        User savedUser = userRepoPort.save(user);
-        log.info("회원가입 완료! : {}", savedUser);
+        UserEntity userEntity = userMapper.toUserEntity(joinReq, Authority.ROLE_ADMIN.name());
+        userEntity.setPassword(encodedPassword);
+        UserEntity savedUserEntity = userRepoPort.save(userEntity);
+        log.info("회원가입 완료! : {}", savedUserEntity);
 
-        return userMapper.toJoinRes(user);
+        return userMapper.toJoinRes(userEntity);
     }
 }

@@ -18,26 +18,26 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/care-service")
 public class MungController {
 
     private final MungService mungService;
     private final ImageService imageService;
 
-    @PostMapping("/care/join/mung")
+    @PostMapping("/join/mung")
     public ResponseEntity<MyMung> likeMungShop(@RequestBody MungJoinReq mungJoinReq) {
 
         log.info("mungJoinReq" + mungJoinReq);
         return ResponseEntity.ok(mungService.join(mungJoinReq));
     }
 
-    @PostMapping("/care/upload-image")
+    @PostMapping("/upload-image")
     private ResponseEntity<ImageUploadRes> upload(ImageUploadReq imageUploadReq) throws IOException {
         log.info("imageUploadReq : {}", imageUploadReq);
         return ResponseEntity.ok(imageService.upload(imageUploadReq));
     }
 
-    @GetMapping("/care/mymung/{userId}")
+    @GetMapping("/mymung/{userId}")
     private ResponseEntity<List<MungRes>> getMyMungs(@PathVariable Long userId) {
 
         log.info("userId : {}", userId);

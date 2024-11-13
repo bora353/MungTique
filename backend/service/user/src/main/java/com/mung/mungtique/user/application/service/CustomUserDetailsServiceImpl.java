@@ -1,3 +1,4 @@
+/*
 package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.CustomUserDetailsDTO;
@@ -26,3 +27,4 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         return new CustomUserDetailsDTO(user);
     }
 }
+*/

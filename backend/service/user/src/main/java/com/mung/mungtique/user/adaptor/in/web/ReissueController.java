@@ -1,5 +1,6 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
+import com.mung.mungtique.user.adaptor.in.web.dto.TokenRes;
 import com.mung.mungtique.user.application.port.in.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,9 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -33,9 +32,12 @@ public class ReissueController {
 
     private final RefreshTokenService refreshTokenService;
 
+
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         // TODO : Controller에 로직이 있어도 될까? if와 같은
+        System.out.println(request);
+
         Map<String, String> tokens  = refreshTokenService.reissueToken(request);
 
         if (tokens.get("error").startsWith("refresh token")) {

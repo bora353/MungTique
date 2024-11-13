@@ -7,35 +7,36 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "mung_user")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends BaseTime {
+public class UserEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String username;
-    //@Column(length = 50)
+
+    @Column(length = 100, nullable = false)
     @Setter
     private String password;
 
-    @Column(unique = true, length = 50)
+    @Column(unique = true, length = 50, nullable = false)
     private String email;
-    @Column(length = 20)
+
+    @Column(length = 20, nullable = false)
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private Authority role;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginAt;
-
 
     // TODO : 추후 IP, Location 정보 추가
 

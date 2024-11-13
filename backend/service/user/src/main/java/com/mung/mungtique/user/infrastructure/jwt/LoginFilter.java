@@ -1,7 +1,7 @@
 package com.mung.mungtique.user.infrastructure.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mung.mungtique.user.adaptor.in.web.dto.CustomUserDetailsDTO;
+import com.mung.mungtique.user.application.port.in.JoinService;
 import com.mung.mungtique.user.application.port.out.TokenRepoPort;
 import com.mung.mungtique.user.domain.Token;
 import jakarta.servlet.FilterChain;
@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,10 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -42,16 +40,19 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      *      ㄴ 쿠키에 발급
      */
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-    private final TokenRepoPort tokenRepoPort;
+    private final JoinService joinService;
+    private final Environment env;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, TokenRepoPort tokenRepoPort) {
-        setAuthenticationManager(authenticationManager);
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-        this.tokenRepoPort = tokenRepoPort;
-        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/login", "POST")); // 로그인 경로 변경
+    //private final JwtUtil jwtUtil;
+    //private final TokenRepoPort tokenRepoPort;
+
+    public LoginFilter(AuthenticationManager authenticationManager, JoinService joinService, Environment env) {
+        super(authenticationManager);
+        //this.jwtUtil = jwtUtil;
+        //this.tokenRepoPort = tokenRepoPort;
+        this.joinService = joinService;
+        this.env = env;
+        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/user/login", "POST")); // 로그인 경로 변경 TODO: gateway에서 변경
     }
 
     @Override
@@ -68,10 +69,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("email : {}", email);
 
         // 스프링 시큐리티에서 user, pass 검증하기 위해서는 token에 담아야 함
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, new ArrayList<>());
 
         // token에 담아서 검증하기 위해 AuthenticationManager로 전달
-        return authenticationManager.authenticate(authToken);
+        return getAuthenticationManager().authenticate(authToken);
     }
 
     // 인증 성공시 실행되는 메소드
@@ -95,6 +96,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 생성된 JWT 토큰을 Response Header에 담아서 클라이언트에 전달
         response.addHeader("Authorization", "Bearer " + token);*/
 
+
+        //TODO: 잠시
+/*
         // 유저 정보
         CustomUserDetailsDTO customUserDetailsDTO = (CustomUserDetailsDTO) authentication.getPrincipal();
         String email = customUserDetailsDTO.getEmail();
@@ -114,7 +118,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         addTokenEntity(email, refresh, 86400000L);
 
         // 응답 설정
-        response.setHeader("access", access); // access token : 응답 헤더에 넣고 front에서 받아서 local storage에 저장
+        //response.setHeader("access", access); // access token : 응답 헤더에 넣고 front에서 받아서 local storage에 저장
+        response.addHeader("Authorization", "Bearer " + access);
         response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
 
@@ -124,7 +129,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(jsonResponse);
 
-        log.info("access, refresh 토큰 후 front 전송");
+        log.info("access, refresh 토큰 후 front 전송");*/
 
     }
 
@@ -138,7 +143,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .expiration(date.toString())
                 .build();
 
-        tokenRepoPort.save(token);
+        //잠시 tokenRepoPort.save(token);
     }
 
     private Cookie createCookie(String key, String value) {

@@ -14,33 +14,33 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/care-service")
 public class MungShopController {
 
     private final MungShopService mungShopService;
 
 
-    @GetMapping("/care/mungshops")
+    @GetMapping("/mungshops")
     public ResponseEntity<List<MungShopRes>> getAllMungShops() {
 
         return ResponseEntity.ok(mungShopService.getAllMungShops());
     }
 
-    @GetMapping("/care/mungshop-like-status")
+    @GetMapping("/mungshop-like-status")
     public ResponseEntity<Boolean> likeMungShopStatus(@RequestParam Long mungShopId, @RequestParam Long userId) {
 
         log.info("Like MungShop Status {}, {}", mungShopId, userId);
         return ResponseEntity.ok(mungShopService.likeMungShopStatus(mungShopId, userId));
     }
 
-    @PostMapping("/care/mungshop-like")
+    @PostMapping("/mungshop-like")
     public ResponseEntity<MungShopLikeRes> likeMungShop(@RequestBody MungShopLikeReq mungShopLikeReq) {
 
         log.info("Like MungShop" + mungShopLikeReq);
         return ResponseEntity.ok(mungShopService.likeMungShop(mungShopLikeReq));
     }
 
-    @PostMapping("/care/mungshop-unlike")
+    @PostMapping("/mungshop-unlike")
     public ResponseEntity<Boolean> unlikeMungShop(@RequestBody MungShopLikeReq mungShopLikeReq) {
 
         log.info("UnLike MungShop" + mungShopLikeReq);

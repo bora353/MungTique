@@ -22,7 +22,7 @@ public class JoinController {
 
     @PostMapping("/join")
     public ResponseEntity<JoinRes> registerUser(@RequestBody JoinReq joinReq){
-        JoinRes joinRes = joinService.registerUser(joinReq);
+        JoinRes joinRes = joinService.createUser(joinReq);
 
         if (joinRes == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);

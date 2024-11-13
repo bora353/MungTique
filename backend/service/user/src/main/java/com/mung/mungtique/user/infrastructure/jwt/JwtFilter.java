@@ -1,10 +1,9 @@
 package com.mung.mungtique.user.infrastructure.jwt;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.CustomOAuth2User;
-import com.mung.mungtique.user.adaptor.in.web.dto.CustomUserDetailsDTO;
 import com.mung.mungtique.user.adaptor.in.web.dto.UserDTO;
 import com.mung.mungtique.user.domain.Authority;
-import com.mung.mungtique.user.domain.User;
+import com.mung.mungtique.user.domain.UserEntity;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -45,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+        if (requestUri.matches("^\\/user\\/login(?:\\/.*)?$")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -158,16 +157,16 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtUtil.getEmail(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        User user = User.builder().username(email).role(Authority.valueOf(role)).build();
+        UserEntity userEntity = UserEntity.builder().username(email).role(Authority.valueOf(role)).build();
 
 //        User user = new User();
 //        user.setUsername(email);
 //        user.setRole(role);
 
-        CustomUserDetailsDTO customUserDetails = new CustomUserDetailsDTO(user);
+        //매우잠시 CustomUserDetailsDTO customUserDetails = new CustomUserDetailsDTO(userEntity);
 
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        //매우잠시 Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        //매우 잠시 SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }

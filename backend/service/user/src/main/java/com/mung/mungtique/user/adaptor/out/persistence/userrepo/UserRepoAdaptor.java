@@ -1,7 +1,7 @@
 package com.mung.mungtique.user.adaptor.out.persistence.userrepo;
 
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
-import com.mung.mungtique.user.domain.User;
+import com.mung.mungtique.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,12 +17,12 @@ public class UserRepoAdaptor implements UserRepoPort {
     }
 
     @Override
-    public User save(User user) {
-        return userRepo.save(user);
+    public UserEntity save(UserEntity userEntity) {
+        return userRepo.save(userEntity);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserEntity findByEmail(String email) {
         return userRepo.findByEmail(email);
     }
 }
