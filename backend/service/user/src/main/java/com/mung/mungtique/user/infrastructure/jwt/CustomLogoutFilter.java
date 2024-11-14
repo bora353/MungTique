@@ -1,3 +1,4 @@
+/*
 package com.mung.mungtique.user.infrastructure.jwt;
 
 import com.mung.mungtique.user.application.port.out.TokenRepoPort;
@@ -85,7 +86,7 @@ public class CustomLogoutFilter extends GenericFilter {
         // 로그아웃 진행
         // DB에서 Refresh 토큰을 제거
         log.info("로그아웃 진행 시작");
-        tokenRepoPort.deleteByRefreshToken(refreshToken);
+        tokenRepoPort.deleteRefreshToken(refreshToken);
 
         // Refresh 토큰 Cookie 삭제!
         Cookie cookie = new Cookie("refresh", null); // null값 설정
@@ -98,3 +99,4 @@ public class CustomLogoutFilter extends GenericFilter {
         log.info("로그아웃 성공!!");
     }
 }
+*/

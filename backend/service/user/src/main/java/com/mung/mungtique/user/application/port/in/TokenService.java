@@ -7,5 +7,6 @@ import java.util.Map;
 
 public interface TokenService {
     Token saveRefreshToken(String email, String refresh);
-    //Map<String, String> reissueToken(HttpServletRequest request);
+    void deleteRefreshToken(String refreshToken);
+    Map<String, String> reissueToken(HttpServletRequest request);
 }

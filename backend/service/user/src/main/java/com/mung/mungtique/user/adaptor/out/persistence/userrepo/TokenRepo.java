@@ -10,5 +10,4 @@ public interface TokenRepo extends JpaRepository<Token, Long>{
 
     @Transactional
     void deleteByRefreshToken(String refreshToken);
-
 }

@@ -1,13 +1,12 @@
 package com.mung.mungtique.user.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Entity
 @Getter
@@ -22,5 +21,6 @@ public class Token {
 
     private String email;
     private String refreshToken;
-    private String expiration;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiration;
 }

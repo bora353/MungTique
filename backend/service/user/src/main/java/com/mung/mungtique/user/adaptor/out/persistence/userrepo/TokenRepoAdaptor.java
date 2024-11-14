@@ -12,8 +12,8 @@ public class TokenRepoAdaptor implements TokenRepoPort {
     private final TokenRepo tokenRepo;
 
     @Override
-    public void save(Token token) {
-        tokenRepo.save(token);
+    public Token save(Token token) {
+        return tokenRepo.save(token);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class TokenRepoAdaptor implements TokenRepoPort {
     }
 
     @Override
-    public void deleteByRefreshToken(String refreshToken) {
+    public void deleteRefreshToken(String refreshToken) {
         tokenRepo.deleteByRefreshToken(refreshToken);
     }
 }

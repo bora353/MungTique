@@ -1,3 +1,4 @@
+/*
 package com.mung.mungtique.user.infrastructure.oauth2;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.CustomOAuth2User;
@@ -58,3 +59,4 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
 }
+*/

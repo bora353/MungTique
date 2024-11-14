@@ -4,9 +4,7 @@ import com.mung.mungtique.user.domain.Token;
 
 public interface TokenRepoPort {
 
-    void save(Token token);
-
+    Token save(Token token);
     Boolean existByRefreshToken(String refreshToken);
-
-    void deleteByRefreshToken(String refreshToken);
+    void deleteRefreshToken(String refreshToken);
 }

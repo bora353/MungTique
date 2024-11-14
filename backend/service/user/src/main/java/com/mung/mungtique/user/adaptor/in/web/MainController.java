@@ -14,7 +14,7 @@ import java.util.Iterator;
 @RequestMapping("/api/v1")
 public class MainController {
 
-    @GetMapping("/")
+    @GetMapping("/user-info")
     public String mainPage(){
 
         // JWTFilter를 통과한 뒤 세션 확인
@@ -30,5 +30,10 @@ public class MainController {
         String role = auth.getAuthority();
 
         return "Main Controller " + username + role;
+    }
+
+    @GetMapping("/welcome")
+    public String welcomePage(){
+        return "welcome to Mungtique User";
     }
 }

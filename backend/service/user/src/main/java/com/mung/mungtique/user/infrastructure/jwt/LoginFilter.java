@@ -1,28 +1,24 @@
 package com.mung.mungtique.user.infrastructure.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mung.mungtique.user.application.port.in.JoinService;
-import com.mung.mungtique.user.application.port.out.TokenRepoPort;
-import com.mung.mungtique.user.domain.Token;
+import com.mung.mungtique.user.application.port.in.TokenService;
+import com.mung.mungtique.user.application.port.in.UserService;
+import com.mung.mungtique.user.domain.UserEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -40,19 +36,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
      *      ㄴ 쿠키에 발급
      */
 
-    private final JoinService joinService;
-    private final Environment env;
+    private final UserService userService;
+    private final TokenService tokenService;
+    private final JwtUtil jwtUtil;
 
-    //private final JwtUtil jwtUtil;
-    //private final TokenRepoPort tokenRepoPort;
-
-    public LoginFilter(AuthenticationManager authenticationManager, JoinService joinService, Environment env) {
+    public LoginFilter(AuthenticationManager authenticationManager, UserService userService, TokenService tokenService, JwtUtil jwtUtil) {
         super(authenticationManager);
-        //this.jwtUtil = jwtUtil;
-        //this.tokenRepoPort = tokenRepoPort;
-        this.joinService = joinService;
-        this.env = env;
-        //setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/login", "POST")); // 로그인 경로 변경
+        this.userService = userService;
+        this.tokenService = tokenService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -66,7 +58,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String email = obtainUsername(request);
         String password = obtainPassword(request);
 
-        log.info("email : {}", email);
+        log.info("attemptAuthentication - email : {}", email);
 
         // 스프링 시큐리티에서 user, pass 검증하기 위해서는 token에 담아야 함
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, new ArrayList<>());
@@ -78,81 +70,35 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     // 인증 성공시 실행되는 메소드
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        /*// CustomUserDetails 객체에서 사용자 이름과 역할 정보 추출
-        CustomUserDetailsDTO customUserDetailsDTO = (CustomUserDetailsDTO) authentication.getPrincipal();
-
-        String email = customUserDetailsDTO.getEmail();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
-
-        // 인증 성공시 JWT 토큰 생성 및 만료 시간 설정
-        String token = jwtUtil.createJwt(email, role, 60 * 60 * 1000L); // 1시간
-        log.info("JWT 토큰 생성 : {}", token); // 매번 다른 토큰 생성
-
-
-        // 생성된 JWT 토큰을 Response Header에 담아서 클라이언트에 전달
-        response.addHeader("Authorization", "Bearer " + token);*/
-
-
-        //TODO: 잠시
-/*
-        // 유저 정보
-        CustomUserDetailsDTO customUserDetailsDTO = (CustomUserDetailsDTO) authentication.getPrincipal();
-        String email = customUserDetailsDTO.getEmail();
-        Long userId = customUserDetailsDTO.getUserId();
+        String email = ((User) authentication.getPrincipal()).getUsername();
+        UserEntity userDetails = userService.getUserDetailsByEmail(email);
 
         // role
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+/*        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+        String role = auth.getAuthority();*/
 
-        // 토큰 생성
-        String access = jwtUtil.createJwt("access", email, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", email, role, 86400000L);
+        String access = jwtUtil.generateToken(email, "access");
+        String refresh = jwtUtil.generateToken(email, "refresh");
 
-        // Refresh Token DB 저장
-        addTokenEntity(email, refresh, 86400000L);
+        tokenService.saveRefreshToken(email, refresh);
 
-        // 응답 설정
-        //response.setHeader("access", access); // access token : 응답 헤더에 넣고 front에서 받아서 local storage에 저장
-        response.addHeader("Authorization", "Bearer " + access);
-        response.addCookie(createCookie("refresh", refresh)); // refresh token : 쿠키에
+        response.setHeader("Authorization", "Bearer " + access);
+        //response.addHeader("aceess", access);
+        response.addHeader("userId", String.valueOf(userDetails.getId()));
+        response.addCookie(createCookie("refresh", refresh)); // refresh token -> 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
 
-        // TODO : 맞는 방법인지 고민 (userId 보냄)
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(Collections.singletonMap("userId", userId));
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(jsonResponse);
-
-        log.info("access, refresh 토큰 후 front 전송");*/
-
-    }
-
-    private void addTokenEntity(String email, String refreshToken, Long expiredMs) {
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        Token token = Token.builder()
-                .email(email)
-                .refreshToken(refreshToken)
-                .expiration(date.toString())
-                .build();
-
-        //잠시 tokenRepoPort.save(token);
+        log.info("successfulAuthentication - access, refresh token send Complete");
     }
 
     private Cookie createCookie(String key, String value) {
-
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60); // 쿠키 최대 수명 : 24시간
-        //cookie.setSecure(true); // 쿠키 보안설정 (활성화하면 HTTPS를 통해서만 쿠키가 전송)
-        //cookie.setPath("/"); //  쿠키의 경로를 설정 (활성화하면 쿠키가 특정 경로에서만 사용됨)
+        cookie.setMaxAge(60 * 60 * 24); // 쿠키 최대 수명 : 24시간
+        cookie.setPath("/"); //  쿠키의 경로를 설정 (활성화하면 쿠키가 특정 경로에서만 사용됨)
         cookie.setHttpOnly(true); // 쿠키가 HttpOnly로 설정되면, 클라이언트 측 스크립트(예: JavaScript)에서 쿠키에 접근할 수 없음 (XSS 공격을 방지하는 데 도움됨)
+        //cookie.setSecure(true); // HTTPS에서만 전송 (쿠키 보안 설정)
 
         return cookie;
     }
@@ -161,8 +107,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         // 인증 실패시 Response Header에 에러 메시지 전달
-        // response.addHeader("error", "Authentication Failed");
-        log.info("실패ㅠㅠ");
+        response.addHeader("error", "Authentication Failed");
+        log.info("unsuccessfulAuthentication");
         response.setStatus(401);
     }
 }

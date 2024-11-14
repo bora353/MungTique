@@ -3,6 +3,7 @@ package com.mung.mungtique.user.application.service;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
 import com.mung.mungtique.user.application.port.in.UserService;
+import com.mung.mungtique.user.application.port.out.TokenRepoPort;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import com.mung.mungtique.user.application.service.mapper.UserMapper;
 import com.mung.mungtique.user.domain.Authority;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class UserServiceImpl implements UserService {
 
     private final UserRepoPort userRepoPort;
+    private final TokenRepoPort tokenRepoPort;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
