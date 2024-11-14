@@ -1,3 +1,4 @@
+/*
 package com.mung.mungtique.user.infrastructure.jwt;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.CustomOAuth2User;
@@ -22,12 +23,15 @@ import java.io.PrintWriter;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtFilterBefore extends OncePerRequestFilter {
 
-    /**
-     * JwtFilter : LoginFilter에서 생성된 JWT 검증하는 역할
-     * 클라이언트가 보낸 모든 요청을 처리할 때마다 실행
-     */
+    */
+/**
+     * * JwtFilter : LoginFilter에서 생성된 JWT 검증하는 역할
+     * * 클라이언트가 보낸 모든 요청을 처리할 때마다 실행
+     *
+     *//*
+
 
     private final JwtUtil jwtUtil;
     
@@ -68,7 +72,9 @@ public class JwtFilter extends OncePerRequestFilter {
             StandardProcess(request, response, filterChain, accessToken);
         }
 
-        /*-------이전코드----------// request에서 Authorization 헤더를 찾음
+        //-------이전코드----------
+
+        // request에서 Authorization 헤더를 찾음
         String authorization = request.getHeader("Authorization");
 
         // Authorization 헤더 검증
@@ -113,7 +119,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        filterChain.doFilter(request, response);*/
+        filterChain.doFilter(request, response);
     }
 
     private void StandardProcess(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, String accessToken) throws IOException, ServletException {
@@ -212,3 +218,4 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+*/

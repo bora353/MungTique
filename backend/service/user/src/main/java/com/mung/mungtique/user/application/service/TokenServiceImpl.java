@@ -1,34 +1,47 @@
 package com.mung.mungtique.user.application.service;
 
-import com.mung.mungtique.user.application.port.in.RefreshTokenService;
+import com.mung.mungtique.user.application.port.in.TokenService;
 import com.mung.mungtique.user.application.port.out.TokenRepoPort;
 import com.mung.mungtique.user.domain.Token;
-import com.mung.mungtique.user.infrastructure.jwt.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenServiceImpl implements RefreshTokenService {
+public class TokenServiceImpl implements TokenService {
 
-    private final JwtUtil jwtUtil;
+    //private final JwtUtil jwtUtil;
     private final TokenRepoPort tokenRepoPort;
 
-    // TODO : expiration time 환경변수로
-/*    @Value("${spring.jwt.access-expiration}")
-    private final String accessExpireTime;
+    @Value("${spring.jwt.access-expiration}")
+    private String ACCESS_TOKEN_EXPIRATION_TIME;
 
     @Value("${spring.jwt.refresh-expiration}")
-    private final int refreshExpireTime;*/
+    private String REFRESH_TOKEN_EXPIRATION_TIME;
 
     @Override
+    public Token saveRefreshToken(String email, String refreshToken) {
+        Instant now = Instant.now();
+
+        Token token = Token.builder()
+                .email(email)
+                .refreshToken(refreshToken)
+                .expiration(Date.from(now.plusMillis(Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME))).toString())
+                .build();
+
+        return tokenRepoPort.save(token);
+    }
+
+    /*@Override
     public Map<String, String> reissueToken(HttpServletRequest request) {
         Map<String, String> tokens = new HashMap<>();
 
@@ -90,7 +103,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         addRefreshToken(email, newRefresh, 86400000L);
 
         return tokens;
-    }
+    }*/
 
     private void addRefreshToken(String email, String newRefresh, long expiredMs) {
 

@@ -1,7 +1,7 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
-import com.mung.mungtique.user.domain.User;
+import com.mung.mungtique.user.domain.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class JoinControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -38,7 +38,7 @@ public class JoinControllerTest {
         HttpEntity<JoinReq> requestEntity = new HttpEntity<>(joinReq, headers);
 
         // when
-        ResponseEntity<User> responseEntity = restTemplate.postForEntity("/api/v1/join", requestEntity, User.class);
+        ResponseEntity<UserEntity> responseEntity = restTemplate.postForEntity("/api/v1/join", requestEntity, UserEntity.class);
 
         // then
         //assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -47,6 +47,6 @@ public class JoinControllerTest {
 
         // TODO : 이게 아닌데...
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND); // 리다이렉션 상태
-        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/login"); // 리다이렉션 경로
+        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/user/login"); // 리다이렉션 경로
     }
 }

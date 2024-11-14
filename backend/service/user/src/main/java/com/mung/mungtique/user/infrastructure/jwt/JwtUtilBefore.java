@@ -1,3 +1,4 @@
+/*
 package com.mung.mungtique.user.infrastructure.jwt;
 
 
@@ -17,7 +18,6 @@ public class JwtUtil {
     private SecretKey secretKey;
 
     public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
-
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
     }
 
@@ -65,3 +65,4 @@ public class JwtUtil {
                 .compact();
     }
 }
+*/

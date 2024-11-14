@@ -2,7 +2,7 @@ package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
-import com.mung.mungtique.user.application.port.in.JoinService;
+import com.mung.mungtique.user.application.port.in.UserService;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import com.mung.mungtique.user.application.service.mapper.UserMapper;
 import com.mung.mungtique.user.domain.Authority;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class JoinServiceImpl implements JoinService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepoPort userRepoPort;
     private final UserMapper userMapper;
@@ -49,8 +49,19 @@ public class JoinServiceImpl implements JoinService {
         UserEntity userEntity = userMapper.toUserEntity(joinReq, Authority.ROLE_ADMIN.name());
         userEntity.setPassword(encodedPassword);
         UserEntity savedUserEntity = userRepoPort.save(userEntity);
-        log.info("회원가입 완료! : {}", savedUserEntity);
+        log.info("Create User Complete : {}", savedUserEntity);
 
         return userMapper.toJoinRes(userEntity);
+    }
+
+    @Override
+    public UserEntity getUserDetailsByEmail(String email) {
+        UserEntity userEntity = userRepoPort.findByEmail(email);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+
+        return userEntity;
     }
 }
