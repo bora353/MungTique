@@ -1,4 +1,3 @@
-/*
 package com.mung.mungtique.user.infrastructure.oauth2;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.CustomOAuth2User;
@@ -29,7 +28,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         // OAuth2 User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
@@ -40,7 +38,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         GrantedAuthority authority = iterator.next();
         String role = authority.getAuthority();
 
-        String token = jwtUtil.createOAuth2Jwt(username, role, 86400000L); // 24시간
+        String token = jwtUtil.createOAuth2Jwt(username, role); // 24시간
 
         response.addCookie(createCookie("Authorization", token));
         response.sendRedirect(allowedOrigins);
@@ -56,7 +54,4 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         return cookie;
     }
-
-
 }
-*/

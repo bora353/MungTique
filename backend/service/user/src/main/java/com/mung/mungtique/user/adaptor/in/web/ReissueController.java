@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 public class ReissueController {
 
     /**
@@ -35,7 +35,7 @@ public class ReissueController {
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         try {
             Map<String, String> tokens = tokenService.reissueToken(request);
-            response.setHeader("access", tokens.get("access"));
+            response.setHeader("Authorization", "Bearer " + tokens.get("access"));
             response.addCookie(createCookie("refresh", tokens.get("refresh")));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (RuntimeException e) {

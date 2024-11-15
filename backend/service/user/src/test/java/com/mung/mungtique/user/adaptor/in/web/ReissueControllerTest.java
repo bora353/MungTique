@@ -27,6 +27,6 @@ public class ReissueControllerTest {
 
         // Then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/login");
+        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/user/login");
     }
 }
