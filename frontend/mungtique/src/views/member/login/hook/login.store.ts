@@ -5,18 +5,18 @@ interface AuthState {
   setIsLogin: (loggedIn: boolean) => void;
 }
 
-const AUTH_TOKEN_KEY = "auth_token";
+const AUTH_TOKEN_KEY = "access";
 
 export const useAuthStore = create<AuthState>((set) => ({
   isLogin: !!localStorage.getItem(AUTH_TOKEN_KEY),
 
-  setIsLogin: (logIn: boolean) => {
-    if (logIn) {
-      const token = "example-token";
+  setIsLogin: (loggedIn: boolean, token?: string) => {
+    if (loggedIn && token) {
       localStorage.setItem(AUTH_TOKEN_KEY, token);
+      set({ isLogin: true });
     } else {
       localStorage.removeItem(AUTH_TOKEN_KEY);
+      set({ isLogin: false });
     }
-    set({ isLogin: logIn });
   },
 }));

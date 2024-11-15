@@ -8,11 +8,11 @@ export default function LoginSignInButton() {
 
   // TODO : url 환경변수로 빼기
   const onNaverLogin = () => {
-    window.location.href = "http://localhost:8082/oauth2/authorization/naver";
+    window.location.href = "http://localhost:8000/oauth2/authorization/naver";
     setIsLogin(true);
   };
   const onKakaoLogin = () => {
-    window.location.href = "http://localhost:8082/oauth2/authorization/kakao";
+    window.location.href = "http://localhost:8000/oauth2/authorization/kakao";
     setIsLogin(true);
   };
 

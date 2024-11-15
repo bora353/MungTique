@@ -1,10 +1,8 @@
-import axios from "axios";
 import { MungShop } from "../../../shared/types/mungshop.interface";
-
-const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
+import { api } from "../../../shared/api/ApiInterceptor";
 
 const getMungShops = async () =>
-  await axios.get<MungShop[]>(`${basePath}/care/mungshops`);
+  await api().get<MungShop[]>(`/care-service/mungshops`);
 
 export const careApi = {
   getMungShops,

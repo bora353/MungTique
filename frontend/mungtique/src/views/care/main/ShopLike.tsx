@@ -1,9 +1,9 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Button } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { MungShopLike } from "../../../shared/types/mungshop.interface";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 interface ShopLikeProps {
   mungShopId: number;
@@ -11,14 +11,13 @@ interface ShopLikeProps {
 
 export default function ShopLike({ mungShopId }: ShopLikeProps) {
   const [isLiked, setIsLiked] = useState(false);
-  const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchLikeStatus = async () => {
       try {
-        const response = await axios.get<boolean>(
-          basePath + "/care/mungshop-like-status",
+        const response = await api().get<boolean>(
+          "/care-service/mungshop-like-status",
           {
             params: { mungShopId, userId },
           }
@@ -37,9 +36,9 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
       setIsLiked(!isLiked);
 
       const endpoint = isLiked
-        ? "/care/mungshop-unlike"
-        : "/care/mungshop-like";
-      await axios.post<MungShopLike>(basePath + endpoint, {
+        ? "/care-service/mungshop-unlike"
+        : "/care-service/mungshop-like";
+      await api().post<MungShopLike>(endpoint, {
         mungShopId,
         userId,
       });

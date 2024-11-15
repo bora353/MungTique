@@ -3,23 +3,22 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea } from "@mui/material";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
 import MuiButton from "../../../components/buttons/MuiButton";
 import { Link } from "react-router-dom";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 export default function MyMungCard() {
   const [myMungs, setMyMungs] = useState<MyMung[]>([]);
 
-  const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
 
   const userId = 1; // TODO : 현재 임의값, 수정필요
 
   const getMyMungs = async () => {
     try {
-      const response = await axios.get<MyMung[]>(
-        `${basePath}/care/mymung/${userId}`
+      const response = await api().get<MyMung[]>(
+        `/care-service/mymung/${userId}`
       );
       setMyMungs(response.data);
       console.log(response.data);

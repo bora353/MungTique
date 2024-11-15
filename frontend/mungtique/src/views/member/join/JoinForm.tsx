@@ -6,7 +6,7 @@ import { Join } from "./join.interface";
 import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
 import { userApi } from "./user.api";
-import axios from "axios";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
@@ -50,11 +50,10 @@ export default function JoinForm({ onsubmit }: JoinProps) {
 
   const handleMailCheckOK = async () => {
     // TODO : 이메일 중복도 체크해야 함!!!
-    const basePath = import.meta.env.VITE_BACKEND_SERVER;
     const userNumber = joinForm.emailVerify;
     const sentNumber = verifyNumber;
 
-    const response = await axios.get(`${basePath}/mail-check`, {
+    const response = await api().get(`user-service/mail-check`, {
       params: {
         userNumber,
         sentNumber,

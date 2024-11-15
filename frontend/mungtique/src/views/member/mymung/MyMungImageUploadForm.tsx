@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useState } from "react";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 export default function MyMungImageUploadForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,7 +19,6 @@ export default function MyMungImageUploadForm() {
     }
   };
 
-  const basePath = import.meta.env.VITE_BACKEND_SERVER_CARE;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,8 +36,8 @@ export default function MyMungImageUploadForm() {
     formData.append("mungId", mungId);
 
     try {
-      const response = await axios.post(
-        `${basePath}/care/upload-image`,
+      const response = await api().post(
+        `/care-service/upload-image`,
         formData,
         {
           headers: {

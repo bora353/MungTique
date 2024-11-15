@@ -16,7 +16,7 @@ import ShopContainer from "./views/shop/ShopContainer";
 
 function App() {
   const isLogin = useAuthStore((state) => state.isLogin);
-  console.log("현재 로그인 상태:", isLogin);
+  console.log("login status : ", isLogin);
 
   return (
     <div>

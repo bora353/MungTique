@@ -3,9 +3,16 @@ import { userApi } from "./user.api";
 
 export const useJoinViewModelHook = () => {
   const joinData = async (joinDTO: Join) => {
-    const response = await userApi.join(joinDTO);
-    return response.data;
+    const { data } = await userApi.join(joinDTO);
+
+    if (!data) {
+      console.error("No data returned from the join request.");
+      return;
+    }
+
+    console.log("Join response:", data);
   };
 
   return { joinData };
 };
+

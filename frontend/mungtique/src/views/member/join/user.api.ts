@@ -3,66 +3,125 @@ import { Join } from "./join.interface";
 import { UserEntity } from "../../../shared/types/user.interface";
 import { Login } from "../../../shared/types/login.interface";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
-
-const basePath = import.meta.env.VITE_BACKEND_SERVER;
+import { api } from "../../../shared/api/ApiInterceptor";
+import { useAuthStore } from "../login/hook/login.store";
 
 // TODO : 반환타입 백엔드에서 dto로 변경해야함 (UserEntity X)
 
+const basePath = import.meta.env.VITE_GATEWAY_SERVER;
+const AUTH_TOKEN_KEY = "access";
+
 const join = async (joinDTO: Join) =>
-  await axios.post<UserEntity>(basePath + "/join", joinDTO);
+  await api().post<UserEntity>(`/user-service/join`, joinDTO);
 
 const login = async (loginDTO: Login) => {
   const formData = new FormData();
   formData.append("email", loginDTO.email);
   formData.append("password", loginDTO.password);
-
-  try {
-    axios.defaults.withCredentials = true;
-    const response = await axios.post(`${basePath}/login`, formData, {
-      withCredentials: true,
-    });
-
-    if (response.status === 200) {
-      console.log(response);
-      const accessToken = response.headers["access"];
-      console.log("access Token:", accessToken);
-      localStorage.setItem("access", accessToken);
-
-      // 서버 응답에서 userId 추출
-      const userId = response.data.userId;
-      localStorage.setItem("userId", userId);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  await api().post<UserEntity>(`/user-service/login`, formData);
 };
 
-const logout = async () => {
-  axios.defaults.withCredentials = true;
+const logout = async () =>
+  await api().post<UserEntity>(`/user-service/logout`, null);
 
-  console.log("access 삭제 예정 : " + localStorage.getItem("access"));
-  localStorage.removeItem("access");
-  localStorage.removeItem("userId");
-  localStorage.clear();
+const mailCheck = async (mailDTO: MailCheck) =>
+  await api().post<string>(`/user-service/logout`, mailDTO);
 
-  const response = await axios.post(`${basePath}/logout`, null, {
-    withCredentials: true,
-  });
+// const join = async (joinDTO: Join) => {
+//   try {
+//     const response = await axios.post<UserEntity>(
+//       basePath + "/user-service/join",
+//       joinDTO
+//     );
 
-  console.log(response);
-  return response.data;
-};
+//     if (response.status === 200) {
+//       console.log(response);
+//       console.log("Join response:", response.data);
+//       return response;
+//     }
+//   } catch (error) {
+//     console.error("Join request failed:", error);
+//   }
+// };
 
-const mailCheck = async (mailDTO: MailCheck) => {
-  try {
-    const response = await axios.post<string>(`${basePath}/mail-send`, mailDTO);
-    return response.data;
-  } catch (error) {
-    // 에러 처리
-    console.error("이메일 인증 요청 중 오류가 발생했습니다:", error);
-    throw new Error("이메일 인증 요청에 실패했습니다.");
-  }
-};
+// const login = async (loginDTO: Login) => {
+//   const { setIsLogin } = useAuthStore.getState();
+
+//   const formData = new FormData();
+//   formData.append("email", loginDTO.email);
+//   formData.append("password", loginDTO.password);
+
+//   try {
+//     axios.defaults.withCredentials = true;
+//     const response = await axios.post(
+//       basePath + `/user-service/login`,
+//       formData
+//     );
+
+//     if (response.status === 200) {
+//       const authorizationHeader = response.headers["authorization"];
+//       if (authorizationHeader) {
+//         const accessToken = authorizationHeader.replace("Bearer ", "");
+//         console.log("Received new access token: ", accessToken);
+//         localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
+//         setIsLogin(true);
+//       }
+
+//       const userId = response.headers["userId"];
+//       if (userId) {
+//         console.log("Received userId: ", userId);
+//         localStorage.setItem("userId", userId);
+//       }
+//     }
+//     return response;
+//   } catch (error) {
+//     console.error("Login failed:", error);
+//     alert("로그인에 실패했습니다. 다시 시도해 주세요.");
+//     throw error;
+//   }
+// };
+
+// const logout = async () => {
+//   const { setIsLogin } = useAuthStore.getState();
+
+//   try {
+//     const response = await axios.post(basePath + `/user-service/logout`, null, {
+//       withCredentials: true,
+//     });
+
+//     if (response.status === 200) {
+//       console.log("Logout successful");
+//       localStorage.removeItem("access");
+//       localStorage.removeItem("userId");
+//       localStorage.clear();
+//       setIsLogin(false);
+//     }
+
+//     return response;
+//   } catch (error) {
+//     console.error("Logout failed:", error);
+//     alert("로그아웃에 실패했습니다.");
+//     throw error;
+//   }
+// };
+
+// const mailCheck = async (mailDTO: MailCheck) => {
+//   try {
+//     const response = await api().post<string>(
+//       `/user-service/mail-send`,
+//       mailDTO
+//     );
+//     return response.data;
+//   } catch (error) {
+//     // 에러 처리
+//     console.error(
+//       "An error occurred while requesting email verification:",
+//       error
+//     );
+//     alert("이메일 인증 요청에 실패했습니다.");
+//     throw error;
+//   }
+// };
 
 export const userApi = {
   join,
