@@ -2,9 +2,11 @@ package com.mung.mungtique.gateway.infrastructure.filter;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.netty.handler.codec.http.cookie.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.http.HttpCookie;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +39,13 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return ((exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
+            HttpCookie authCookie = request.getCookies().getFirst("Authorization");
+
+            if (authCookie != null) {
+                OAuthProcess(authCookie.getValue());
+                return chain.filter(exchange);
+            }
+
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED);
             }
@@ -44,7 +54,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String jwt = authorizationHeader.replace("Bearer ", "");
 
             if (!isJwtValid(jwt)) {
-                return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
+                return onError(exchange, "Invalid or expired JWT token", HttpStatus.UNAUTHORIZED);
             }
             
             /*exchange.getRequest().mutate()
@@ -90,6 +100,21 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
 
         return returnValue;
+    }
+
+    private void OAuthProcess(String token) {
+        byte[] secretKeyBytes = Base64.getEncoder().encode(secret.getBytes());
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        String username = claims.get("username", String.class);
+
+        log.info("isJwtValid - claim(username) : {}", username);
     }
 
     public static class Config {
