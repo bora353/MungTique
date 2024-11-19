@@ -1,16 +1,22 @@
-import { Link } from "react-router-dom";
-import MuiButton from "../../../components/buttons/MuiButton";
 import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
-import MyMungContainer from "../mymung/MyMungContainer";
 import { useAuthStore } from "../login/hook/login.store";
+import MyMungContainer from "../mymung/MyMungContainer";
+import MuiButton from "../../../components/buttons/MuiButton";
+import { Link } from "react-router-dom";
 
 export default function MyPageContainer() {
+  const AUTH_TOKEN_KEY = "access";
+  const { setIsLogin } = useAuthStore.getState();
   const { logoutData } = useLogoutViewModelHook();
-  const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
-  const handleLogout = () => {
-    logoutData();
-    setIsLogin(false); // 로그인 상태유지
+  const handleLogout = async () => {
+    const logoutResult = await logoutData();
+
+    if (logoutResult && logoutResult.status === 200) {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem("userId");
+      setIsLogin(false);
+    }
   };
 
   const handleMyMung = () => {};

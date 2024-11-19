@@ -19,8 +19,7 @@ const login = async (loginDTO: Login) => {
   });
 };
 
-const logout = async () =>
-  await api().post<UserEntity>(`/user-service/logout`, null);
+const logout = async () => await api().post(`/user-service/logout`, null);
 
 const mailCheck = async (mailDTO: MailCheck) =>
   await api().post<string>(`/user-service/logout`, mailDTO);
