@@ -2,11 +2,36 @@ import LoginButton from "./LoginSignInButton";
 import LoginForm from "./LoginForm";
 import { Login } from "../../../shared/types/login.interface";
 import { useLoginViewModelHook } from "./hook/useLoginViewModel.hook";
+import { useAuthStore } from "./hook/login.store";
+import { useEffect } from "react";
 
 export default function LoginContainer() {
-  // TODO : Hook, mutate 사용
+  const AUTH_TOKEN_KEY = "access";
+  const { setIsLogin } = useAuthStore.getState();
   const { loginData } = useLoginViewModelHook();
-  const handleLoginSubmit = (loginDTO: Login) => loginData(loginDTO);
+  const handleLoginSubmit = async (loginDTO: Login) => {
+    const { userId, accessToken } = await loginData(loginDTO);
+
+    if (userId) {
+      localStorage.setItem("userId", userId);
+      console.log("User ID saved:", userId);
+    }
+    if (accessToken) {
+      localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
+      console.log("Access token saved:", accessToken);
+    }
+  };
+
+  useEffect(() => {
+    const storedAccessToken = localStorage.getItem(AUTH_TOKEN_KEY);
+    const storedUserId = localStorage.getItem("userId");
+
+    if (storedAccessToken && storedUserId) {
+      setIsLogin(true);
+      console.log("Stored Access token:", storedAccessToken);
+      console.log("Stored User ID:", storedUserId);
+    }
+  }, [setIsLogin]);
 
   return (
     <div>

@@ -1,15 +1,8 @@
-import axios from "axios";
 import { Join } from "./join.interface";
 import { UserEntity } from "../../../shared/types/user.interface";
 import { Login } from "../../../shared/types/login.interface";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
 import { api } from "../../../shared/api/ApiInterceptor";
-import { useAuthStore } from "../login/hook/login.store";
-
-// TODO : 반환타입 백엔드에서 dto로 변경해야함 (UserEntity X)
-
-const basePath = import.meta.env.VITE_GATEWAY_SERVER;
-const AUTH_TOKEN_KEY = "access";
 
 const join = async (joinDTO: Join) =>
   await api().post<UserEntity>(`/user-service/join`, joinDTO);
@@ -18,7 +11,12 @@ const login = async (loginDTO: Login) => {
   const formData = new FormData();
   formData.append("email", loginDTO.email);
   formData.append("password", loginDTO.password);
-  await api().post<UserEntity>(`/user-service/login`, formData);
+  return await api().post(`/user-service/login`, formData, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    withCredentials: true,
+  });
 };
 
 const logout = async () =>

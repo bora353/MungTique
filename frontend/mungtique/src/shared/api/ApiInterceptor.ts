@@ -4,6 +4,7 @@ export interface ApiInterceptor {}
 
 const serverUrl = import.meta.env.VITE_GATEWAY_SERVER;
 const AUTH_TOKEN_KEY = "access";
+const token = localStorage.getItem(AUTH_TOKEN_KEY);
 
 const apiClient = (baseUrl: string): AxiosInstance => {
   const instance = axios.create({
@@ -11,7 +12,7 @@ const apiClient = (baseUrl: string): AxiosInstance => {
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem(AUTH_TOKEN_KEY)}`,
+      Authorization: token ? `Bearer ${token}` : undefined,
     },
     timeout: 3000,
   });
@@ -51,6 +52,7 @@ const apiInterceptor = (baseUrl: string) => {
               console.log("Received new access token: ", accessToken);
               localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
             }
+            return axiosInstance(error.config);
           } catch (err) {
             console.error("Error during token reissue", err);
             alert("Session expired. Please log in again.");
@@ -79,7 +81,7 @@ function signOut() {
     .then(() => console.log("Logout from server"))
     .catch((err) => console.error("Server logout failed", err));
 
-  window.location.href = "/login";
+  window.location.replace("/login"); // 뒤로 가기 방지
 }
 
 export const api = () => apiInterceptor(serverUrl);
