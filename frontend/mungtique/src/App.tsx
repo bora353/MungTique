@@ -29,10 +29,10 @@ function App() {
             <Route path="/join" element={<JoinContainer />} />
             <Route path="/care" element={<CareContainer />} />
             <Route path="/shop" element={<ShopContainer />} />
+            <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
 
             {isLogin ? (
               <>
-                <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
                 <Route path="/findinfo" element={<FindInfoContainer />} />
                 {<Route path="/mypage" element={<MyPageContainer />} />}
                 <Route path="/mymung" element={<MyMungJoinContainer />} />
@@ -42,7 +42,12 @@ function App() {
                     element={<ReservationContainer />}
                   />
                 }
-                {<Route path="/mungimage" element={<MyMungImageUploadContainer />} />}
+                {
+                  <Route
+                    path="/mungimage"
+                    element={<MyMungImageUploadContainer />}
+                  />
+                }
               </>
             ) : null}
           </Route>

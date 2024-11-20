@@ -14,7 +14,7 @@ const apiClient = (baseUrl: string): AxiosInstance => {
       "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : undefined,
     },
-    timeout: 3000,
+    // timeout: 3000,
   });
 
   console.log("API Client created with configuration:", {
