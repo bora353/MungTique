@@ -25,9 +25,9 @@ const mailSend = async (mailDTO: MailCheck) => {
   return await api().post<string>(`/user-service/mail-send`, mailDTO);
 };
 
-const mailCheck = async (userNumber: string, sentNumber: string) =>
+const mailCheck = async (mail: string, providedVerificationCode: string) =>
   await api().get<boolean>(`/user-service/mail-check`, {
-    params: { userNumber, sentNumber },
+    params: { mail, providedVerificationCode },
   });
 
 export const userApi = {
