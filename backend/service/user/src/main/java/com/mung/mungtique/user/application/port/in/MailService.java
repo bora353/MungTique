@@ -4,5 +4,7 @@ import jakarta.mail.MessagingException;
 
 public interface MailService {
 
-    int sendMail(String mail) throws MessagingException;
+    int sendEmailWithVerificationCode(String mail) throws MessagingException;
+    boolean isEmailDuplicate(String mail);
+    boolean checkMailVerificationCode(String mail, String providedVerificationCode);
 }
