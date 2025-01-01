@@ -1,18 +1,15 @@
 package com.mung.mungtique.care.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "image")
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class Image {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Image extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

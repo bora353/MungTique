@@ -1,18 +1,15 @@
 package com.mung.mungtique.care.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "mymung")
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class MyMung {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MyMung extends BaseTime {
     // TODO : 강아지 여러마리 키울 수도 있으니 1:N
 
     @Id

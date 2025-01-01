@@ -1,18 +1,15 @@
 package com.mung.mungtique.care.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "mung_shop_price")
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class MungShopPrice {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class MungShopPrice extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
