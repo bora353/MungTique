@@ -23,14 +23,16 @@ public class MungShop extends BaseTime {
     @Column(length = 100)
     private String storeAddress;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 100)
-    private String breeds;
+    private BreedType breedType;
 
     @Column(length = 50)
     private String businessHours;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 50)
-    private String closingDays;
+    private ClosingDayType closingDays;
 
     @Column(length = 30)
     private String latitude ;

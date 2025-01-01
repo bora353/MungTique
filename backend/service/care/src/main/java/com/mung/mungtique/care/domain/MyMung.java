@@ -20,7 +20,8 @@ public class MyMung extends BaseTime {
     private String mungName;
 
     @Column(length = 50, nullable = false)
-    private String breed;
+    @Enumerated(EnumType.STRING)
+    private BreedType breedType;
 
     @Column(length = 10, nullable = false)
     private int weight;

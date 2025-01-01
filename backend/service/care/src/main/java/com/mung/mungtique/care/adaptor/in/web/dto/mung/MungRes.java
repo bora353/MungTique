@@ -1,6 +1,7 @@
 package com.mung.mungtique.care.adaptor.in.web.dto.mung;
 
 import com.mung.mungtique.care.adaptor.in.web.dto.image.ImageUploadRes;
+import com.mung.mungtique.care.domain.BreedType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 public class MungRes {
     private Long myMungId;
     private String mungName;
-    private String breed;
+    private BreedType breedType;
     private int weight;
     private int age;
     private String gender;
