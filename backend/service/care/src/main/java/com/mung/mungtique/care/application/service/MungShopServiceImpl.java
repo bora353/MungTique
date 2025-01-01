@@ -11,12 +11,14 @@ import com.mung.mungtique.care.domain.MungShopLike;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MungShopServiceImpl implements MungShopService {
 
     private final MungShopRepoPort mungShopRepoPort;
@@ -35,6 +37,7 @@ public class MungShopServiceImpl implements MungShopService {
     }
 
     @Override
+    @Transactional
     public MungShopLikeRes likeMungShop(MungShopLikeReq mungShopLikeReq) {
 
         MungShop mungShop = mungShopRepoPort.findById(mungShopLikeReq.mungShopId()).orElseThrow(() -> new EntityNotFoundException("MungShop with id " + mungShopLikeReq.mungShopId() + " not found"));
@@ -50,6 +53,7 @@ public class MungShopServiceImpl implements MungShopService {
     }
 
     @Override
+    @Transactional
     public boolean unlikeMungShop(MungShopLikeReq mungShopLikeReq) {
         Long mungShopId = mungShopLikeReq.mungShopId();
         Long userId = mungShopLikeReq.userId();

@@ -4,34 +4,37 @@ import com.mung.mungtique.care.adaptor.in.web.dto.image.ImageUploadRes;
 import com.mung.mungtique.care.adaptor.in.web.dto.mung.MungJoinReq;
 import com.mung.mungtique.care.adaptor.in.web.dto.mung.MungRes;
 import com.mung.mungtique.care.application.port.in.MungService;
-import com.mung.mungtique.care.application.port.out.MungPort;
+import com.mung.mungtique.care.application.port.out.MungRepoPort;
 import com.mung.mungtique.care.application.service.mapper.MungMapper;
 import com.mung.mungtique.care.domain.MyMung;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class MungServiceImpl implements MungService {
 
-    private final MungPort mungPort;
+    private final MungRepoPort mungRepoPort;
     private final MungMapper mapper;
 
     @Override
+    @Transactional
     public MyMung join(MungJoinReq mungJoinReq) {
         MyMung myMung = mapper.dtoToDomain(mungJoinReq);
 
-        return mungPort.join(myMung);
+        return mungRepoPort.save(myMung);
     }
 
     @Override
     public List<MungRes> getMyMungs(Long userId) {
 
-        List<MyMung> byUserId = mungPort.findByUserId(userId);
+        List<MyMung> byUserId = mungRepoPort.findByUserId(userId);
         List<MungRes> mungResList = mapper.domainListToDtoList(byUserId);
 
         for (MungRes mungRes : mungResList) {

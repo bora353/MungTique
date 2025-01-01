@@ -1,6 +1,5 @@
 package com.mung.mungtique.user.application.service;
 
-import com.mung.mungtique.user.adaptor.in.web.dto.MailReq;
 import com.mung.mungtique.user.application.port.in.MailService;
 import com.mung.mungtique.user.application.port.out.RedisPort;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
@@ -11,10 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class MailServiceImpl implements MailService {
 
     private final UserRepoPort userRepoPort;

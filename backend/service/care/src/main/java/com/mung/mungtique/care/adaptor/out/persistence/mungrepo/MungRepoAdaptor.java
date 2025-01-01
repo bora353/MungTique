@@ -1,6 +1,6 @@
 package com.mung.mungtique.care.adaptor.out.persistence.mungrepo;
 
-import com.mung.mungtique.care.application.port.out.MungPort;
+import com.mung.mungtique.care.application.port.out.MungRepoPort;
 import com.mung.mungtique.care.domain.MyMung;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,12 +10,12 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class MungRepoAdaptor implements MungPort {
+public class MungRepoAdaptor implements MungRepoPort {
 
     private final MungRepo mungRepo;
 
     @Override
-    public MyMung join(MyMung myMung) {
+    public MyMung save(MyMung myMung) {
         return mungRepo.save(myMung);
     }
 

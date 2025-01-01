@@ -3,7 +3,6 @@ package com.mung.mungtique.user.application.service;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
 import com.mung.mungtique.user.application.port.in.UserService;
-import com.mung.mungtique.user.application.port.out.TokenRepoPort;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import com.mung.mungtique.user.application.service.mapper.UserMapper;
 import com.mung.mungtique.user.domain.Authority;
@@ -15,16 +14,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepoPort userRepoPort;
-    private final TokenRepoPort tokenRepoPort;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public JoinRes createUser(JoinReq joinReq) {
         String encodedPassword = bCryptPasswordEncoder.encode(joinReq.password());
         Boolean isExist = userRepoPort.existsByEmail(joinReq.email());

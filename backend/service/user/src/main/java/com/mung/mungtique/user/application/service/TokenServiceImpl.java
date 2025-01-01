@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TokenServiceImpl implements TokenService {
 
     private final JwtUtil jwtUtil;
@@ -26,6 +28,7 @@ public class TokenServiceImpl implements TokenService {
     private String REFRESH_TOKEN_EXPIRATION_TIME;
 
     @Override
+    @Transactional
     public Token saveRefreshToken(String email, String refreshToken) {
         Instant now = Instant.now();
         Instant expirationTime = now.plusMillis(Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME));
@@ -40,6 +43,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    @Transactional
     public void deleteRefreshToken(String refreshToken) {
         tokenRepoPort.deleteRefreshToken(refreshToken);
     }
