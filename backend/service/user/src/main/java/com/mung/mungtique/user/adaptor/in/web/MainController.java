@@ -1,5 +1,6 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 @RequestMapping("/api/v1")
 public class MainController {
 
+    @Operation(summary = "메인 페이지")
     @GetMapping("/user-info")
     public String mainPage(){
 

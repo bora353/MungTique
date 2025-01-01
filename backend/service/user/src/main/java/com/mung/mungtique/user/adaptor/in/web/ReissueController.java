@@ -1,6 +1,7 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
 import com.mung.mungtique.user.application.port.in.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/")
 public class ReissueController {
 
     /**
@@ -31,6 +32,7 @@ public class ReissueController {
 
     private final TokenService tokenService;
 
+    @Operation(summary = "access token 만료 시, refresh token을 통해 다시 reissue")
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         try {

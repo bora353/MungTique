@@ -1,4 +1,3 @@
-/*
 package com.mung.mungtique.care.infrastructure.config;
 
 import io.swagger.v3.oas.models.Components;
@@ -12,10 +11,11 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI().components(new Components()).info(apiInfo()); }
-
-    private Info apiInfo() {
-        return new Info().title("Mungtique API").description("Mungtique API").version("1.0.0"); }
-
+        return new OpenAPI()
+                .components(new Components())
+                .info(new Info()
+                        .title("Mungtique Care API")
+                        .description("Mungtique API Documentation")
+                        .version("1.0.0"));
+    }
 }
-*/
