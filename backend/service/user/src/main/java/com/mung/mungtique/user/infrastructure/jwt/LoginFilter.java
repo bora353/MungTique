@@ -1,5 +1,6 @@
 package com.mung.mungtique.user.infrastructure.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mung.mungtique.user.application.port.in.TokenService;
 import com.mung.mungtique.user.application.port.in.UserService;
 import com.mung.mungtique.user.domain.UserEntity;
@@ -19,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -85,10 +88,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         tokenService.saveRefreshToken(email, refresh);
 
         response.setHeader("Authorization", "Bearer " + access);
-        //response.addHeader("aceess", access);
-        response.addHeader("userId", String.valueOf(userDetails.getId()));
         response.addCookie(createCookie("refresh", refresh)); // refresh token -> 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("userId", userDetails.getId());
+
+        response.setContentType("application/json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(response.getWriter(), responseBody);
 
         log.info("successfulAuthentication - access, refresh token send Complete");
     }

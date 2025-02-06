@@ -25,5 +25,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     // testCode h2
     testImplementation 'com.h2database:h2'
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 

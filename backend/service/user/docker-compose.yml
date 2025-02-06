@@ -12,6 +12,8 @@ services:
       - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
+      - REDIS_IP=${REDIS_IP}
+      - REDIS_PORT=${REDIS_PORT}
     ports:
       - "8082:8080"
     volumes:

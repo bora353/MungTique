@@ -12,7 +12,7 @@ services:
       - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini
     restart: always
     networks:
-      - mung-network
+      - mungtique
 
   prometheus:
     image: prom/prometheus
@@ -27,7 +27,7 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
     restart: always
     networks:
-      - mung-network
+      - mungtique
 
   node_exporter:
     image: prom/node-exporter
@@ -36,10 +36,10 @@ services:
       - "9100:9100"
     restart: always
     networks:
-      - mung-network
+      - mungtique
 
   postgres:
-    image: postgres:15
+    image: postgres:latest
     container_name: postgres
     ports:
       - "5432:5432"
@@ -52,7 +52,7 @@ services:
     volumes:
       - /postgresql/data:/var/lib/postgresql/data
     networks:
-      - mung-network
+      - mungtique
 
   pg_exporter:
     image: prometheuscommunity/postgres-exporter:v0.11.1
@@ -62,7 +62,7 @@ services:
     environment:
       - DATA_SOURCE_NAME=postgresql://mungtique:1234@postgres:5432/mungmung?sslmode=disable
     networks:
-      - mung-network
+      - mungtique
 
   loki:
     image: grafana/loki:latest
@@ -73,7 +73,7 @@ services:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
     command: -config.file=/etc/loki/loki-config.yml
     networks:
-      - mung-network
+      - mungtique
 
   promtail:
     image: grafana/promtail:latest
@@ -83,8 +83,9 @@ services:
       - ./loki/promtail-config.yml:/etc/promtail/promtail-config.yml
     command: -config.file=/etc/promtail/promtail-config.yml
     networks:
-      - mung-network
+      - mungtique
 
 networks:
-  mung-network:
+  mungtique:
     driver: bridge
+    external: true

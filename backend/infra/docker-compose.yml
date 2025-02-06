@@ -1,11 +1,11 @@
 version: "3.7"
 services:
-    # aegis_redis:
-    #     image: redis:latest
-    #     ports:
-    #         - 6379:6379
-    #     networks:
-    #         - mungtique
+    redis:
+        image: redis:latest
+        ports:
+            - 6379:6379
+        networks:
+            - mungtique
 
     zookeeper-1:
         image: bitnami/zookeeper:latest

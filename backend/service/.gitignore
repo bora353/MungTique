@@ -5,7 +5,7 @@
 **/mount/**
 .env
 .env.cpy
-
+.idea
 *.log
 logs/**
 HELP.md
