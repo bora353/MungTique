@@ -1,0 +1,21 @@
+package com.mung.mungtique.dog.adaptor.in.web.dto.mung;
+
+
+import com.mung.mungtique.dog.adaptor.in.web.dto.image.ImageUploadRes;
+import com.mung.mungtique.dog.domain.BreedType;
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class DogRes {
+    private Long myMungId;
+    private String mungName;
+    private BreedType breedType;
+    private int weight;
+    private int age;
+    private String gender;
+    private String fixed;
+    private Long userId;
+    private ImageUploadRes image;
+}

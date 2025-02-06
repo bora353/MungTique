@@ -1,3 +1,4 @@
 rootProject.name = 'spring-mungtique'
 include 'user'
-include 'care'
+include 'mungshop'
+include 'dog'

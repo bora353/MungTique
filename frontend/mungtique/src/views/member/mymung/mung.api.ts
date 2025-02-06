@@ -3,7 +3,7 @@ import { UserEntity } from "../../../shared/types/user.interface";
 import { api } from "../../../shared/api/ApiInterceptor";
 
 const mungJoin = async (mungJoinDTO: MyMung) =>
-  await api().post<UserEntity>("/care-service/join/mung", mungJoinDTO);
+  await api().post<UserEntity>("/dogs", mungJoinDTO);
 
 export const mungApi = {
   mungJoin,

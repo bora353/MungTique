@@ -18,7 +18,7 @@ export default function MyMungCard() {
   const getMyMungs = async () => {
     try {
       const response = await api().get<MyMung[]>(
-        `/care-service/mymung/${userId}`
+        `/dogs/${userId}`
       );
       setMyMungs(response.data);
       console.log(response.data);
