@@ -22,11 +22,19 @@ public class CorsGlobalConfiguration {
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
+        http.formLogin((auth) -> auth.disable());
+        http.httpBasic((auth) -> auth.disable());
+
         http.authorizeExchange((auth) -> auth
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/h2-console/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/join").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/auth/user-service/reissue").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/user-service/mail-send").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/v1/user-service/mail-check").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/user-service/login").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/user-service/logout").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/user-service/reissue").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/care-service/**").permitAll()
                         .pathMatchers("/swagger-ui/**").permitAll()
                         .pathMatchers("/swagger-resources/**").permitAll()
                         .pathMatchers("/v3/api-docs/**").permitAll()
@@ -46,6 +54,7 @@ public class CorsGlobalConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedHeader("Authorization");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.addExposedHeader("Authorization");

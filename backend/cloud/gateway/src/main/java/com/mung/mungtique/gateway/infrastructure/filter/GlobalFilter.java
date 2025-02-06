@@ -22,6 +22,13 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
     public GatewayFilter apply(Config config) {
         // Custom Pre Filter
         return ((exchange, chain) -> {
+
+            if (exchange.getRequest().getURI().getPath().equals("/api/v1/user-service/join")
+                || exchange.getRequest().getURI().getPath().equals("/api/v1/user-service/login")
+                || exchange.getRequest().getURI().getPath().equals("/api/v1/user-service/logout")) {
+                return chain.filter(exchange);
+            }
+
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
 
