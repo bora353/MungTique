@@ -1,6 +1,5 @@
 package com.mung.mungtique.mungshop.application.service;
 
-import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeReq;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeRes;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.mungshop.application.port.in.MungShopService;
@@ -38,12 +37,13 @@ public class MungShopServiceImpl implements MungShopService {
 
     @Override
     @Transactional
-    public MungShopLikeRes likeMungShop(MungShopLikeReq mungShopLikeReq) {
 
-        MungShop mungShop = mungShopRepoPort.findById(mungShopLikeReq.mungShopId()).orElseThrow(() -> new EntityNotFoundException("MungShop with id " + mungShopLikeReq.mungShopId() + " not found"));
+    public MungShopLikeRes likeMungShop(Long mungShopId, Long userId) {
+
+        MungShop mungShop = mungShopRepoPort.findById(mungShopId).orElseThrow(() -> new EntityNotFoundException("MungShop with id " + mungShopId + " not found"));
 
         MungShopLike mungShopLike = MungShopLike.builder()
-                .userId(mungShopLikeReq.userId())
+                .userId(userId)
                 .mungShop(mungShop)
                 .build();
 
@@ -54,10 +54,7 @@ public class MungShopServiceImpl implements MungShopService {
 
     @Override
     @Transactional
-    public boolean unlikeMungShop(MungShopLikeReq mungShopLikeReq) {
-        Long mungShopId = mungShopLikeReq.mungShopId();
-        Long userId = mungShopLikeReq.userId();
-
+    public boolean unlikeMungShop(Long mungShopId, Long userId) {
         MungShopLike existingLike = mungShopRepoPort.findByMungShopMungShopIdAndUserId(mungShopId, userId)
                                     .orElseThrow(() -> new NoSuchElementException("No MungShopLike found with the given MungShopId and UserId"));
 

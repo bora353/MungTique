@@ -19,7 +19,7 @@ public class Image extends BaseTime {
     private String url;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "myMungId")
+    @JoinColumn(name = "dogId", nullable = false)
     private Dog dog;
 
     public void updateUrl(String url){

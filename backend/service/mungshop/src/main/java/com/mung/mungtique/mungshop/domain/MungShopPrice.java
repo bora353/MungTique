@@ -19,13 +19,13 @@ public class MungShopPrice extends BaseTime {
     @Enumerated(EnumType.STRING)
     private BreedType breedType;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String serviceType;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mung_shop_id")
+    @JoinColumn(name = "mung_shop_id", nullable = false)
     private MungShop mungShop;
 }

@@ -1,6 +1,5 @@
 package com.mung.mungtique.mungshop.adaptor.in.web;
 
-import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeReq;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeRes;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.mungshop.application.port.in.MungShopService;
@@ -31,23 +30,23 @@ public class MungShopController {
     @GetMapping("/mungshops/like-status")
     public ResponseEntity<Boolean> likeMungShopStatus(@RequestParam Long mungShopId, @RequestParam Long userId) {
 
-        log.info("Like MungShop Status {}, {}", mungShopId, userId);
+        log.info("like status for MungShopId: {} by UserId: {}", mungShopId, userId);
         return ResponseEntity.ok(mungShopService.likeMungShopStatus(mungShopId, userId));
     }
     
     @Operation(summary = "애견샵에 좋아요를 선택한다.")
     @PostMapping("/mungshops/{mungShopId}/like")
     public ResponseEntity<MungShopLikeRes> likeMungShop(@PathVariable Long mungShopId,
-                                                        @RequestBody MungShopLikeReq mungShopLikeReq) {
-        log.info("Like MungShop" + mungShopLikeReq);
-        return ResponseEntity.ok(mungShopService.likeMungShop(mungShopLikeReq));
+                                                        @RequestBody Long userId) {
+        log.info("UserId: {} is liking MungShopId: {}", userId, mungShopId);
+        return ResponseEntity.ok(mungShopService.likeMungShop(mungShopId, userId));
     }
     
     @Operation(summary = "애견샵에 싫어요를 선택한다.")
     @PostMapping("/mungshops/{mungShopId}/unlike")
     public ResponseEntity<Boolean> unlikeMungShop(@PathVariable Long mungShopId,
-                                                        @RequestBody MungShopLikeReq mungShopLikeReq) {
-        log.info("UnLike MungShop" + mungShopLikeReq);
-        return ResponseEntity.ok(mungShopService.unlikeMungShop(mungShopLikeReq));
+                                                        @RequestBody Long userId) {
+        log.info("UserId: {} is unliking MungShopId: {}", userId, mungShopId);
+        return ResponseEntity.ok(mungShopService.unlikeMungShop(mungShopId, userId));
     }
 }

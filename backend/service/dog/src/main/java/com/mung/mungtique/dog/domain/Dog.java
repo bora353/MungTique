@@ -19,26 +19,26 @@ public class Dog extends BaseTime {
     @Column(length = 50, nullable = false)
     private String dogName;
 
-    @Column(length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(length = 50, nullable = false)
     private BreedType breedType;
 
-    @Column(length = 10, nullable = false)
+    @Column(nullable = false)
     private int weight;
 
-    @Column(length = 10, nullable = false)
+    @Column(nullable = false)
     private int age;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private String gender; // enum 타입?
+    private Gender gender;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private String fixed; // enum 타입?
+    private FixedStatus fixed;
 
-    @Column(length = 20)
     private Long userId;
 
     @OneToOne(mappedBy = "dog", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Image image;
-
 }

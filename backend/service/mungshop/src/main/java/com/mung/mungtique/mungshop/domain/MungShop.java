@@ -3,6 +3,7 @@ package com.mung.mungtique.mungshop.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -20,32 +21,32 @@ public class MungShop extends BaseTime {
     @Column(length = 20, nullable = false)
     private String storeName;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String storeAddress;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 100)
     private BreedType breedType;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String businessHours;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private ClosingDayType closingDays;
 
-    @Column(length = 30)
-    private String latitude ;
+    @Column(precision = 10, scale = 7, nullable = false)
+    private BigDecimal latitude;
 
-    @Column(length = 30)
-    private String longitude;
+    @Column(precision = 10, scale = 7, nullable = false)
+    private BigDecimal longitude;
 
     @Column(length = 200)
-    private String filePath;
+    private String storeImageUrl;
 
-    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MungShopPrice> prices;
 
-    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MungShopLike> likes;
 }

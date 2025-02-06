@@ -15,11 +15,11 @@ public class MungShopLike extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mungShopLikeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mung_shop_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "mung_shop_id", nullable = false)
     private MungShop mungShop;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
 }
