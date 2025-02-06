@@ -1,6 +1,6 @@
 package com.mung.mungtique.user.application.service;
 
-import com.mung.mungtique.user.application.port.in.MailService;
+import com.mung.mungtique.user.application.port.in.EmailService;
 import com.mung.mungtique.user.application.port.out.RedisPort;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import jakarta.mail.MessagingException;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class MailServiceImpl implements MailService {
+public class EmailServiceImpl implements EmailService {
 
     private final UserRepoPort userRepoPort;
     private final RedisPort redisPort;

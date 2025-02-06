@@ -4,6 +4,7 @@ import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
 import com.mung.mungtique.user.application.port.in.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class UserController {
 
     @PostMapping("/join")
     @Operation(summary = "user 회원가입한다.")
-    public ResponseEntity<JoinRes> registerUser(@RequestBody JoinReq joinReq){
+    public ResponseEntity<JoinRes> registerUser(@RequestBody @Valid JoinReq joinReq){
         JoinRes joinRes = userService.createUser(joinReq);
 
         if (joinRes == null) {

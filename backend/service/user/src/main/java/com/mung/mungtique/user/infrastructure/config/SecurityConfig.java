@@ -88,7 +88,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/actuator/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/join", "POST")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/auth/reissue", "POST")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/reissue", "POST")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/swagger-resources/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
@@ -120,7 +120,7 @@ public class SecurityConfig {
         /*http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/api/v1/", "/api/v1/user/login", "/api/v1/join", "/swagger-ui/**",
-                                "/v3/api-docs/**", "/user/logout","/api/v1/mail-check","/api/v1/mail-send").permitAll() // 모든 사용자 허용
+                                "/v3/api-docs/**", "/user/logout","/api/v1/email-check","/api/v1/email-send").permitAll() // 모든 사용자 허용
 
                         .requestMatchers("/api/v1/reissue").permitAll() // 모든 사용자 허용
                         .requestMatchers("/api/v1/admin").hasRole("ADMIN") // ADMIN 권한을 가진 사용자만 허용
