@@ -1,4 +1,4 @@
-INSERT INTO mung_shop (store_name, store_address, breed_type, business_hours, closing_days, latitude, longitude, file_path)
+INSERT INTO mung_shop (store_name, store_address, breed_type, business_hours, closing_days, latitude, longitude, store_image_url)
 VALUES
     ('즐거운 애견 미용실', '경기 화성시 동탄공원로1길 22-3 1층 101호', 'ALL', '10:00 AM - 18:30 PM', 'NONE', '37.2031802', '127.060017','/images/mungshop/shop1.jpg'),
     ('멍샬롬', '경기 화성시 동탄공원로 36 다경프라자 1층', 'ALL', '10:30 AM - 20:00 PM', 'SUNDAY', '37.202773', '127.0596957','/images/mungshop/shop2.jpg'),
