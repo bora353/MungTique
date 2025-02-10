@@ -6,6 +6,7 @@ import com.mung.mungtique.dog.adaptor.in.web.dto.image.ImageUploadRes;
 import com.mung.mungtique.dog.application.port.in.ImageService;
 import com.mung.mungtique.dog.application.port.out.DogRepoPort;
 import com.mung.mungtique.dog.application.port.out.ImageRepoPort;
+import com.mung.mungtique.dog.application.port.out.ImageStoragePort;
 import com.mung.mungtique.dog.domain.Image;
 import com.mung.mungtique.dog.domain.Dog;
 import lombok.RequiredArgsConstructor;
@@ -28,40 +29,31 @@ public class ImageServiceImpl implements ImageService {
 
     private final ImageRepoPort imageRepoPort;
     private final DogRepoPort dogRepoPort;
-
-    @Value("${file.path.image}")
-    private String uploadFolder;
+    private final ImageStoragePort imageStoragePort;
 
     @Override
     @Transactional
     public ImageUploadRes upload(ImageUploadReq imageUploadReq) throws IOException {
-        Long DogId = imageUploadReq.dogId();
+        Long dogId = imageUploadReq.dogId();
         MultipartFile file = imageUploadReq.file();
-        Dog dog = dogRepoPort.findById(DogId).orElseThrow(() -> new NoSuchElementException("Could not find Dog with the given ID"));
+        Dog dog = dogRepoPort.findById(dogId).orElseThrow(() -> new NoSuchElementException("Dog not found with ID: " + dogId));
 
-        UUID uuid = UUID.randomUUID();
-        String imageFileName = uuid + "_" + file.getOriginalFilename();
+        String uploadUrl = imageStoragePort.uploadDogImage(file, dogId);
+        log.info("Upload URL: {}", uploadUrl);
 
-        // TODO : Object Storage 사용하자
-        File destinationFile = new File(uploadFolder + imageFileName);
-        log.info("destinationFile : {}", destinationFile);
+        Image image = imageRepoPort.findByDog(dog)
+                .map(existingImage -> {
+                    existingImage.updateUrl(uploadUrl);
+                    return existingImage;
+                })
+                .orElseGet(() -> Image.builder()
+                                        .dog(dog)
+                                        .url(uploadUrl)
+                                        .build());
 
-        file.transferTo(destinationFile);
-
-        Image image = imageRepoPort.findByDog(dog);
-        log.info("image : {} ", image);
-
-        if (image != null) {
-            image.updateUrl("/DogImages/" + imageFileName);
-        } else {
-            image = Image.builder()
-                    .dog(dog)
-                    .url("/DogImages/" + imageFileName)
-                    .build();
-        }
         Image savedImage = imageRepoPort.save(image);
-        log.info("Saved Image : {}", savedImage);
+        log.info("Dog ID: {}, Saved Image: {}", dogId, savedImage);
 
-        return new ImageUploadRes("/DogImages/" + imageFileName);
+        return new ImageUploadRes(uploadUrl);
     }
 }

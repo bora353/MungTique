@@ -47,6 +47,8 @@ public class DogServiceImpl implements DogService {
 
             DogRes.setImage(new ImageUploadRes(imageUrl));
         }
+        
+        // TODO : 예외처리로 기본 이미지 보여지게 해야함(메서드 수정 많이 필요)
 
         return DogResList;
     }

@@ -6,6 +6,8 @@ import com.mung.mungtique.dog.domain.Image;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ImageRepoAdaptor implements ImageRepoPort {
@@ -13,8 +15,8 @@ public class ImageRepoAdaptor implements ImageRepoPort {
     private final ImageRepo imageRepo;
 
     @Override
-    public Image findByDog(Dog myMung) {
-        return imageRepo.findByDog(myMung);
+    public Optional<Image> findByDog(Dog myMung) {
+        return Optional.ofNullable(imageRepo.findByDog(myMung));
     }
 
     @Override
