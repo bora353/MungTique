@@ -51,7 +51,7 @@ export default function JoinForm({ onsubmit }: JoinProps) {
         return;
       }
 
-      const mailDTO: MailCheck = { mail: email };
+      const mailDTO: MailCheck = { email: email };
       const result = await userApi.mailSend(mailDTO);
       console.log("이메일 인증 요청 완료", result);
 

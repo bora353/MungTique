@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 interface AuthState {
   isLogin: boolean;
-  setIsLogin: (loggedIn: boolean) => void;
+  setIsLogin: (loggedIn: boolean, token?: string) => void;
 }
 
 const AUTH_TOKEN_KEY = "access";

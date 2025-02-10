@@ -2,8 +2,8 @@ import { MungShop } from "../../../shared/types/mungshop.interface";
 import { api } from "../../../shared/api/ApiInterceptor";
 
 const getMungShops = async () =>
-  await api().get<MungShop[]>(`/care-service/mungshops`);
+  await api().get<MungShop[]>(`/mungshop-service/mungshops`);
 
-export const careApi = {
+export const mungshopApi = {
   getMungShops,
 };

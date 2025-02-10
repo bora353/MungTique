@@ -14,14 +14,14 @@ public class RedisAdaptor implements RedisPort {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void saveVerificationCodeFor3Minutes(String mail, int verificationCode) {
-        String redisKey = "user-service:" + mail + ":" + verificationCode;
+    public void saveVerificationCodeFor3Minutes(String email, int verificationCode) {
+        String redisKey = "user-service:" + email;
         redisTemplate.opsForValue().set(redisKey, String.valueOf(verificationCode), 3, TimeUnit.MINUTES);
     }
 
     @Override
-    public String findVerificationCode(String mail) {
-        String redisKey = "user-service:" + mail;
+    public String findVerificationCode(String email) {
+        String redisKey = "user-service:" + email;
         Object code = redisTemplate.opsForValue().get(redisKey);
         return code != null ? code.toString() : null;
     }

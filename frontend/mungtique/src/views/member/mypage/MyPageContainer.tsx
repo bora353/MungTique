@@ -2,9 +2,12 @@ import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
 import { useAuthStore } from "../login/hook/login.store";
 import MyMungContainer from "../mymung/MyMungContainer";
 import MuiButton from "../../../components/buttons/MuiButton";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function MyPageContainer() {
+  const navigate = useNavigate();
+
   const AUTH_TOKEN_KEY = "access";
   const { setIsLogin } = useAuthStore.getState();
   const { logoutData } = useLogoutViewModelHook();
@@ -16,10 +19,20 @@ export default function MyPageContainer() {
       localStorage.removeItem(AUTH_TOKEN_KEY);
       localStorage.removeItem("userId");
       setIsLogin(false);
+      navigate("/login");
     }
   };
 
-  const handleMyMung = () => {};
+  const handleMyMung = () => {
+    navigate("/mymung");
+  };
+
+  useEffect(() => {
+    const storedAccessToken = localStorage.getItem("access");
+    if (storedAccessToken) {
+      setIsLogin(true, storedAccessToken);
+    }
+  }, [setIsLogin]);
 
   return (
     <div>
@@ -28,15 +41,13 @@ export default function MyPageContainer() {
           <div>
             <MyMungContainer />
           </div>
-          <Link to="/mymung">
-            <MuiButton
-              value="반려뭉 등록"
-              color="warning"
-              type="button"
-              variant="contained"
-              onClick={handleMyMung}
-            />
-          </Link>
+          <MuiButton
+            value="반려뭉 등록"
+            color="warning"
+            type="button"
+            variant="contained"
+            onClick={handleMyMung}
+          />
 
           <p>예약내역</p>
           <p>주문내역(쇼핑몰 한다면)</p>

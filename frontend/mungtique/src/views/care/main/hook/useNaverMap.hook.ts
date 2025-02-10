@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { careApi } from "../care.api";
 import { MungShop } from "../../../../shared/types/mungshop.interface";
+import { mungshopApi } from "../mungshop.api";
 
 export const useNaverMapHook = () => {
   const [mungShops, setMungShops] = useState<MungShop[]>([]);
 
   const fetchMungShops = async () => {
-    const response = await careApi.getMungShops();
+    const response = await mungshopApi.getMungShops();
     //return response.data;
     setMungShops(response.data);
   };

@@ -22,12 +22,13 @@ const login = async (loginDTO: Login) => {
 const logout = async () => await api().post(`/user-service/logout`, null);
 
 const mailSend = async (mailDTO: MailCheck) => {
+  console.log("mailDTO", mailDTO);
   return await api().post<string>(`/user-service/mail-send`, mailDTO);
 };
 
-const mailCheck = async (mail: string, providedVerificationCode: string) =>
+const mailCheck = async (email: string, providedVerificationCode: string) =>
   await api().get<boolean>(`/user-service/mail-check`, {
-    params: { mail, providedVerificationCode },
+    params: { email, providedVerificationCode },
   });
 
 export const userApi = {

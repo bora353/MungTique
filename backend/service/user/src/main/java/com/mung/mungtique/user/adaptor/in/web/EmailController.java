@@ -36,6 +36,8 @@ public class EmailController {
     @Operation(summary = "사용자가 보낸 인증번호와 실제 인증번호를 확인해서 boolean으로 반환한다.")
     @GetMapping("/mail-check")
     public ResponseEntity<Boolean> checkMail(@RequestParam String email, @RequestParam String providedVerificationCode) {
+        log.info("email: {}, providedVerificationCode: {}", email, providedVerificationCode);
+
         boolean isMatch = emailService.checkMailVerificationCode(email, providedVerificationCode);
 
         if (!isMatch) {

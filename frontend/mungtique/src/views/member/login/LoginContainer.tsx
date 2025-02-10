@@ -9,6 +9,7 @@ export default function LoginContainer() {
   const AUTH_TOKEN_KEY = "access";
   const { setIsLogin } = useAuthStore.getState();
   const { loginData } = useLoginViewModelHook();
+
   const handleLoginSubmit = async (loginDTO: Login) => {
     const { userId, accessToken } = await loginData(loginDTO);
 
@@ -19,19 +20,20 @@ export default function LoginContainer() {
     if (accessToken) {
       localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
       console.log("Access token saved:", accessToken);
+      setIsLogin(true, accessToken);
     }
   };
 
-  useEffect(() => {
-    const storedAccessToken = localStorage.getItem(AUTH_TOKEN_KEY);
-    const storedUserId = localStorage.getItem("userId");
+  // useEffect(() => {
+  //   const storedAccessToken = localStorage.getItem(AUTH_TOKEN_KEY);
+  //   const storedUserId = localStorage.getItem("userId");
 
-    if (storedAccessToken && storedUserId) {
-      setIsLogin(true);
-      console.log("Stored Access token:", storedAccessToken);
-      console.log("Stored User ID:", storedUserId);
-    }
-  }, [setIsLogin]);
+  //   if (storedAccessToken && storedUserId) {
+  //     setIsLogin(true, storedAccessToken);
+  //     console.log("Stored Access token:", storedAccessToken);
+  //     console.log("Stored User ID:", storedUserId);
+  //   }
+  // }, [setIsLogin]);
 
   return (
     <div>

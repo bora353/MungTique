@@ -23,22 +23,22 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
 
     @Override
-    public boolean isEmailDuplicate(String mail) {
-        return userRepoPort.existsByEmail(mail);
+    public boolean isEmailDuplicate(String email) {
+        return userRepoPort.existsByEmail(email);
     }
 
     @Override
-    public int sendEmailWithVerificationCode(String mail) throws MessagingException {
+    public int sendEmailWithVerificationCode(String email) throws MessagingException {
         int verificationCode = createVerificationCode();
         log.info("인증번호 : {} ", verificationCode);
 
-        redisPort.saveVerificationCodeFor3Minutes(mail, verificationCode);
+        redisPort.saveVerificationCodeFor3Minutes(email, verificationCode);
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
 
         helper.setFrom("mungtique@mung.com"); // TODO : 이메일의 발신자 주소 설정 (작동 안함)
-        helper.setTo(mail);
+        helper.setTo(email);
         helper.setSubject("뭉티끄 이메일 인증 메일입니다.");
 
         String body = "";
@@ -53,8 +53,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public boolean checkMailVerificationCode(String mail, String userNumber) {
-        String verificationCode = redisPort.findVerificationCode(mail);
+    public boolean checkMailVerificationCode(String email, String userNumber) {
+        String verificationCode = redisPort.findVerificationCode(email);
 
         if (verificationCode == null) {
             return false;

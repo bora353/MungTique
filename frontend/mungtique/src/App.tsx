@@ -2,7 +2,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomeAppBar from "./HomeAppBar";
 import { useAuthStore } from "./views/member/login/hook/login.store";
-import CareContainer from "./views/care/main/CareContainer";
 import ReservationContainer from "./views/care/reservation/ReservationContainer";
 import MainContainer from "./views/mungtiqueMain/MainContainer";
 import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
@@ -13,6 +12,7 @@ import MyMungImageUploadContainer from "./views/member/mymung/MyMungImageUploadC
 import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import ShopContainer from "./views/shop/ShopContainer";
+import MungshopContainer from "./views/care/main/MungshopContainer";
 
 function App() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -27,7 +27,7 @@ function App() {
             <Route path="/" element={<MainContainer />} />
             <Route path="/login" element={<LoginContainer />} />
             <Route path="/join" element={<JoinContainer />} />
-            <Route path="/care" element={<CareContainer />} />
+            <Route path="/mungshop" element={<MungshopContainer />} />
             <Route path="/shop" element={<ShopContainer />} />
             <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
 
@@ -49,7 +49,9 @@ function App() {
                   />
                 }
               </>
-            ) : null}
+            ) : (
+              <Navigate to="/login" />
+            )}
           </Route>
         </Routes>
       </BrowserRouter>

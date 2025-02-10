@@ -12,14 +12,11 @@ import { api } from "../../../shared/api/ApiInterceptor";
 export default function MyMungCard() {
   const [myMungs, setMyMungs] = useState<MyMung[]>([]);
 
-
-  const userId = 1; // TODO : 현재 임의값, 수정필요
+  const userId = localStorage.getItem("userId");
 
   const getMyMungs = async () => {
     try {
-      const response = await api().get<MyMung[]>(
-        `/dogs/${userId}`
-      );
+      const response = await api().get<MyMung[]>(`/dog-service/dogs/${userId}`);
       setMyMungs(response.data);
       console.log(response.data);
     } catch (error) {

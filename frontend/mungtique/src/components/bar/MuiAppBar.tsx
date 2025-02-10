@@ -64,7 +64,7 @@ export default function MuiAppBar() {
                 </Link>
               </div>
             </Box>
-            {["/care", "/shop", "/mypage"].map((path, index) => (
+            {["/mungshop", "/shop", "/mypage"].map((path, index) => (
               <Button
                 key={index}
                 color="inherit"
