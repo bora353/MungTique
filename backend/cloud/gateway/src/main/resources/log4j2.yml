@@ -1,0 +1,85 @@
+Configutation:
+  name: DefaultLogger
+  status: warn
+  monitorInterval: 60
+
+  Properties:
+    Property:
+      - name : "service-name"
+        value : "gateway_service"
+      - name: "charset-UTF-8"
+        value: "UTF-8"
+      - name: "pattern"
+        value: "%highlight{[%-5level]} %d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%F] %c{1} - %msg%n"
+      - name : "log-file-path"
+        value : "./logs/${service-name}.log"
+      - name : "archive-directory"
+        value : "./logs/archive/${service-name}"
+      - name : "log-rolling-file-path"
+        value : "${archive-directory}/rolling_%d{yyyy-MM-dd-hh-mm}_%i.log"
+
+  Appenders:
+    Console:
+      - name: Console_Appender
+        target: SYSTEM_OUT
+
+        PatternLayout:
+          charset: ${charset-UTF-8}
+          pattern: ${pattern}
+          disableAnsi: false
+
+      - name: Json_Console_Appender
+        target: SYSTEM_OUT
+
+        jsonLayout:
+          compact : false,
+          complete : false,
+
+    RollingFile:
+      - name: RollingFile_Appender
+        fileName: ${log-file-path}
+        filePattern: ${log-rolling-file-path}
+        PatternLayout:
+          charset: ${charset-UTF-8}
+          pattern: ${pattern}
+
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: "200KB"
+          TimeBasedTriggeringPolicy:
+            interval: "1"
+        DefaultRollOverStrategy:
+          Delete:
+            basePath: ${archive-directory}
+            maxDepth: "1"
+            IfAccumulatedFileCount:
+              exceeds: 1
+
+
+      - name: Json_RollingFile_Appender
+        fileName: ${log-file-path}
+        filePattern: ${log-rolling-file-path}
+        JSONLayout:
+          complete: true,
+          compact: false,
+          eventEol: true,
+
+        Policies:
+          SizeBasedTriggeringPolicy:
+            size: "200KB"
+          TimeBasedTriggeringPolicy:
+            interval: "1"
+        DefaultRollOverStrategy:
+          Delete:
+            basePath: ${archive-directory}
+            maxDepth: "1"
+            IfAccumulatedFileCount:
+              exceeds: 1
+
+  Loggers:
+    Root:
+      level: info
+      additivity: false
+      AppenderRef:
+        - ref: Console_Appender
+        - ref: RollingFile_Appender
