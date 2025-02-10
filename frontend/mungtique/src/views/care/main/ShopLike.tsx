@@ -16,7 +16,7 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
   useEffect(() => {
     const fetchLikeStatus = async () => {
       try {
-        const response = await api().get<boolean>("/mungshops/like-status", {
+        const response = await api().get<boolean>("/mungshop-service/mungshops/like-status", {
           params: { mungShopId, userId },
         });
         setIsLiked(response.data);

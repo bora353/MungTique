@@ -37,7 +37,7 @@ export default function MyMungImageUploadForm() {
 
     try {
       const response = await api().post(
-        `/dogs/upload-image`,
+        `/dog-service/dogs/upload-image`,
         formData,
         {
           headers: {
