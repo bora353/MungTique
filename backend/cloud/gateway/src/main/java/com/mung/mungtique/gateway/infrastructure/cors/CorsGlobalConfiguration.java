@@ -19,7 +19,7 @@ public class CorsGlobalConfiguration {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.cors(ServerHttpSecurity.CorsSpec::disable);
+//        http.cors(ServerHttpSecurity.CorsSpec::disable);
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         http.formLogin((auth) -> auth.disable());

@@ -1,6 +1,6 @@
 export interface MyMung {
   myMungId?: number;
-  image?: { url: string };
+  imageUrl?: string;
 
   mungName: string;
   breed: string;

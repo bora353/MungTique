@@ -10,10 +10,14 @@ import com.mung.mungtique.dog.application.service.mapper.DogMapper;
 import com.mung.mungtique.dog.domain.Dog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,21 +39,10 @@ public class DogServiceImpl implements DogService {
     @Override
     public List<DogRes> getDogs(Long userId) {
 
-        List<Dog> byUserId = dogRepoPort.findByUserId(userId);
-        List<DogRes> DogResList = mapper.domainListToDtoList(byUserId);
+        List<Dog> dogs = dogRepoPort.findByUserId(userId);
 
-        for (DogRes DogRes : DogResList) {
-            if (DogRes.getImage() == null) continue; // TODO : default image 나오게
-
-            String[] split = DogRes.getImage().url().split("/");
-            String realImageUrl = split[split.length - 1];
-            String imageUrl =  "C:\\temp\\" + realImageUrl; // TODO : S3 서버 사용하자
-
-            DogRes.setImage(new ImageUploadRes(imageUrl));
-        }
-        
-        // TODO : 예외처리로 기본 이미지 보여지게 해야함(메서드 수정 많이 필요)
-
-        return DogResList;
+        return dogs.isEmpty() ? Collections.emptyList() : dogs.stream()
+                .map(mapper::domainToDto)
+                .collect(Collectors.toList());
     }
 }

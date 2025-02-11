@@ -2,6 +2,7 @@ package com.mung.mungtique.dog.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "image")

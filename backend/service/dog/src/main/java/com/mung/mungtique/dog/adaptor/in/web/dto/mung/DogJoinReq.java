@@ -9,7 +9,7 @@ import lombok.Builder;
 
 @Builder
 public record DogJoinReq(
-        @NotBlank(message = "강아지 이름은 필수입니다.") String mungName,
+        @NotBlank(message = "강아지 이름은 필수입니다.") String dogName,
         @NotNull(message = "견종은 필수입니다.") BreedType breedType,
         @Min(value = 0, message = "체중은 0 이상이어야 합니다.") int weight,
         @Min(value = 0, message = "나이는 0 이상이어야 합니다.") int age,

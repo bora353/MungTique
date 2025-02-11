@@ -1,7 +1,6 @@
 package com.mung.mungtique.dog.adaptor.in.web;
 
 
-import com.mung.mungtique.dog.adaptor.in.web.dto.image.ImageUploadReq;
 import com.mung.mungtique.dog.adaptor.in.web.dto.image.ImageUploadRes;
 import com.mung.mungtique.dog.adaptor.in.web.dto.mung.DogJoinReq;
 import com.mung.mungtique.dog.adaptor.in.web.dto.mung.DogRes;
@@ -14,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,14 +38,15 @@ public class DogController {
 
     @Operation(summary = "강아지 이미지 업로드 한다.")
     @PostMapping("/dogs/upload-image")
-    private ResponseEntity<ImageUploadRes> upload(@RequestBody @Valid ImageUploadReq imageUploadReq) throws IOException {
-        log.info("imageUploadReq : {}", imageUploadReq);
-        return ResponseEntity.ok(imageService.upload(imageUploadReq));
+    private ResponseEntity<ImageUploadRes> upload (@RequestParam("dogId") Long dogId,
+                                                    @RequestParam("file") MultipartFile file) throws IOException {
+        log.info("dogId: {}, file: {}", dogId, file.getOriginalFilename());
+        return ResponseEntity.ok(imageService.upload(dogId, file));
     }
 
     @Operation(summary = "로그인한 사용자의 강아지 정보를 모두 가져온다")
     @GetMapping("/dogs/{userId}")
-    private ResponseEntity<List<DogRes>> getMyMungs(@PathVariable Long userId) {
+    private ResponseEntity<List<DogRes>> getDogs(@PathVariable Long userId) {
 
         log.info("userId : {}", userId);
         return ResponseEntity.ok(dogService.getDogs(userId));

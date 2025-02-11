@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../../../shared/api/ApiInterceptor";
+import axios from "axios";
 
 export default function MyMungImageUploadForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -19,7 +20,6 @@ export default function MyMungImageUploadForm() {
     }
   };
 
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -33,7 +33,12 @@ export default function MyMungImageUploadForm() {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("mungId", mungId);
+    formData.append("dogId", mungId);
+
+    console.log("FormData being sent:");
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
 
     try {
       const response = await api().post(

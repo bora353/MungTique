@@ -30,54 +30,74 @@ export default function MyMungCard() {
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {myMungs.map((mung) => (
-        <Card
-          key={mung.myMungId}
-          sx={{ maxWidth: 345, marginBottom: 2, marginRight: 2 }}
-        >
-          <CardActionArea>
+      {myMungs.length === 0 ? (
+        <div style={{ width: "100%", textAlign: "center", padding: "20px" }}>
+          <Typography variant="h6" color="text.secondary">
+            뭉정보를 등록하세요 <br />
             <Link to="/mungimage">
               <MuiButton
                 color="info"
                 type="button"
-                value="이미지등록"
+                value="이미지 등록"
                 variant="outlined"
               />
             </Link>
-
-            <CardMedia
-              component="img"
-              height="140"
-              image={
-                mung.image
-                  ? mung.image?.url
-                  : "/static/images/cards/contemplative-reptile.jpg"
-              }
-              alt={mung.mungName}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {mung.mungName}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                견종: {mung.breed}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                몸무게: {mung.weight}kg
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                나이: {mung.age}살
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                성별: {mung.gender}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                중성화여부: {mung.fixed}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      ))}
+          </Typography>
+        </div>
+      ) : (
+        myMungs.map((mung) => (
+          <Card
+            key={mung.myMungId}
+            sx={{ maxWidth: 345, marginBottom: 2, marginRight: 2 }}
+          >
+            <CardActionArea>
+              <Link to="/mungimage">
+                <MuiButton
+                  color="info"
+                  type="button"
+                  value="이미지등록"
+                  variant="outlined"
+                />
+              </Link>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "200px",
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  style={{ width: "100px", height: "auto" }} // 너비를 100px로 설정하고 높이는 자동 조정
+                  image={mung.imageUrl}
+                  alt={mung.mungName}
+                />
+              </div>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {mung.mungName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  견종: {mung.breed}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  몸무게: {mung.weight}kg
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  나이: {mung.age}살
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  성별: {mung.gender}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  중성화여부: {mung.fixed}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))
+      )}
     </div>
   );
 }

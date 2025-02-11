@@ -10,8 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dog extends BaseTime {
-    // TODO : 강아지 여러마리 키울 수도 있으니 1:N
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dogId;
