@@ -1,5 +1,4 @@
 export default function ReservationContainer() {
-  // TODO : hook으로 빼고 전체적으로 정리하기!!
 
   return (
     <div>

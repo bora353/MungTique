@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { api } from "../../../shared/api/ApiInterceptor";
-import axios from "axios";
 
 export default function MyMungImageUploadForm() {
   const [file, setFile] = useState<File | null>(null);

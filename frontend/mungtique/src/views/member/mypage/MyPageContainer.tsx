@@ -24,7 +24,7 @@ export default function MyPageContainer() {
   };
 
   const handleMyMung = () => {
-    navigate("/mymung");
+    navigate("/mymung/register");
   };
 
   useEffect(() => {

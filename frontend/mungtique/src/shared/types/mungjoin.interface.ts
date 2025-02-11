@@ -1,9 +1,9 @@
 export interface MyMung {
-  myMungId?: number;
+  dogId?: number;
   imageUrl?: string;
 
-  mungName: string;
-  breed: string;
+  dogName: string;
+  breedType: string;
   weight: number;
   age: number;
   gender: string;

@@ -7,12 +7,15 @@ export default function LoginSignInButton() {
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
 
   // TODO : url 환경변수로 빼기
+  const naverUrl = import.meta.env.VITE_AUTH_SERVER_NAVER;
+  const kakaoUrl = import.meta.env.VITE_AUTH_SERVER_KAKAO;
+
   const onNaverLogin = () => {
-    window.location.href = "http://localhost:8000/oauth2/authorization/naver";
+    window.location.href = naverUrl;
     setIsLogin(true);
   };
   const onKakaoLogin = () => {
-    window.location.href = "http://localhost:8000/oauth2/authorization/kakao";
+    window.location.href = kakaoUrl;
     setIsLogin(true);
   };
 

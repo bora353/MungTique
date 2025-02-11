@@ -1,5 +1,4 @@
 export default function ShopContainer() {
-  // TODO : Hook, mutate 사용
 
   return (
     <div>

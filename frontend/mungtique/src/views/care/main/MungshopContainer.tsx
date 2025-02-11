@@ -6,7 +6,6 @@ import MapMarkerInfo from "./MapMarkerInfo";
 import NaverMap from "./NaverMap";
 
 export default function MungshopContainer() {
-  // TODO : hook으로 빼고 전체적으로 정리하기!!
   const [selectedMarker, setSelectedMarker] = useState<MungShop | null>(null);
   const { mungShops, currentPosition, getCurrentPosition } = useNaverMapHook();
   const { distance } = useCalculateDistance(

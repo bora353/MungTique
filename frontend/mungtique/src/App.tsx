@@ -13,6 +13,7 @@ import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import ShopContainer from "./views/shop/ShopContainer";
 import MungshopContainer from "./views/care/main/MungshopContainer";
+import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
 
 function App() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -34,20 +35,20 @@ function App() {
             {isLogin ? (
               <>
                 <Route path="/findinfo" element={<FindInfoContainer />} />
-                {<Route path="/mypage" element={<MyPageContainer />} />}
-                <Route path="/mymung" element={<MyMungJoinContainer />} />
-                {
-                  <Route
-                    path="/reservation"
-                    element={<ReservationContainer />}
-                  />
-                }
-                {
-                  <Route
-                    path="/mungimage"
-                    element={<MyMungImageUploadContainer />}
-                  />
-                }
+                <Route path="/mypage" element={<MyPageContainer />} />
+                <Route
+                  path="/mymung/register"
+                  element={<MyMungJoinContainer />}
+                />
+                <Route
+                  path="/mymung/:dogId"
+                  element={<MyMungUpdateContainer />}
+                />
+                <Route path="/reservation" element={<ReservationContainer />} />
+                <Route
+                  path="/mungimage"
+                  element={<MyMungImageUploadContainer />}
+                />
               </>
             ) : (
               <Navigate to="/login" />
