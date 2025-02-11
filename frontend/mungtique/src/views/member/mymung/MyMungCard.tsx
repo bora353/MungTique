@@ -1,15 +1,18 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
-import { MyMung } from "../../../shared/types/mungjoin.interface";
+import { useNavigate } from "react-router-dom";
 import MuiButton from "../../../components/buttons/MuiButton";
-import { Link } from "react-router-dom";
 import { api } from "../../../shared/api/ApiInterceptor";
+import { MyMung } from "../../../shared/types/mungjoin.interface";
+import MyMungImageUploadForm from "./MyMungImageUploadForm";
 
 export default function MyMungCard() {
+  const navigate = useNavigate();
   const [myMungs, setMyMungs] = useState<MyMung[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selectedDogId, setSelectedDogId] = useState<number | null>(null);
 
   const userId = localStorage.getItem("userId");
 
@@ -25,7 +28,17 @@ export default function MyMungCard() {
 
   useEffect(() => {
     getMyMungs();
-  }, []);
+  }, [userId]);
+
+  const handleCardClick = (dogId: number) => {
+    navigate(`/mymung/${dogId}`);
+  };
+
+  const handleImageUploadClick = (dogId: number) => {
+    // navigate(`/mungimage/${dogId}`);
+    setSelectedDogId(dogId); 
+    setOpen(true);
+  };
 
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -41,58 +54,64 @@ export default function MyMungCard() {
         </div>
       ) : (
         myMungs.map((mung) => (
-          <Link
+          <Card
             key={mung.dogId}
-            to={`/mymung/${mung.dogId}`}
-            style={{ textDecoration: "none" }}
+            sx={{ width: 200, marginBottom: 2, marginRight: 2 }}
+            onClick={() => handleCardClick(mung.dogId)}
           >
-            <Card sx={{ width: 200, marginBottom: 2, marginRight: 2 }}>
-              <CardContent>
-                <Link to="/mungimage">
-                  <MuiButton
-                    color="info"
-                    type="button"
-                    value="이미지 등록"
-                    variant="outlined"
-                  />
-                </Link>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "200px",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    style={{ width: "100px", height: "auto" }}
-                    image={mung.imageUrl}
-                    alt={mung.dogName}
-                  />
-                </div>
-                <Typography gutterBottom variant="h5" component="div">
-                  {mung.dogName}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  견종: {mung.breedType}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  몸무게: {mung.weight}kg
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  나이: {mung.age}살
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  성별: {mung.gender}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  중성화여부: {mung.fixed}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Link>
+            <CardContent>
+              <MuiButton
+                color="info"
+                type="button"
+                value="이미지 등록"
+                variant="outlined"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.stopPropagation();
+                  handleImageUploadClick(mung.dogId);
+                }}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "200px",
+                }}
+              >
+                <img
+                  style={{ width: "100px", height: "auto" }}
+                  src={mung.imageUrl}
+                  alt={mung.dogName}
+                />
+              </div>
+              <Typography gutterBottom variant="h5" component="div">
+                {mung.dogName}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                견종: {mung.breedType}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                몸무게: {mung.weight}kg
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                나이: {mung.age}살
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                성별: {mung.gender}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                중성화여부: {mung.fixed}
+              </Typography>
+            </CardContent>
+          </Card>
         ))
+      )}
+      {selectedDogId !== null && (
+        <MyMungImageUploadForm
+          open={open}
+          onClose={() => setOpen(false)}
+          dogId={selectedDogId}
+        />
       )}
     </div>
   );

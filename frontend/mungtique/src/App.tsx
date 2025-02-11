@@ -46,7 +46,7 @@ function App() {
                 />
                 <Route path="/reservation" element={<ReservationContainer />} />
                 <Route
-                  path="/mungimage"
+                  path="/mungimage/:dogId"
                   element={<MyMungImageUploadContainer />}
                 />
               </>

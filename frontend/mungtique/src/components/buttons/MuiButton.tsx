@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 
 export interface ButtonProps {
   value: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   type: "button" | "submit" | "reset";
   variant: "text" | "outlined" | "contained";
   color:
