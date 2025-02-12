@@ -4,11 +4,14 @@ import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeRes;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.mungshop.application.port.in.MungShopService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -24,6 +27,13 @@ public class MungShopController {
     public ResponseEntity<List<MungShopRes>> getAllMungShops() {
 
         return ResponseEntity.ok(mungShopService.getAllMungShops());
+    }
+
+    @Operation(summary = "애견샵 검색 기능으로 필요한 정보만 가져온다")
+    @GetMapping("/mungshops/search")
+    public ResponseEntity<List<MungShopRes>> searchMungShops(@RequestParam("searchQuery") String searchQuery) {
+        log.info("mungshop search : {}", searchQuery);
+        return ResponseEntity.ok(mungShopService.findMungShopsByQuery(searchQuery));
     }
     
     @Operation(summary = "애견샵 좋아요 정보를 가져온다")

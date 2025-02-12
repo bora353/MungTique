@@ -40,4 +40,9 @@ public class MungShopRepoAdaptor implements MungShopRepoPort {
     public Optional<MungShop> findById(Long mungShopId) {
         return mungShopRepo.findById(mungShopId);
     }
+
+    @Override
+    public List<MungShop> findByStoreName(String searchQuery) {
+        return mungShopRepo.findByStoreNameContaining(searchQuery);
+    }
 }

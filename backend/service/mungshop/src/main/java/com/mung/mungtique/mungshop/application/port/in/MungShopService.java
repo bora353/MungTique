@@ -11,4 +11,5 @@ public interface MungShopService {
     MungShopLikeRes likeMungShop(Long mungShopId, Long userId);
     boolean unlikeMungShop(Long mungShopId, Long userId);
 
+    List<MungShopRes> findMungShopsByQuery(String searchQuery);
 }

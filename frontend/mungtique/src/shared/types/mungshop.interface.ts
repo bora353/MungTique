@@ -7,7 +7,7 @@ export interface MungShop {
   breeds: string;
   businessHours: string;
   closingDays: string;
-  filePath: string;
+  storeImageUrl: string;
 }
 
 export interface MungShopLike {

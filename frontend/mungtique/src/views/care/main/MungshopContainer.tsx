@@ -1,13 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCalculateDistance } from "./hook/useCalculateDistance.hook";
 import { useNaverMapHook } from "./hook/useNaverMap.hook";
-import { MungShop } from "../../../shared/types/mungshop.interface";
+import { useSearchQueryHook } from "./hook/useSearchQuery.hook";
 import MapMarkerInfo from "./MapMarkerInfo";
 import NaverMap from "./NaverMap";
 
 export default function MungshopContainer() {
-  const [selectedMarker, setSelectedMarker] = useState<MungShop | null>(null);
   const { mungShops, currentPosition, getCurrentPosition } = useNaverMapHook();
+
+  const {
+    setSearchQuery,
+    filteredMungShops,
+    selectedMarker,
+    setSelectedMarker,
+  } = useSearchQueryHook(mungShops);
+
   const { distance } = useCalculateDistance(
     selectedMarker?.latitude,
     selectedMarker?.longitude,
@@ -22,15 +29,18 @@ export default function MungshopContainer() {
   return (
     <div>
       <div style={{ height: "91vh", display: "flex" }}>
-        {selectedMarker && (
-          <MapMarkerInfo selectedMarker={selectedMarker} distance={distance} />
-        )}
+        <MapMarkerInfo
+          selectedMarker={selectedMarker}
+          distance={distance}
+          onSearch={setSearchQuery}
+        />
 
         <div style={{ width: selectedMarker ? "75%" : "100%" }}>
           <NaverMap
             currentPosition={currentPosition}
-            mungShops={mungShops}
+            mungShops={filteredMungShops}
             setSelectedMarker={setSelectedMarker}
+            selectedMarker={selectedMarker}
           />
         </div>
       </div>

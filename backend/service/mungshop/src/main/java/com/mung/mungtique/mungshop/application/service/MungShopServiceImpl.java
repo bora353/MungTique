@@ -31,6 +31,12 @@ public class MungShopServiceImpl implements MungShopService {
     }
 
     @Override
+    public List<MungShopRes> findMungShopsByQuery(String searchQuery) {
+        List<MungShop> mungShops = mungShopRepoPort.findByStoreName(searchQuery);
+        return mapper.domainListToDtoList(mungShops);
+    }
+
+    @Override
     public Boolean likeMungShopStatus(Long mungShopId, Long userId) {
         return mungShopRepoPort.findByMungShopMungShopIdAndUserId(mungShopId, userId).isPresent();
     }

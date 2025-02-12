@@ -1,17 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MungShop } from "../../../shared/types/mungshop.interface";
 
 interface NaverMapProps {
   currentPosition: GeolocationPosition | null;
   mungShops: MungShop[] | undefined;
   setSelectedMarker: (shop: MungShop) => void;
+  selectedMarker?: MungShop | null;
 }
 
 export default function NaverMap({
   currentPosition,
   mungShops,
   setSelectedMarker,
+  selectedMarker,
 }: NaverMapProps) {
+  console.log("mungShops 데이터 확인:", mungShops);
+
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,7 +41,18 @@ export default function NaverMap({
         });
       });
 
-      const infowindow = new naver.maps.InfoWindow();
+      if (selectedMarker?.latitude && selectedMarker?.longitude) {
+        const selectedLatLng = new naver.maps.LatLng(
+          selectedMarker.latitude,
+          selectedMarker.longitude
+        );
+        map.setCenter(selectedLatLng);
+        map.setZoom(16);
+      }
+
+      const infowindow = new naver.maps.InfoWindow({
+        content: '<div style="padding:5px;">' + "현위치" + "</div>",
+      });
 
       if (currentPosition) {
         const location = new naver.maps.LatLng(
@@ -47,9 +62,6 @@ export default function NaverMap({
         map.setCenter(location);
         map.setZoom(16);
 
-        infowindow.setContent(
-          '<div style="padding:10px;">' + "현위치" + "</div>"
-        );
         infowindow.open(map, location);
         console.log("Coordinates: " + location.toString());
       }

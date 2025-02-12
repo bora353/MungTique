@@ -16,4 +16,6 @@ public interface MungShopRepoPort {
     void delete(MungShopLike mungShopLike);
 
     Optional<MungShop> findById(Long mungShopId);
+
+    List<MungShop> findByStoreName(String searchQuery);
 }
