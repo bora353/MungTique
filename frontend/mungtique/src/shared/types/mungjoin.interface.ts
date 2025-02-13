@@ -1,5 +1,5 @@
 export interface MyMung {
-  dogId: number;
+  dogId?: number;
   imageUrl?: string;
 
   dogName: string;
