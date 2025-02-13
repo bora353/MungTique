@@ -5,12 +5,14 @@ import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.mungshop.domain.MungShop;
 import com.mung.mungtique.mungshop.domain.MungShopLike;
 import org.mapstruct.Mapper;
-
-import java.util.List;
+import org.mapstruct.Mapping;
 
 @Mapper (componentModel = "spring")
 public interface MungShopMapper {
 
-    List<MungShopRes> domainListToDtoList(List<MungShop> mungShop);
-    MungShopLikeRes domainToDto(MungShopLike mungShop);
+    @Mapping(source="mungShop.prices", target="mungShopPrices")
+    MungShopRes toMungShopDTO(MungShop mungShop);
+
+    //List<MungShopRes> mungShopListToMungshopResList(List<MungShop> mungShop);
+    MungShopLikeRes toLikeDTO(MungShopLike mungShop);
 }

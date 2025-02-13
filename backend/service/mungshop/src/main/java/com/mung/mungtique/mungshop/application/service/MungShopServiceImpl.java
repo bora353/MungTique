@@ -26,14 +26,13 @@ public class MungShopServiceImpl implements MungShopService {
     @Override
     public List<MungShopRes> getAllMungShops() {
         List<MungShop> mungShops = mungShopRepoPort.findAll();
-
-        return mapper.domainListToDtoList(mungShops);
+        return mungShops.stream().map(mapper::toMungShopDTO).toList();
     }
 
     @Override
     public List<MungShopRes> findMungShopsByQuery(String searchQuery) {
         List<MungShop> mungShops = mungShopRepoPort.findByStoreName(searchQuery);
-        return mapper.domainListToDtoList(mungShops);
+        return mungShops.stream().map(mapper::toMungShopDTO).toList();
     }
 
     @Override
@@ -55,7 +54,7 @@ public class MungShopServiceImpl implements MungShopService {
 
         MungShopLike savedMungShopLike = mungShopRepoPort.save(mungShopLike);
 
-        return mapper.domainToDto(savedMungShopLike);
+        return mapper.toLikeDTO(savedMungShopLike);
     }
 
     @Override

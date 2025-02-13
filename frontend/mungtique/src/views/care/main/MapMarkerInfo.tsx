@@ -7,6 +7,7 @@ import MuiButton from "../../../components/buttons/MuiButton";
 import { MungShop } from "../../../shared/types/mungshop.interface";
 import ShopLike from "./ShopLike";
 import SearchBar from "./SearchBar";
+import { useState } from "react";
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -20,6 +21,7 @@ export default function MapMarkerInfo({
   onSearch,
 }: MarkerInfoProps) {
   console.log(selectedMarker);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div style={{ width: "25%", overflowY: "auto", maxHeight: "100%" }}>
@@ -51,9 +53,35 @@ export default function MapMarkerInfo({
                 <p style={{ fontWeight: "bold" }}>
                   휴무일: {selectedMarker.closingDays}
                 </p>
-                <p>가능한 견종: {selectedMarker.breeds}</p>
+                <p>가능한 견종: {selectedMarker.breedType}</p>
                 <p>실제 강아지들 미용한 사진 / 후기</p>
-                <p>가격(따로 DB??)</p>
+                <div>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      color: "skyblue",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    가격 {isOpen ? "▲" : "▼"}
+                  </div>
+
+                  {isOpen && (
+                    <div>
+                      {selectedMarker?.mungShopPrices.map((price) => (
+                        <div key={price.mungShopPriceId}>
+                          <div style={{ fontWeight: "bold" }}>
+                            {price.breedType}
+                          </div>
+                          <span>
+                            {price.serviceType} {price.price}원
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </Typography>
             </CardContent>
             <CardActions>

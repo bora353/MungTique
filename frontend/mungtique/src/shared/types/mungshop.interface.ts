@@ -4,10 +4,11 @@ export interface MungShop {
   longitude: number;
   storeName: string;
   storeAddress: string;
-  breeds: string;
+  breedType: string;
   businessHours: string;
   closingDays: string;
   storeImageUrl: string;
+  mungShopPrices: MungShopPrice[];
 }
 
 export interface MungShopLike {
@@ -15,3 +16,9 @@ export interface MungShopLike {
   mungShop: MungShop;
   userId: number;
 }
+  export interface MungShopPrice {
+    mungShopPriceId: number;
+    breedType: string;
+    serviceType: string;
+    price: number;
+  }

@@ -20,7 +20,8 @@ public class MungShopPrice extends BaseTime {
     private BreedType breedType;
 
     @Column(length = 50, nullable = false)
-    private String serviceType;
+    @Enumerated(EnumType.STRING)
+    private ServiceType serviceType;
 
     @Column(length = 20, nullable = false)
     private int price;
