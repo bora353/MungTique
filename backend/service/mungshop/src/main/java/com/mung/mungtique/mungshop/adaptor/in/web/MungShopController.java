@@ -38,9 +38,9 @@ public class MungShopController {
     
     @Operation(summary = "애견샵 좋아요 정보를 가져온다")
     @GetMapping("/mungshops/like-status")
-    public ResponseEntity<Boolean> likeMungShopStatus(@RequestParam Long mungShopId, @RequestParam Long userId) {
-
+    public ResponseEntity<Boolean> likeMungShopStatus(@RequestParam Long mungShopId, @RequestParam(required = false) Long userId) {
         log.info("like status for MungShopId: {} by UserId: {}", mungShopId, userId);
+        if (userId == null) return ResponseEntity.ok(false);
         return ResponseEntity.ok(mungShopService.likeMungShopStatus(mungShopId, userId));
     }
     

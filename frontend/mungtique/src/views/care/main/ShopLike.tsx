@@ -12,13 +12,18 @@ interface ShopLikeProps {
 export default function ShopLike({ mungShopId }: ShopLikeProps) {
   const [isLiked, setIsLiked] = useState(false);
   const userId = localStorage.getItem("userId");
+  const params: Record<string, string | number> = { mungShopId };
+  if (userId) params.userId = userId;
 
   useEffect(() => {
     const fetchLikeStatus = async () => {
       try {
-        const response = await api().get<boolean>("/mungshop-service/mungshops/like-status", {
-          params: { mungShopId, userId },
-        });
+        const response = await api().get<boolean>(
+          "/mungshop-service/mungshops/like-status",
+          {
+            params,
+          }
+        );
         setIsLiked(response.data);
       } catch (error) {
         console.error("Error fetching like status:", error);
@@ -33,8 +38,8 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
       setIsLiked(!isLiked);
 
       const endpoint = isLiked
-      ? `/mungshop-unlike/${mungShopId}`
-      : `/mungshop-like/${mungShopId}`;
+        ? `/mungshop-unlike/${mungShopId}`
+        : `/mungshop-like/${mungShopId}`;
       await api().post<MungShopLike>(endpoint, {
         userId,
       });
