@@ -13,6 +13,8 @@ import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import ShopContainer from "./views/shop/ShopContainer";
 import MungshopContainer from "./views/care/main/MungshopContainer";
 import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
+import ReservationConfirmContainer from "./views/care/reservation/ReservationConfirmContainer";
+import ReservationMungContainer from "./views/care/reservation/ReservationMungContainer";
 
 function App() {
   const isLogin = useAuthStore((state) => state.isLogin);
@@ -44,6 +46,14 @@ function App() {
                   element={<MyMungUpdateContainer />}
                 />
                 <Route path="/reservation" element={<ReservationContainer />} />
+                <Route
+                  path="/reservation-mung"
+                  element={<ReservationMungContainer />}
+                />
+                <Route
+                  path="/reservation-confirm"
+                  element={<ReservationConfirmContainer />}
+                />
                 {/* <Route
                   path="/mungimage/:dogId"
                   element={<MyMungImageUploadContainer />}
