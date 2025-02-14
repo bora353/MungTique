@@ -1,5 +1,6 @@
 package com.mung.mungtique.mungshop.adaptor.in.web;
 
+import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeReq;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopLikeRes;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopRes;
 import com.mung.mungtique.mungshop.application.port.in.MungShopService;
@@ -47,16 +48,16 @@ public class MungShopController {
     @Operation(summary = "애견샵에 좋아요를 선택한다.")
     @PostMapping("/mungshops/{mungShopId}/like")
     public ResponseEntity<MungShopLikeRes> likeMungShop(@PathVariable Long mungShopId,
-                                                        @RequestBody Long userId) {
-        log.info("UserId: {} is liking MungShopId: {}", userId, mungShopId);
-        return ResponseEntity.ok(mungShopService.likeMungShop(mungShopId, userId));
+                                                        @RequestBody MungShopLikeReq likeReq) {
+        log.info("UserId: {} is liking MungShopId: {}", likeReq.userId(), mungShopId);
+        return ResponseEntity.ok(mungShopService.likeMungShop(mungShopId, likeReq.userId()));
     }
     
     @Operation(summary = "애견샵에 싫어요를 선택한다.")
     @PostMapping("/mungshops/{mungShopId}/unlike")
     public ResponseEntity<Boolean> unlikeMungShop(@PathVariable Long mungShopId,
-                                                        @RequestBody Long userId) {
-        log.info("UserId: {} is unliking MungShopId: {}", userId, mungShopId);
-        return ResponseEntity.ok(mungShopService.unlikeMungShop(mungShopId, userId));
+                                                  @RequestBody MungShopLikeReq likeReq) {
+        log.info("UserId: {} is unliking MungShopId: {}", likeReq.userId(), mungShopId);
+        return ResponseEntity.ok(mungShopService.unlikeMungShop(mungShopId, likeReq.userId()));
     }
 }

@@ -3,11 +3,12 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import MuiButton from "../../../components/buttons/MuiButton";
 import { MungShop } from "../../../shared/types/mungshop.interface";
 import ShopLike from "./ShopLike";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
+import MapTabMenu from "./MapTabMenu";
+import { Button } from "@mui/material";
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -20,11 +21,10 @@ export default function MapMarkerInfo({
   distance,
   onSearch,
 }: MarkerInfoProps) {
-  console.log(selectedMarker);
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("홈");
 
   return (
-    <div style={{ width: "25%", overflowY: "auto", maxHeight: "100%" }}>
+    <div style={{ width: "27%", overflowY: "auto", maxHeight: "100%" }}>
       <SearchBar onSearch={onSearch} />
 
       <Card>
@@ -36,63 +36,83 @@ export default function MapMarkerInfo({
               sx={{ height: 350 }}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {selectedMarker.storeName}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <p style={{ fontWeight: "bold", color: "skyblue" }}>
-                  {distance}m
-                </p>
-                <p> ⭐⭐⭐⭐⭐ 하지말까</p>
-                <p style={{ fontWeight: "bold" }}>
-                  주소: {selectedMarker.storeAddress}
-                </p>
-                <p style={{ fontWeight: "bold" }}>
-                  영업 시간: {selectedMarker.businessHours}
-                </p>
-                <p style={{ fontWeight: "bold" }}>
-                  휴무일: {selectedMarker.closingDays}
-                </p>
-                <p>가능한 견종: {selectedMarker.breedType}</p>
-                <p>실제 강아지들 미용한 사진 / 후기</p>
-                <div>
-                  <div
-                    style={{
-                      fontWeight: "bold",
-                      color: "skyblue",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    가격 {isOpen ? "▲" : "▼"}
-                  </div>
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold">
+                  {selectedMarker.storeName} &nbsp;
+                </span>
+                <span className="text-sm text-blue-400">{distance}m</span>
+                &nbsp;
+                <span className="text-sm">⭐ 4.5</span>
+                <ShopLike mungShopId={selectedMarker.mungShopId} />
+              </div>
 
-                  {isOpen && (
-                    <div>
-                      {selectedMarker?.mungShopPrices.map((price) => (
-                        <div key={price.mungShopPriceId}>
-                          <div style={{ fontWeight: "bold" }}>
-                            {price.breedType}
+              <CardActions>
+                <Button
+                  type="button"
+                  color="warning"
+                  variant="contained"
+                  fullWidth
+                >
+                  예약하기
+                </Button>
+              </CardActions>
+
+              <MapTabMenu activeTab={activeTab} setActiveTab={setActiveTab} />
+
+              {activeTab === "가격" && (
+                <div className="p-3 text-gray-600">
+                  <div className="flex flex-col gap-3">
+                    {selectedMarker?.mungShopPrices.map((price) => (
+                      <div
+                        key={price.mungShopPriceId}
+                        className="flex flex-col bg-white shadow-sm rounded-md p-3"
+                      >
+                        <div className="flex justify-between items-center mb-1">
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm text-gray-700">
+                              {price.breedType}
+                            </span>
                           </div>
-                          <span>
-                            {price.serviceType} {price.price}원
+                          <span className="text-xs text-gray-400">
+                            {price.serviceType}
                           </span>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                        <div className="flex justify-between items-center">
+                          <span className="text-lg font-semibold text-blue-500 ml-auto">
+                            {price.price}원
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </Typography>
+              )}
+
+              {activeTab === "홈" && (
+                <div className="p-4 text-gray-500">
+                  <div className="flex items-center gap-2 mt-2">
+                    <span>
+                      <span>📍</span> 주소: {selectedMarker.storeAddress}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span>
+                      <span>⏰</span> 영업 시간: {selectedMarker.businessHours}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span>
+                      <span>🚫</span> 휴무일: {selectedMarker.closingDays}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span>
+                      <span>📍</span> 가능한 견종: {selectedMarker.breedType}
+                    </span>
+                  </div>
+                </div>
+              )}
             </CardContent>
-            <CardActions>
-              <MuiButton
-                type="button"
-                color="warning"
-                variant="contained"
-                value="예약하기"
-              />
-              <ShopLike mungShopId={selectedMarker.mungShopId} />
-            </CardActions>
           </>
         ) : (
           <CardContent style={{ textAlign: "center", padding: "20px" }}>

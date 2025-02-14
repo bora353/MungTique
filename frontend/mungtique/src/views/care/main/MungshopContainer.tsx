@@ -35,7 +35,7 @@ export default function MungshopContainer() {
           onSearch={setSearchQuery}
         />
 
-        <div style={{ width: selectedMarker ? "75%" : "100%" }}>
+        <div style={{ width: selectedMarker ? "73%" : "100%" }}>
           <NaverMap
             currentPosition={currentPosition}
             mungShops={filteredMungShops}
