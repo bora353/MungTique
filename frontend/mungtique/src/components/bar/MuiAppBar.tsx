@@ -1,17 +1,16 @@
-import { Link, Link as RouterLink } from "react-router-dom";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Container,
-  Box,
-  IconButton,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Toolbar,
+  Typography
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function MuiAppBar() {
   const customTheme = createTheme({
@@ -32,55 +31,72 @@ export default function MuiAppBar() {
       },
     },
     typography: {
-      fontFamily: "'KCC-Hanbit', sans-serif", // 글꼴 지정
+      fontFamily: "'KCC-Hanbit', sans-serif",
     },
   });
 
   return (
     <ThemeProvider theme={customTheme}>
       <AppBar
-        position="static"
+        position="sticky"
         color="inherit"
         sx={{ backgroundColor: "#FAF9F1" }}
       >
         <Container maxWidth="lg">
           <Toolbar disableGutters>
+            {/* 로고 및 홈 버튼 */}
             <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                sx={{ mr: 2 }}
-              ></IconButton>
-              <div>
-                <Link to="/">
-                  <img
-                    src="/images/logo.png"
-                    alt="뭉티끄"
-                    width="130"
-                    height="80"
-                  />
-                </Link>
-              </div>
+              <RouterLink to="/">
+                <img
+                  src="/images/logo.png"
+                  alt="뭉티끄"
+                  width="140"
+                  height="80"
+                />
+              </RouterLink>
             </Box>
-            {["/mungshop", "/shop", "/mypage"].map((path, index) => (
-              <Button
-                key={index}
-                color="inherit"
-                component={RouterLink}
-                to={path}
-                sx={{ fontSize: "1rem", color: "#333" }}
-              >
-                {index === 0 ? (
-                  <ContentCutIcon sx={{ color: "#F7B5D8" }} />
-                ) : index === 1 ? (
-                  <StorefrontIcon sx={{ color: "skyblue" }} />
-                ) : (
-                  <AccountCircleIcon sx={{ color: "#AF69EE" }} />
-                )}
-              </Button>
-            ))}
+
+            {/* 네비게이션 메뉴 */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              {[
+                {
+                  path: "/mungshop",
+                  icon: <ContentCutIcon sx={{ color: "#F7B5D8" }} />,
+                  label: "뭉샵",
+                },
+                {
+                  path: "/shop",
+                  icon: <StorefrontIcon sx={{ color: "skyblue" }} />,
+                  label: "스토어",
+                },
+                {
+                  path: "/mypage",
+                  icon: <AccountCircleIcon sx={{ color: "#AF69EE" }} />,
+                  label: "마이페이지",
+                },
+              ].map((item, index) => (
+                <Button
+                  key={index}
+                  component={RouterLink}
+                  to={item.path}
+                  sx={{
+                    fontSize: "1rem",
+                    color: "#333",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textTransform: "none",
+                    "&:hover": { color: "#007FFF", transform: "scale(1.1)" },
+                    transition: "all 0.2s ease-in-out",
+                  }}
+                >
+                  {item.icon}
+                  <Typography variant="caption" sx={{ mt: 0.5 }}>
+                    {item.label}
+                  </Typography>
+                </Button>
+              ))}
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>

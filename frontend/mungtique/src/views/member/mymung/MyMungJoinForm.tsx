@@ -59,7 +59,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
   return (
     <div className="p-6 max-w-md mx-auto bg-white shadow-md rounded-lg">
-      <h1 className="text-4xl text-blue-500 mb-10">My Mung 등록</h1>
+      <h1 className="text-3xl text-blue-500 mb-10">My Mung 등록</h1>
 
       {/* 폼 입력 */}
       <form onSubmit={handleSubmit} className="mt-4">
@@ -69,7 +69,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           <input
             type="text"
             name="dogName"
-            className="w-full mt-1 p-3 border rounded-md focus:outline-none"
+            className="w-full mt-1 p-1.5 border rounded-md focus:outline-none"
             maxLength={10}
             value={mungJoinForm.dogName}
             onChange={(e) => handleChange("dogName", e.target.value)}
@@ -81,7 +81,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           <label className="text-gray-600 text-sm font-semibold">품종</label>
           <select
             name="breedType"
-            className="w-full mt-1 p-3 border rounded-md bg-white"
+            className="w-full mt-1 p-1.5 border rounded-md bg-white"
             value={mungJoinForm.breedType}
             onChange={(e) => handleChange("breedType", e.target.value)}
           >
@@ -102,7 +102,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           <input
             type="number"
             name="weight"
-            className="w-full mt-1 p-3 border rounded-md focus:outline-none"
+            className="w-full mt-1 p-1.5 border rounded-md focus:outline-none"
             value={mungJoinForm.weight}
             onChange={(e) => handleChange("weight", e.target.value)}
           />
@@ -114,7 +114,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           <input
             type="number"
             name="age"
-            className="w-full mt-1 p-3 border rounded-md focus:outline-none"
+            className="w-full mt-1 p-1.5 border rounded-md focus:outline-none"
             value={mungJoinForm.age}
             onChange={(e) => handleChange("age", e.target.value)}
           />
@@ -126,7 +126,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           <div className="flex gap-2 mt-1">
             <button
               type="button"
-              className={`p-3 border rounded-md w-full ${
+              className={`p-1.5 border rounded-md w-full ${
                 mungJoinForm.gender === "MALE" ? "bg-gray-200" : "bg-white"
               }`}
               onClick={() => handleChange("gender", "MALE")}
@@ -135,7 +135,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
             </button>
             <button
               type="button"
-              className={`p-3 border rounded-md w-full ${
+              className={`p-1.5 border rounded-md w-full ${
                 mungJoinForm.gender === "FEMALE" ? "bg-gray-200" : "bg-white"
               }`}
               onClick={() => handleChange("gender", "FEMALE")}
@@ -153,7 +153,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           <div className="flex gap-2 mt-1">
             <button
               type="button"
-              className={`p-3 border rounded-md w-full ${
+              className={`p-1.5 border rounded-md w-full ${
                 mungJoinForm.fixed === "YES" ? "bg-gray-200" : "bg-white"
               }`}
               onClick={() => handleChange("fixed", "YES")}
@@ -162,7 +162,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
             </button>
             <button
               type="button"
-              className={`p-3 border rounded-md w-full ${
+              className={`p-1.5 border rounded-md w-full ${
                 mungJoinForm.fixed === "NO" ? "bg-gray-200" : "bg-white"
               }`}
               onClick={() => handleChange("fixed", "NO")}
@@ -176,7 +176,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
         <div className="mt-6">
           <button
             type="submit"
-            className="w-full p-3 bg-blue-500 text-white rounded-md"
+            className="w-full p-1.5 bg-blue-500 text-white rounded-md"
           >
             완료
           </button>
@@ -185,7 +185,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
       {/* Snackbar 메시지 */}
       {openSnackbar && (
-        <div className="mt-4 p-3 bg-red-500 text-white text-center rounded-md">
+        <div className="mt-4 p-1.5 bg-red-500 text-white text-center rounded-md">
           {snackbarMessage}
         </div>
       )}

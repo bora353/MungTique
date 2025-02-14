@@ -9,6 +9,8 @@ import SearchBar from "./SearchBar";
 import { useState } from "react";
 import MapTabMenu from "./MapTabMenu";
 import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import StorefrontIcon from "@mui/icons-material/Storefront"; 
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -21,6 +23,7 @@ export default function MapMarkerInfo({
   distance,
   onSearch,
 }: MarkerInfoProps) {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("홈");
 
   return (
@@ -52,6 +55,7 @@ export default function MapMarkerInfo({
                   color="warning"
                   variant="contained"
                   fullWidth
+                  onClick={() => navigate("/reservation")}
                 >
                   예약하기
                 </Button>
@@ -115,9 +119,13 @@ export default function MapMarkerInfo({
             </CardContent>
           </>
         ) : (
-          <CardContent style={{ textAlign: "center", padding: "20px" }}>
-            <Typography variant="body2" color="text.secondary">
-              매장을 선택하면 정보가 보여요 ~ !
+          <CardContent className="flex flex-col items-center justify-center text-center py-10">
+            <StorefrontIcon sx={{ fontSize: 50, color: "#A0A0A0" }} />
+            <Typography variant="h6" color="text.primary" className="mt-2">
+              매장을 선택해 주세요
+            </Typography>
+            <Typography variant="body2" color="text.secondary" className="mt-1">
+              원하는 매장을 클릭하면 정보가 표시됩니다.
             </Typography>
           </CardContent>
         )}

@@ -8,7 +8,6 @@ import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
 import JoinContainer from "./views/member/join/JoinContainer";
 import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";
 import LoginContainer from "./views/member/login/LoginContainer";
-import MyMungImageUploadContainer from "./views/member/mymung/MyMungImageUploadContainer";
 import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import ShopContainer from "./views/shop/ShopContainer";
@@ -45,10 +44,10 @@ function App() {
                   element={<MyMungUpdateContainer />}
                 />
                 <Route path="/reservation" element={<ReservationContainer />} />
-                <Route
+                {/* <Route
                   path="/mungimage/:dogId"
                   element={<MyMungImageUploadContainer />}
-                />
+                /> */}
               </>
             ) : (
               <Route path="*" element={<Navigate to="/login" />} />
