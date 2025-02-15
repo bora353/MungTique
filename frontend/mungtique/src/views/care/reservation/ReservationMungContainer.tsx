@@ -1,19 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// 강아지 목록 (더미 데이터)
 const dogs = [
   { id: 1, name: "코코", image: "https://placehold.co/50x50" },
   { id: 2, name: "바비", image: "https://placehold.co/50x50" },
   { id: 3, name: "초코", image: "https://placehold.co/50x50" },
 ];
 
-export default function ReservationMungContainer({
-  onNext,
-}: {
-  onNext: () => void;
-}) {
+export default function ReservationMungContainer() {
+  const navigate = useNavigate();
+
   const [selectedDog, setSelectedDog] = useState<number | null>(null);
   const [selectedService, setSelectedService] = useState<string | null>(null);
+
+  const handleNext = () => {
+    if (!selectedDog || !selectedService) {
+      alert("강아지와 서비스를 선택해주세요!");
+      return;
+    }
+
+    console.log("선택된 강아지:", selectedDog);
+    console.log("선택된 서비스:", selectedService);
+
+    navigate("/reservation-confirm");
+  };
 
   return (
     <div className="fixed inset-0 bg-gray-50 flex justify-center items-center">
@@ -82,7 +92,7 @@ export default function ReservationMungContainer({
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             disabled={!selectedDog || !selectedService}
-            onClick={onNext}
+            onClick={handleNext}
           >
             다음
           </button>
