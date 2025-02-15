@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  care-service:
-    container_name: care-service
-    image: mungtique/care:${MUNGTIQUE_VERSION}
+  mungshop-service:
+    container_name: mungshop-service
+    image: mungtique/mungshop:${MUNGTIQUE_VERSION}
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - CARE_DB_URL=${CARE_DB_URL}
+      - mungshop_DB_URL=${mungshop_DB_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
       - KAFKA_URI=${KAFKA_URI}
@@ -17,26 +17,26 @@ services:
     ports:
       - "8083:8080"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/care/logs:/logs
+      - ${HOST_OPERATION_DIR_PATH}/mungshop/logs:/logs
     depends_on:
-      care-db:
+      mungshop-db:
         condition: service_healthy
     networks:
       - mungtique
 
-  care-db:
+  mungshop-db:
     image: postgres:latest
-    container_name: care-db
+    container_name: mungshop-db
     restart: always
     environment:
       POSTGRES_USER: ${PG_ID}
       POSTGRES_PASSWORD: ${PG_PW}
-      POSTGRES_DB: care
+      POSTGRES_DB: mungshop
     ports:
       - "54324:5432"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/care/sql-init:/docker-entrypoint-initdb.d
-      - ${HOST_OPERATION_DIR_PATH}/mount/care/db:/var/lib/postgresql/data
+      - ${HOST_OPERATION_DIR_PATH}/mungshop/sql-init:/docker-entrypoint-initdb.d
+      - ${HOST_OPERATION_DIR_PATH}/mount/mungshop/db:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
       interval: 10s

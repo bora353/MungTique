@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  care-service:
-    container_name: care-service
-    image: mungtique/care:${MUNGTIQUE_VERSION}
+  dog-service:
+    container_name: dog-service
+    image: mungtique/dog:${MUNGTIQUE_VERSION}
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - CARE_DB_URL=${CARE_DB_URL}
+      - dog_DB_URL=${dog_DB_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
       - KAFKA_URI=${KAFKA_URI}
@@ -17,26 +17,26 @@ services:
     ports:
       - "8083:8080"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/care/logs:/logs
+      - ${HOST_OPERATION_DIR_PATH}/dog/logs:/logs
     depends_on:
-      care-db:
+      dog-db:
         condition: service_healthy
     networks:
       - mungtique
 
-  care-db:
+  dog-db:
     image: postgres:latest
-    container_name: care-db
+    container_name: dog-db
     restart: always
     environment:
       POSTGRES_USER: ${PG_ID}
       POSTGRES_PASSWORD: ${PG_PW}
-      POSTGRES_DB: care
+      POSTGRES_DB: dog
     ports:
       - "54324:5432"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/care/sql-init:/docker-entrypoint-initdb.d
-      - ${HOST_OPERATION_DIR_PATH}/mount/care/db:/var/lib/postgresql/data
+      - ${HOST_OPERATION_DIR_PATH}/dog/sql-init:/docker-entrypoint-initdb.d
+      - ${HOST_OPERATION_DIR_PATH}/mount/dog/db:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
       interval: 10s
