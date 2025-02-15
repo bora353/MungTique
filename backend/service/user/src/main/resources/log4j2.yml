@@ -1,4 +1,4 @@
-Configutation:
+Configuration:
   name: DefaultLogger
   status: warn
   monitorInterval: 60
@@ -6,7 +6,7 @@ Configutation:
   Properties:
     Property:
       - name : "service-name"
-        value : "user_service"
+        value : "user-service"
       - name: "charset-UTF-8"
         value: "UTF-8"
       - name: "pattern"
@@ -16,13 +16,12 @@ Configutation:
       - name : "archive-directory"
         value : "./logs/archive/${service-name}"
       - name : "log-rolling-file-path"
-        value : "${archive-directory}/rolling_%d{yyyy-MM-dd-hh-mm}_%i.log"
+        value : "${archive-directory}/rolling_%d{yyyy-MM-dd-HH-mm}_%i.log"
 
   Appenders:
     Console:
       - name: Console_Appender
         target: SYSTEM_OUT
-
         PatternLayout:
           charset: ${charset-UTF-8}
           pattern: ${pattern}
@@ -30,7 +29,6 @@ Configutation:
 
       - name: Json_Console_Appender
         target: SYSTEM_OUT
-
         jsonLayout:
           compact : false,
           complete : false,
@@ -45,15 +43,16 @@ Configutation:
 
         Policies:
           SizeBasedTriggeringPolicy:
-            size: "200KB"
+            size: "500KB"
           TimeBasedTriggeringPolicy:
-            interval: "1"
+            interval: "7"
+
         DefaultRollOverStrategy:
           Delete:
             basePath: ${archive-directory}
-            maxDepth: "1"
+            maxDepth: "2"
             IfAccumulatedFileCount:
-              exceeds: 1
+              exceeds: 5
 
 
       - name: Json_RollingFile_Appender
@@ -66,19 +65,19 @@ Configutation:
 
         Policies:
           SizeBasedTriggeringPolicy:
-            size: "200KB"
+            size: "500KB"
           TimeBasedTriggeringPolicy:
-            interval: "1"
+            interval: "7"
         DefaultRollOverStrategy:
           Delete:
             basePath: ${archive-directory}
-            maxDepth: "1"
+            maxDepth: "2"
             IfAccumulatedFileCount:
-              exceeds: 1
+              exceeds: 5
 
   Loggers:
     Root:
-      level: info
+      level: ${LOG_LEVEL:-info}
       additivity: false
       AppenderRef:
         - ref: Console_Appender

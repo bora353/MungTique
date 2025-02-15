@@ -6,7 +6,7 @@ Configuration:
   Properties:
     Property:
       - name : "service-name"
-        value : "dog-service"
+        value : "reservation-service"
       - name: "charset-UTF-8"
         value: "UTF-8"
       - name: "pattern"
