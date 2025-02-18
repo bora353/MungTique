@@ -2,25 +2,52 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs, { Dayjs } from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 export default function ReservationContainer() {
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [availableTimes, setAvailableTimes] = useState<
+    Array<{ dateTime: string; time: string; date: string }>
+  >([]);
 
-  const availableTimes = [
-    "5:00",
-    "5:30",
-    "6:00",
-    "6:30",
-    "7:00",
-    "7:30",
-    "8:00",
-    "8:30",
-  ];
+  // TODO: mungshopId 가져와야해!! 프리티어 적용하기~
+  const mungShopId = 1;
+
+  useEffect(() => {
+    api()
+      .get(`/mungshop-service/mungshops/reservation/${mungShopId}/available`)
+      .then((response) => {
+        const times = response.data.map(
+          (reservation: { reservationDateTime: string }) => {
+            return {
+              dateTime: reservation.reservationDateTime,
+              time: dayjs(reservation.reservationDateTime).format("HH:mm"),
+              date: dayjs(reservation.reservationDateTime).format("YYYY-MM-DD"),
+            };
+          }
+        );
+        setAvailableTimes(times);
+      })
+      .catch((error) => {
+        console.error("Error fetching available times:", error);
+      });
+  }, [mungShopId]);
+
+  const allTimes = Array.from({ length: 10 }, (_, i) =>
+    dayjs()
+      .startOf("day")
+      .add(9 + i, "hour")
+      .format("HH:mm")
+  );
+
+  const filteredAvailableTimes = availableTimes.filter(
+    (timeSlot) => timeSlot.date === selectedDate?.format("YYYY-MM-DD")
+  );
 
   const handleNext = () => {
     if (!selectedDate || !selectedTime) {
@@ -32,6 +59,29 @@ export default function ReservationContainer() {
     console.log("선택된 시간:", selectedTime);
 
     navigate("/reservation-mung");
+  };
+
+  const handleTimeClick = (time: string) => {
+    if (filteredAvailableTimes.some((available) => available.time === time)) {
+      setSelectedTime(time);
+    }
+  };
+
+  const getButtonStyle = (time: string) => {
+    // 선택된 시간
+    if (selectedTime === time) {
+      return "bg-blue-500 text-white";
+    }
+    // 불가능한 시간
+    else if (
+      !filteredAvailableTimes.some((available) => available.time === time)
+    ) {
+      return "bg-gray-300 text-gray-500 cursor-not-allowed";
+    }
+    // 기본 상태
+    else {
+      return "bg-blue-100 text-gray-700";
+    }
   };
 
   return (
@@ -55,15 +105,18 @@ export default function ReservationContainer() {
       <div className="w-full max-w-md bg-white p-4 mt-6 rounded-lg shadow-md">
         <h2 className="text-lg font-semibold">오후</h2>
         <div className="grid grid-cols-4 gap-2 mt-2">
-          {availableTimes.map((time) => (
+          {allTimes.map((time) => (
             <button
-              key={time}
-              className={`p-3 border rounded-lg text-center ${
-                selectedTime === time
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-              onClick={() => setSelectedTime(time)}
+              key={time} // 고유한 key 값 설정
+              className={`p-3 border rounded-lg text-center ${getButtonStyle(
+                time
+              )}`}
+              onClick={() => handleTimeClick(time)}
+              disabled={
+                !filteredAvailableTimes.some(
+                  (available) => available.time === time
+                )
+              } // 불가능한 시간 비활성화
             >
               {time}
             </button>

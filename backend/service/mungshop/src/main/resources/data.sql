@@ -6,6 +6,18 @@ VALUES
     ('센트럴동물병원', '경기 화성시 동탄지성로 102 하나로프라자', 'ALL', '9:30 AM - 20:00 PM', 'SUNDAY', '37.2081031', '127.0641932','/images/mungshop/shop4.jpg'),
     ('멍화만사성', '경기 화성시 동탄지성로 143 2층', 'ALL', '8:00 AM - 20:30 PM', 'TUESDAY', '37.2095214', '127.0595995','/images/mungshop/shop5.jpg');
 
+INSERT INTO mung_shop_reservation (reservation_date_time, status, mung_shop_id)
+VALUES
+    (CURRENT_DATE || ' 10:00:00', 'NOT_RESERVED', 1),
+    (CURRENT_DATE || ' 11:00:00', 'COMPLETE', 1),
+    (CURRENT_DATE || ' 12:00:00', 'CANCELED', 1),
+    (CURRENT_DATE || ' 14:00:00', 'PENDING', 1),
+    (CURRENT_DATE || ' 15:00:00', 'NOT_RESERVED', 1),
+    (CURRENT_DATE || ' 16:00:00', 'COMPLETE', 1),
+    (CURRENT_DATE || ' 17:00:00', 'NOT_RESERVED', 1),
+    (CURRENT_DATE + INTERVAL '1' DAY || ' 10:00:00', 'NOT_RESERVED', 1),
+    (CURRENT_DATE + INTERVAL '1' DAY || ' 14:00:00', 'NOT_RESERVED', 1);
+
 INSERT INTO mung_shop_price (breed_type, service_type, price, mung_shop_id)
 VALUES
     -- 1번 샵

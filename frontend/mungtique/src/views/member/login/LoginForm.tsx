@@ -40,7 +40,7 @@ export default function LoginForm({ onsubmit }: LoginProps) {
 
     try {
       console.log("loginDTO", loginDTO);
-      onsubmit(loginDTO);
+      await onsubmit(loginDTO);
       navigate("/");
     } catch (error) {
       setSnackbarMessage("로그인에 실패했습니다.");
