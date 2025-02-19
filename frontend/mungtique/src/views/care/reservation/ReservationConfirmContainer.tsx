@@ -29,7 +29,7 @@ export default function ReservationConfirm() {
     }
 
     api()
-      .get(`/user-service/user-info`)
+      .get(`/user-service/users/${userId}`)
       .then((response) => {
         console.log(response.data);
       })

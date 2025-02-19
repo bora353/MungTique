@@ -25,14 +25,22 @@ public class CustomLogoutHandler implements LogoutHandler, LogoutSuccessHandler 
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refreshToken = cookie.getValue();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refresh")) {
+                    refreshToken = cookie.getValue();
+                    break; // 찾았으면 더 이상 반복할 필요 없음
+                }
             }
         }
 
-        tokenService.deleteRefreshToken(refreshToken);
-        log.info("delete RefreshToken complete");
+        if (refreshToken != null) {
+            tokenService.deleteRefreshToken(refreshToken);
+            log.info("delete RefreshToken complete");
+        } else {
+            log.warn("Refresh token not found in cookies.");
+        }
     }
 
     @Override

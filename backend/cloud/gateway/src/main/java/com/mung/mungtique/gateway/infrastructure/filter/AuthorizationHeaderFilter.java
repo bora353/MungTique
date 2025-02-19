@@ -77,6 +77,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     }
 
     private boolean isJwtValid(String jwt) {
+        log.info(jwt);
         byte[] secretKeyBytes = Base64.getEncoder().encode(secret.getBytes());
         SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
 
@@ -92,6 +93,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .getSubject();
             log.info("isJwtValid - subject(email) : {}", subject);
         } catch (Exception ex) {
+            log.info(ex.getMessage());
             returnValue = false;
         }
 

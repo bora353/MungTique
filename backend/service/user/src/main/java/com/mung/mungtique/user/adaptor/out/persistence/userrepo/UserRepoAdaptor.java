@@ -5,6 +5,8 @@ import com.mung.mungtique.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserRepoAdaptor implements UserRepoPort {
@@ -22,7 +24,12 @@ public class UserRepoAdaptor implements UserRepoPort {
     }
 
     @Override
-    public UserEntity findByEmail(String email) {
+    public Optional<UserEntity> findByEmail(String email) {
         return userRepo.findByEmail(email);
+    }
+
+    @Override
+    public Optional<UserEntity> findById(Long userId) {
+        return userRepo.findById(userId);
     }
 }

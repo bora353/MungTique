@@ -2,6 +2,7 @@ package com.mung.mungtique.user.application.service.mapper;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
+import com.mung.mungtique.user.adaptor.in.web.dto.UserRes;
 import com.mung.mungtique.user.domain.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,4 +17,6 @@ public interface UserMapper {
     UserEntity toUserEntity(JoinReq joinReq, String role);
 
     JoinRes toJoinRes(UserEntity userEntity);
+
+    UserRes toUserRes(UserEntity user);
 }

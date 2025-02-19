@@ -2,17 +2,16 @@ package com.mung.mungtique.user.adaptor.in.web;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
+import com.mung.mungtique.user.adaptor.in.web.dto.UserRes;
 import com.mung.mungtique.user.application.port.in.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,5 +31,13 @@ public class UserController {
         } else {
             return ResponseEntity.ok(joinRes);
         }
+    }
+
+    @GetMapping("/users/{userId}")
+    @Operation(summary = "user 정보 가져온다.")
+    public ResponseEntity<UserRes> getUserById(@PathVariable String userId){
+        UserRes userInfo = userService.getUserInfo(userId);
+
+        return ResponseEntity.ok(userInfo);
     }
 }

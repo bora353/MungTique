@@ -2,6 +2,7 @@ package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
+import com.mung.mungtique.user.adaptor.in.web.dto.UserRes;
 import com.mung.mungtique.user.application.port.in.UserService;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import com.mung.mungtique.user.application.service.mapper.UserMapper;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,15 +32,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepoPort.findByEmail(email);
-
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
-        
-        return new User(userEntity.getEmail(), userEntity.getPassword()
-        , true, true, true, true
-                , new ArrayList<>()); // 권한 추가 작업 넣을 수 있음
+        return userRepoPort.findByEmail(email)
+                .map(user -> new User(user.getEmail(), user.getPassword(),
+                        true, true, true, true, new ArrayList<>())) // 권한 추가 가능
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with Email: " + email));
     }
 
     @Override
@@ -59,12 +56,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserDetailsByEmail(String email) {
-        UserEntity userEntity = userRepoPort.findByEmail(email);
+        UserEntity userEntity = userRepoPort.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User not found with Email: " + email));
 
         if (userEntity == null) {
             throw new UsernameNotFoundException("User not found with email: " + email);
         }
 
         return userEntity;
+    }
+
+    @Override
+    public UserRes getUserInfo(String userId) {
+        UserEntity user =  userRepoPort.findById(Long.parseLong(userId)).orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
+        return userMapper.toUserRes(user);
     }
 }
