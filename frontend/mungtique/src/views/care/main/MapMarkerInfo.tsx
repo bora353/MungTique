@@ -10,7 +10,8 @@ import { useState } from "react";
 import MapTabMenu from "./MapTabMenu";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import StorefrontIcon from "@mui/icons-material/Storefront"; 
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import { useReservationStore } from "../reservation/reservation.store";
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -25,6 +26,10 @@ export default function MapMarkerInfo({
 }: MarkerInfoProps) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("홈");
+  const {
+    setSelectedMungShop,
+    setSelectedMungShopId,
+  } = useReservationStore();
 
   return (
     <div style={{ width: "27%", overflowY: "auto", maxHeight: "100%" }}>
@@ -55,7 +60,11 @@ export default function MapMarkerInfo({
                   color="warning"
                   variant="contained"
                   fullWidth
-                  onClick={() => navigate("/reservation")}
+                  onClick={() => {
+                    navigate(`/reservation`);
+                    setSelectedMungShopId(selectedMarker.mungShopId);
+                    setSelectedMungShop(selectedMarker.storeName);
+                  }}
                 >
                   예약하기
                 </Button>

@@ -1,17 +1,36 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const dogs = [
-  { id: 1, name: "코코", image: "https://placehold.co/50x50" },
-  { id: 2, name: "바비", image: "https://placehold.co/50x50" },
-  { id: 3, name: "초코", image: "https://placehold.co/50x50" },
-];
+import { useReservationStore } from "./reservation.store";
+import { useEffect, useState } from "react";
+import { api } from "../../../shared/api/ApiInterceptor";
+import { MyMung } from "../../../shared/types/mungjoin.interface";
 
 export default function ReservationMungContainer() {
   const navigate = useNavigate();
+  const { selectedDog, selectedService, setSelectedDog, setSelectedService } =
+    useReservationStore();
+  const [dogs, setDogs] = useState<{ dogId: number; dogName: string }[]>([]);
+  const userId = localStorage.getItem("userId");
 
-  const [selectedDog, setSelectedDog] = useState<number | null>(null);
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  useEffect(() => {
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    api()
+      .get<MyMung[]>(`/dog-service/dogs/${userId}`)
+      .then((response) => {
+        const dogData = response.data.map((dog: MyMung) => ({
+          dogId: dog.dogId,
+          dogName: dog.dogName,
+        }));
+        setDogs(dogData);
+      })
+      .catch((error) => {
+        console.error("강아지 정보를 불러오는데 실패했습니다:", error);
+      });
+  }, [userId]);
 
   const handleNext = () => {
     if (!selectedDog || !selectedService) {
@@ -41,23 +60,18 @@ export default function ReservationMungContainer() {
         {/* 강아지 선택 */}
         <div className="mt-4">
           <h3 className="text-lg font-semibold">강아지 선택</h3>
-          <div className="flex space-x-2 mt-2">
+          <div className="grid grid-cols-3 gap-2 mt-2">
             {dogs.map((dog) => (
               <button
-                key={dog.id}
-                className={`flex items-center p-2 border rounded-lg ${
-                  selectedDog === dog.id
-                    ? "bg-green-500 text-white"
+                key={dog.dogId}
+                className={`p-3 border rounded-lg text-center ${
+                  selectedDog === dog.dogName
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700"
                 }`}
-                onClick={() => setSelectedDog(dog.id)}
+                onClick={() => setSelectedDog(dog.dogName)}
               >
-                <img
-                  src={dog.image}
-                  alt={dog.name}
-                  className="w-10 h-10 rounded-full mr-2"
-                />
-                {dog.name}
+                {dog.dogName}
               </button>
             ))}
           </div>
@@ -67,12 +81,12 @@ export default function ReservationMungContainer() {
         <div className="mt-6">
           <h3 className="text-lg font-semibold">서비스 선택</h3>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            {["목욕", "커트", "전체"].map((service) => (
+            {["목욕", "커트", "목욕+커트"].map((service) => (
               <button
                 key={service}
                 className={`p-3 border rounded-lg text-center ${
                   selectedService === service
-                    ? "bg-green-500 text-white"
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700"
                 }`}
                 onClick={() => setSelectedService(service)}

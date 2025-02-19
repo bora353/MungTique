@@ -1,8 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useReservationStore } from "./reservation.store";
+import { api } from "../../../shared/api/ApiInterceptor";
+import { useNavigate } from "react-router-dom";
 
-export default function ReservationConfirm({ onNext }: { onNext: () => void }) {
-  const [selectedRequest, setSelectedRequest] = useState("");
+export default function ReservationConfirm() {
+  const navigate = useNavigate();
   const [additionalInfo, setAdditionalInfo] = useState("");
+  const {
+    selectedMungShop,
+    setSelectedMungShopId,
+    selectedDog,
+    selectedService,
+    selectedDate,
+    selectedTime,
+    availableTimes,
+  } = useReservationStore();
+  const userId = localStorage.getItem("userId");
+
+  // TODO : 예약자정보 user에서 api 로 가져오기
+  // TODO : 예약정보 전체 reservation 서비스로 보내기
+  // TODO : zustand에 로컬스토리지 추가
+
+  useEffect(() => {
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    api()
+      .get(`/user-service/user-info`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("예약자 정보를 불러오는데 실패했습니다:", error);
+      });
+  }, [userId]);
 
   return (
     <div className="fixed inset-0  bg-gray-50 flex justify-center items-center">
@@ -17,15 +51,18 @@ export default function ReservationConfirm({ onNext }: { onNext: () => void }) {
         </p>
         {/* 예약 정보 */}
         <div className="bg-gray-100 rounded-lg p-4 mt-3">
-          <h3 className="font-semibold">🐶 멍샬롬 방문 예약</h3>
+          <h3 className="font-semibold">🐶 {selectedMungShop} 방문 예약</h3>
           <p className="text-sm text-gray-600">
-            일정 <span className="font-semibold">2.28(금) · 오후 5:00</span>
+            일정
+            <span className="text-gray-800">
+              {selectedDate?.format("M월 D일(ddd)")} {selectedTime}
+            </span>
           </p>
           <p className="text-sm text-gray-600">
-            강아지 <span className="font-semibold">코코</span>
+            강아지 <span className="text-gray-800">{selectedDog}</span>
           </p>
           <p className="text-sm text-gray-600">
-            서비스 <span className="font-semibold">목욕 + 커트</span>
+            서비스 <span className="text-gray-800">{selectedService}</span>
           </p>
         </div>
         {/* 예약자 정보 */}
@@ -42,24 +79,10 @@ export default function ReservationConfirm({ onNext }: { onNext: () => void }) {
           </div>
         </div>
         {/* 요청사항 선택 */}
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold">요청사항</h3>
-          <select
-            className="mt-2 w-full border border-gray-300 rounded-lg p-2 text-gray-700"
-            value={selectedRequest}
-            onChange={(e) => setSelectedRequest(e.target.value)}
-          >
-            <option value="">요청사항을 선택해 주세요.</option>
-            <option value="조용한 공간">조용한 공간</option>
-            <option value="빠른 서비스">빠른 서비스</option>
-            <option value="디자인 스타일 요청">디자인 스타일 요청</option>
-          </select>
-        </div>
-        {/* 추가 정보 입력 */}
         <div className="mt-4">
           <textarea
             className="w-full border border-gray-300 rounded-lg p-2 text-gray-700"
-            placeholder="추가 요청 사항이 있으면 입력해 주세요."
+            placeholder="요청 사항이 있으면 입력해 주세요."
             value={additionalInfo}
             onChange={(e) => setAdditionalInfo(e.target.value)}
           />
@@ -68,7 +91,7 @@ export default function ReservationConfirm({ onNext }: { onNext: () => void }) {
         <div className="mt-6 flex justify-end">
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            onClick={onNext}
+            //onClick={onNext}
           >
             예약하기
           </button>

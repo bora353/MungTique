@@ -45,7 +45,10 @@ function App() {
                   path="/mymung/:dogId"
                   element={<MyMungUpdateContainer />}
                 />
-                <Route path="/reservation" element={<ReservationContainer />} />
+                <Route
+                  path="/reservation"
+                  element={<ReservationContainer />}
+                />
                 <Route
                   path="/reservation-mung"
                   element={<ReservationMungContainer />}

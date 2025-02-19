@@ -1,26 +1,28 @@
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
-import dayjs, { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../shared/api/ApiInterceptor";
+import { useReservationStore } from "./reservation.store";
 
 export default function ReservationContainer() {
   const navigate = useNavigate();
 
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [availableTimes, setAvailableTimes] = useState<
-    Array<{ dateTime: string; time: string; date: string }>
-  >([]);
-
-  // TODO: mungshopId 가져와야해!! 프리티어 적용하기~
-  const mungShopId = 1;
+  const {
+    selectedMungShopId,
+    selectedDate,
+    selectedTime,
+    availableTimes,
+    setSelectedDate,
+    setSelectedTime,
+    setAvailableTimes,
+  } = useReservationStore();
 
   useEffect(() => {
     api()
-      .get(`/mungshop-service/mungshops/reservation/${mungShopId}/available`)
+      .get(`/mungshop-service/mungshops/reservation/${selectedMungShopId}/available`)
       .then((response) => {
         const times = response.data.map(
           (reservation: { reservationDateTime: string }) => {
@@ -36,7 +38,7 @@ export default function ReservationContainer() {
       .catch((error) => {
         console.error("Error fetching available times:", error);
       });
-  }, [mungShopId]);
+  }, [selectedMungShopId]);
 
   const allTimes = Array.from({ length: 10 }, (_, i) =>
     dayjs()
@@ -97,6 +99,7 @@ export default function ReservationContainer() {
             <StaticDatePicker
               value={selectedDate}
               onChange={(newDate) => setSelectedDate(newDate)}
+              slots={{ actionBar: () => null }}
             />
           </LocalizationProvider>
         </div>

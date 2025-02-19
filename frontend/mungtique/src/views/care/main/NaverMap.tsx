@@ -22,8 +22,9 @@ export default function NaverMap({
     if (mapRef.current && currentPosition) {
       const map = new naver.maps.Map(mapRef.current, {
         center: new naver.maps.LatLng(
-          currentPosition.coords.latitude,
-          currentPosition.coords.longitude
+          // currentPosition.coords.latitude,
+          // currentPosition.coords.longitude
+          37.206967589057925, 127.05491620429956
         ),
         zoom: 16,
         mapTypeId: naver.maps.MapTypeId.NORMAL,
@@ -63,7 +64,7 @@ export default function NaverMap({
         map.setZoom(16);
 
         infowindow.open(map, location);
-        console.log("Coordinates: " + location.toString());
+        //console.log("Coordinates: " + location.toString());
       }
     }
   }, [currentPosition, mapRef, mungShops, setSelectedMarker]);
