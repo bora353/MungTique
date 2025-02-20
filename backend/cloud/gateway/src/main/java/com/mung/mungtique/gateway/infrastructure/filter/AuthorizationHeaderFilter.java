@@ -1,5 +1,7 @@
 package com.mung.mungtique.gateway.infrastructure.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.netty.handler.codec.http.cookie.Cookie;
@@ -22,6 +24,8 @@ import org.springframework.http.HttpCookie;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -37,15 +41,20 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
+            String servicePath = exchange.getRequest().getURI().getPath();
+            log.info("serviceName: {}", servicePath);
+
             ServerHttpRequest request = exchange.getRequest();
 
+            // 1. OAuth 인증 (쿠키)
             HttpCookie authCookie = request.getCookies().getFirst("Authorization");
-
+            log.info("OAuth Cookie: {}", authCookie);
             if (authCookie != null) {
                 OAuthProcess(authCookie.getValue());
                 return chain.filter(exchange);
             }
 
+            // 2. JWT 인증 (헤더)
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED);
             }
@@ -71,13 +80,24 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         response.setStatusCode(httpStatus);
         log.error(error);
 
-        byte[] bytes = "The requested token is invalid.".getBytes(StandardCharsets.UTF_8);
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("result", "ERROR");
+        errorResponse.put("message", error);
+        String jsonResponse = null;
+        try {
+            jsonResponse = new ObjectMapper().writeValueAsString(errorResponse);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] bytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
+
+//        byte[] bytes = "The requested token is invalid.".getBytes(StandardCharsets.UTF_8);
         DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
         return response.writeWith(Flux.just(buffer));
     }
 
     private boolean isJwtValid(String jwt) {
-        log.info(jwt);
+        log.info("------ jwt : {}", jwt);
         byte[] secretKeyBytes = Base64.getEncoder().encode(secret.getBytes());
         SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
 
@@ -92,8 +112,11 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .getPayload()
                     .getSubject();
             log.info("isJwtValid - subject(email) : {}", subject);
-        } catch (Exception ex) {
-            log.info(ex.getMessage());
+        } catch (ExpiredJwtException ex) {
+            log.info("JWT token expired: {}", ex.getMessage());
+            returnValue = false;
+        } catch (JwtException ex) {
+            log.info("Invalid JWT token: {}", ex.getMessage());
             returnValue = false;
         }
 
@@ -116,7 +139,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
         String username = claims.get("username", String.class);
 
-        log.info("isJwtValid - claim(username) : {}", username);
+        log.info("OAuth isJwtValid - claim(username) : {}", username);
     }
 
     public static class Config {

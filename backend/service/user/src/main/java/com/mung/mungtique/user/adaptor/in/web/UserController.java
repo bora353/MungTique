@@ -6,7 +6,6 @@ import com.mung.mungtique.user.adaptor.in.web.dto.UserRes;
 import com.mung.mungtique.user.application.port.in.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,12 +23,11 @@ public class UserController {
     @PostMapping("/join")
     @Operation(summary = "user 회원가입한다.")
     public ResponseEntity<JoinRes> registerUser(@RequestBody @Valid JoinReq joinReq){
-        JoinRes joinRes = userService.createUser(joinReq);
-
-        if (joinRes == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        } else {
+        try {
+            JoinRes joinRes = userService.createUser(joinReq);
             return ResponseEntity.ok(joinRes);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 

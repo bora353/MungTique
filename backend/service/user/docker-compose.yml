@@ -31,19 +31,24 @@ services:
     environment:
       POSTGRES_USER: ${PG_ID}
       POSTGRES_PASSWORD: ${PG_PW}
-      POSTGRES_DB: user
     ports:
       - "54323:5432"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/user/sql-init:/docker-entrypoint-initdb.d
-      - ${HOST_OPERATION_DIR_PATH}/user/db:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#      - ${HOST_OPERATION_DIR_PATH}/user/sql-init:/docker-entrypoint-initdb.d
+#      - ${HOST_OPERATION_DIR_PATH}/user/db:/var/lib/postgresql/data
+      - user-db-init:/docker-entrypoint-initdb.d
+      - user-db-data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
     networks:
       - mungtique
+
+volumes:
+  user-db-data:
+  user-db-init:
 
 networks:
   mungtique:

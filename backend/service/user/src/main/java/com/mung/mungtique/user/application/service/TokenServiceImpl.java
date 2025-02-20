@@ -7,18 +7,18 @@ import com.mung.mungtique.user.infrastructure.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class TokenServiceImpl implements TokenService {
 
     private final JwtUtil jwtUtil;
@@ -29,17 +29,23 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     @Transactional
-    public Token saveRefreshToken(String email, String refreshToken) {
-        Instant now = Instant.now();
-        Instant expirationTime = now.plusMillis(Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME));
+    public Map<String, String> reissueToken(HttpServletRequest request) {
+        String refreshToken = extractRefreshTokenFromRequest(request).orElseThrow(() -> new NoSuchElementException("Refresh token not found"));
 
-        Token token = Token.builder()
-                .email(email)
-                .refreshToken(refreshToken)
-                .expiration(Date.from(expirationTime))
-                .build();
+        validateRefreshToken(refreshToken);
 
-        return tokenRepoPort.save(token);
+        String email = jwtUtil.extractUsername(refreshToken);
+        String newAccess = jwtUtil.generateToken(email, "access");
+        String newRefresh = jwtUtil.generateToken(email, "refresh");
+
+        // DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
+        deleteAndSaveRefreshToken(refreshToken, email, newRefresh);
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access", newAccess);
+        tokens.put("refresh", newRefresh);
+
+        return tokens;
     }
 
     @Override
@@ -49,9 +55,13 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Map<String, String> reissueToken(HttpServletRequest request) {
-        String refreshToken = extractRefreshTokenFromRequest(request);
+    @Transactional
+    public Token saveRefreshToken(String email, String refreshToken) {
+        Token token = createNewToken(email, refreshToken);
+        return tokenRepoPort.save(token);
+    }
 
+    private void validateRefreshToken(String refreshToken) {
         if (refreshToken == null || !jwtUtil.validateRefreshToken(refreshToken)) {
             throw new RuntimeException ("Invalid or expired refresh token");
         }
@@ -60,30 +70,32 @@ public class TokenServiceImpl implements TokenService {
         if (!isExist) {
             throw new RuntimeException("Refresh token not found in the database");
         }
-
-        String email = jwtUtil.extractUsername(refreshToken);
-
-        String newAccess = jwtUtil.generateToken(email, "access");
-        String newRefresh = jwtUtil.generateToken(email, "refresh");
-
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access", newAccess);
-        tokens.put("refresh", newRefresh);
-
-        // DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        deleteRefreshToken(refreshToken);
-        saveRefreshToken(email, newRefresh);
-
-        return tokens;
     }
 
-    private String extractRefreshTokenFromRequest(HttpServletRequest request) {
+    private Optional<String> extractRefreshTokenFromRequest(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if ("refresh".equals(cookie.getName())) {
-                return cookie.getValue();
+                return Optional.of(cookie.getValue());
             }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    private void deleteAndSaveRefreshToken(String refreshToken, String email, String newRefresh) {
+        tokenRepoPort.deleteRefreshToken(refreshToken);
+        Token token = createNewToken(email, newRefresh);
+        tokenRepoPort.save(token);
+    }
+
+    private Token createNewToken(String email, String refreshToken) {
+        Instant now = Instant.now();
+        Instant expirationTime = now.plusMillis(Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME));
+
+        return Token.builder()
+                .email(email)
+                .refreshToken(refreshToken)
+                .expiration(Date.from(expirationTime))
+                .build();
     }
 }

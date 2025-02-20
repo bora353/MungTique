@@ -4,9 +4,10 @@ export interface ApiInterceptor {}
 
 const serverUrl = import.meta.env.VITE_GATEWAY_SERVER;
 const AUTH_TOKEN_KEY = "access";
-const token = localStorage.getItem(AUTH_TOKEN_KEY);
 
 const apiClient = (baseUrl: string): AxiosInstance => {
+  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+
   const instance = axios.create({
     baseURL: `${baseUrl}/api/v1/`,
     withCredentials: true,
@@ -17,12 +18,12 @@ const apiClient = (baseUrl: string): AxiosInstance => {
     // timeout: 3000,
   });
 
-  console.log("API Client created with configuration:", {
-    baseURL: instance.defaults.baseURL,
-    headers: instance.defaults.headers,
-    responseType: instance.defaults.responseType,
-    timeout: instance.defaults.timeout,
-  });
+  // console.log("API Client created with configuration:", {
+  //   baseURL: instance.defaults.baseURL,
+  //   headers: instance.defaults.headers,
+  //   responseType: instance.defaults.responseType,
+  //   timeout: instance.defaults.timeout,
+  // });
 
   return instance;
 };
@@ -51,12 +52,16 @@ const apiInterceptor = (baseUrl: string) => {
               const accessToken = authorizationHeader.replace("Bearer ", "");
               console.log("Received new access token: ", accessToken);
               localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
+              axiosInstance.defaults.headers.common[
+                "Authorization"
+              ] = `Bearer ${accessToken}`;
+              error.config.headers["Authorization"] = `Bearer ${accessToken}`;
             }
-            return axiosInstance(error.config);
+            return axiosInstance(error.config); // 토큰 발행 후 원래 요청 다시
           } catch (err) {
             console.error("Error during token reissue", err);
             alert("Session expired. Please log in again.");
-            signOut(); // 로그아웃 처리
+            signOut();
           }
         } else if (message === "Refresh token not found in the database") {
           alert("Session expired. Please log in again.");
@@ -73,12 +78,14 @@ const apiInterceptor = (baseUrl: string) => {
 
 function signOut() {
   const axiosInstance = apiClient(serverUrl);
-
   localStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem("userId");
 
   axiosInstance
     .post("/user-service/logout")
-    .then(() => console.log("Logout from server"))
+    .then(() => {
+      console.log("Logout from server");
+    })
     .catch((err) => console.error("Server logout failed", err));
 
   window.location.replace("/login"); // 뒤로 가기 방지

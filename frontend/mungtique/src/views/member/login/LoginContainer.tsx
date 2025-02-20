@@ -3,7 +3,6 @@ import LoginForm from "./LoginForm";
 import { Login } from "../../../shared/types/login.interface";
 import { useLoginViewModelHook } from "./hook/useLoginViewModel.hook";
 import { useAuthStore } from "./hook/login.store";
-import { useEffect } from "react";
 
 export default function LoginContainer() {
   const AUTH_TOKEN_KEY = "access";

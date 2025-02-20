@@ -9,6 +9,5 @@ public interface UserRepoPort {
     Boolean existsByEmail(String email);
     UserEntity save(UserEntity userEntity);
     Optional<UserEntity> findByEmail(String email);
-
     Optional<UserEntity> findById(Long userId);
 }

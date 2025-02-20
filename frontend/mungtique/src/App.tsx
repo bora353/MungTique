@@ -18,7 +18,7 @@ import ReservationMungContainer from "./views/care/reservation/ReservationMungCo
 
 function App() {
   const isLogin = useAuthStore((state) => state.isLogin);
-  console.log("login status : ", isLogin);
+  // console.log("login status : ", isLogin);
 
   return (
     <div>

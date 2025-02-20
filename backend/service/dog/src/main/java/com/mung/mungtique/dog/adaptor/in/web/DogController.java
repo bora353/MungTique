@@ -51,5 +51,4 @@ public class DogController {
         log.info("userId : {}", userId);
         return ResponseEntity.ok(dogService.getDogs(userId));
     }
-
 }

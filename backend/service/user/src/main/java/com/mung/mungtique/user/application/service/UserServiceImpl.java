@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = bCryptPasswordEncoder.encode(joinReq.password());
         Boolean isExist = userRepoPort.existsByEmail(joinReq.email());
 
-        if (isExist) return null;
+        if (isExist) throw new IllegalArgumentException("User with this email already exists.");
 
         UserEntity userEntity = userMapper.toUserEntity(joinReq, Authority.ROLE_ADMIN.name());
         userEntity.setPassword(encodedPassword);
@@ -56,18 +56,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserDetailsByEmail(String email) {
-        UserEntity userEntity = userRepoPort.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User not found with Email: " + email));
-
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
-        }
-
-        return userEntity;
+        return userRepoPort.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User not found with Email: " + email));
     }
 
     @Override
     public UserRes getUserInfo(String userId) {
         UserEntity user =  userRepoPort.findById(Long.parseLong(userId)).orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
         return userMapper.toUserRes(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateLstLoginAt(UserEntity user) {
+        user.setLastLoginAt();
+        userRepoPort.save(user);
     }
 }

@@ -35,7 +35,7 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
         } else if (registrationId.equals("kakao")) {
             oAuth2Res = new KakaoRes(oAuth2User.getAttributes());
         } else {
-            return null;
+            throw new OAuth2AuthenticationException("Unsupported registration ID: " + registrationId);
         }
 
         // 리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만들기

@@ -6,6 +6,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
+@Slf4j
 public class ReissueController {
 
     /**
@@ -35,6 +37,8 @@ public class ReissueController {
     @Operation(summary = "access token 만료 시, refresh token을 통해 다시 reissue")
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+        log.info("Reissue Start");
+
         try {
             Map<String, String> tokens = tokenService.reissueToken(request);
             response.setHeader("Authorization", "Bearer " + tokens.get("access"));

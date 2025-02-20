@@ -38,6 +38,9 @@ public class UserEntity extends BaseTime {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginAt;
 
-    // TODO : 추후 IP, Location 정보 추가
+    public void setLastLoginAt() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
 
+    // TODO : 추후 IP, Location 정보 추가
 }

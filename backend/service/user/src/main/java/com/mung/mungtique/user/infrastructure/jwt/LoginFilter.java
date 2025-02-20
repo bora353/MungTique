@@ -74,7 +74,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         String email = ((User) authentication.getPrincipal()).getUsername();
-        UserEntity userDetails = userService.getUserDetailsByEmail(email);
+        UserEntity user = userService.getUserDetailsByEmail(email);
+        userService.updateLstLoginAt(user);
 
         // role
 /*        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -92,12 +93,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("userId", userDetails.getId());
+        responseBody.put("userId", user.getId());
 
         response.setContentType("application/json");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), responseBody);
 
+        log.info("access : {}", access);
+        log.info("refresh : {}", refresh);
         log.info("successfulAuthentication - access, refresh token send Complete");
     }
 
