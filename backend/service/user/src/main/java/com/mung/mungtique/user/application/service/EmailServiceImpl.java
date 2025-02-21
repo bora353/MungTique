@@ -1,7 +1,7 @@
 package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.application.port.in.EmailService;
-import com.mung.mungtique.user.application.port.out.RedisPort;
+import com.mung.mungtique.user.application.port.out.MailAuthPort;
 import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailServiceImpl implements EmailService {
 
     private final UserRepoPort userRepoPort;
-    private final RedisPort redisPort;
+    private final MailAuthPort mailAuthPort;
     private final JavaMailSender javaMailSender;
 
     @Override
@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
         int verificationCode = createVerificationCode();
         log.info("인증번호 : {} ", verificationCode);
 
-        redisPort.saveVerificationCodeFor3Minutes(email, verificationCode);
+        mailAuthPort.saveVerificationCodeFor3Minutes(email, verificationCode);
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public boolean checkMailVerificationCode(String email, String userNumber) {
-        String verificationCode = redisPort.findVerificationCode(email);
+        String verificationCode = mailAuthPort.findVerificationCode(email);
 
         if (verificationCode == null) {
             return false;

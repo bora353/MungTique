@@ -1,6 +1,6 @@
 package com.mung.mungtique.user.adaptor.out.redis;
 
-import com.mung.mungtique.user.application.port.out.RedisPort;
+import com.mung.mungtique.user.application.port.out.MailAuthPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class RedisAdaptor implements RedisPort {
+public class MailAuthAdaptor implements MailAuthPort {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
