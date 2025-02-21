@@ -1,8 +1,8 @@
 package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.application.port.in.TokenService;
-import com.mung.mungtique.user.application.port.out.TokenRepoPort;
-import com.mung.mungtique.user.domain.Token;
+import com.mung.mungtique.user.application.port.out.RefreshTokenRepoPort;
+import com.mung.mungtique.user.domain.RefreshToken;
 import com.mung.mungtique.user.infrastructure.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.util.*;
 public class TokenServiceImpl implements TokenService {
 
     private final JwtUtil jwtUtil;
-    private final TokenRepoPort tokenRepoPort;
+    private final RefreshTokenRepoPort refreshTokenRepoPort;
 
     @Value("${spring.jwt.refresh-expiration}")
     private String REFRESH_TOKEN_EXPIRATION_TIME;
@@ -51,14 +51,15 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public void deleteRefreshToken(String refreshToken) {
-        tokenRepoPort.deleteRefreshToken(refreshToken);
+        refreshTokenRepoPort.deleteRefreshToken(refreshToken);
     }
 
     @Override
     @Transactional
-    public Token saveRefreshToken(String email, String refreshToken) {
-        Token token = createNewToken(email, refreshToken);
-        return tokenRepoPort.save(token);
+    public RefreshToken saveRefreshToken(String email, String refreshToken) {
+        refreshTokenRepoPort.deleteById(email);
+        RefreshToken token = createNewToken(email, refreshToken);
+        return refreshTokenRepoPort.save(token);
     }
 
     private void validateRefreshToken(String refreshToken) {
@@ -66,7 +67,7 @@ public class TokenServiceImpl implements TokenService {
             throw new RuntimeException ("Invalid or expired refresh token");
         }
 
-        Boolean isExist = tokenRepoPort.existByRefreshToken(refreshToken);
+        Boolean isExist = refreshTokenRepoPort.existByRefreshToken(refreshToken);
         if (!isExist) {
             throw new RuntimeException("Refresh token not found in the database");
         }
@@ -83,19 +84,14 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private void deleteAndSaveRefreshToken(String refreshToken, String email, String newRefresh) {
-        tokenRepoPort.deleteRefreshToken(refreshToken);
-        Token token = createNewToken(email, newRefresh);
-        tokenRepoPort.save(token);
+        refreshTokenRepoPort.deleteRefreshToken(refreshToken);
+        refreshTokenRepoPort.deleteById(email);
+        RefreshToken token = createNewToken(email, newRefresh);
+        refreshTokenRepoPort.save(token);
     }
 
-    private Token createNewToken(String email, String refreshToken) {
-        Instant now = Instant.now();
-        Instant expirationTime = now.plusMillis(Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME));
-
-        return Token.builder()
-                .email(email)
-                .refreshToken(refreshToken)
-                .expiration(Date.from(expirationTime))
-                .build();
+    private RefreshToken createNewToken(String email, String refreshToken) {
+        long expiration = Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME); // 만료 시간 (초 단위)
+        return new RefreshToken(email, refreshToken, expiration);
     }
 }

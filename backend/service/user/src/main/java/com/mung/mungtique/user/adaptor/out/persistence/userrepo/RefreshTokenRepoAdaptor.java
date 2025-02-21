@@ -1,19 +1,19 @@
 package com.mung.mungtique.user.adaptor.out.persistence.userrepo;
 
-import com.mung.mungtique.user.application.port.out.TokenRepoPort;
-import com.mung.mungtique.user.domain.Token;
+import com.mung.mungtique.user.application.port.out.RefreshTokenRepoPort;
+import com.mung.mungtique.user.domain.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class TokenRepoAdaptor implements TokenRepoPort {
+public class RefreshTokenRepoAdaptor implements RefreshTokenRepoPort {
 
-    private final TokenRepo tokenRepo;
+    private final RefreshTokenRepo tokenRepo;
 
     @Override
-    public Token save(Token token) {
-        return tokenRepo.save(token);
+    public RefreshToken save(RefreshToken refreshToken) {
+        return tokenRepo.save(refreshToken);
     }
 
     @Override
@@ -24,5 +24,10 @@ public class TokenRepoAdaptor implements TokenRepoPort {
     @Override
     public void deleteRefreshToken(String refreshToken) {
         tokenRepo.deleteByRefreshToken(refreshToken);
+    }
+
+    @Override
+    public void deleteById(String email) {
+        tokenRepo.deleteById(email);
     }
 }
