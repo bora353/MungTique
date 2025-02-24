@@ -81,17 +81,20 @@ export default function ReservationMungContainer() {
         <div className="mt-6">
           <h3 className="text-lg font-semibold">서비스 선택</h3>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            {["목욕", "커트", "목욕+커트"].map((service) => (
-              <button
-                key={service}
-                className={`p-3 border rounded-lg text-center ${
-                  selectedService === service
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-                onClick={() => setSelectedService(service)}
-              >
-                {service}
+          {[
+          { label: "목욕", value: "WASH" },
+          { label: "커트", value: "CUT" },
+          { label: "목욕+커트", value: "FULL" },
+          ].map(({ label, value }) => (
+          <button
+            key={value}
+            className={`p-3 border rounded-lg text-center ${
+              selectedService === value
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+            onClick={() => setSelectedService(value)}>
+                {label}
               </button>
             ))}
           </div>

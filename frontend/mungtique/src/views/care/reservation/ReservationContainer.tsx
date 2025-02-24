@@ -22,14 +22,16 @@ export default function ReservationContainer() {
 
   useEffect(() => {
     api()
-      .get(`/mungshop-service/mungshops/reservation/${selectedMungShopId}/available`)
+      .get(
+        `/mungshop-service/mungshops/reservation/${selectedMungShopId}/available`
+      )
       .then((response) => {
+        console.log(response.data);
         const times = response.data.map(
-          (reservation: { reservationDateTime: string }) => {
+          (reservation: { reservationDate: string; reservationTime: string }) => {
             return {
-              dateTime: reservation.reservationDateTime,
-              time: dayjs(reservation.reservationDateTime).format("HH:mm"),
-              date: dayjs(reservation.reservationDateTime).format("YYYY-MM-DD"),
+              date: reservation.reservationDate,
+              time: reservation.reservationTime,
             };
           }
         );

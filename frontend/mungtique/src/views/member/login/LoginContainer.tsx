@@ -14,11 +14,11 @@ export default function LoginContainer() {
 
     if (userId) {
       localStorage.setItem("userId", userId);
-      console.log("User ID saved:", userId);
+      //console.log("User ID saved:", userId);
     }
     if (accessToken) {
       localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
-      console.log("Access token saved:", accessToken);
+      //console.log("Access token saved:", accessToken);
       setIsLogin(true, accessToken);
     }
   };

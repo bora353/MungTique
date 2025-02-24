@@ -37,6 +37,7 @@ public class CorsGlobalConfiguration {
                         .pathMatchers(HttpMethod.GET, "/api/v1/user-service/**").permitAll()
                         .pathMatchers("/api/v1/mungshop-service/**").permitAll()
                         .pathMatchers("/api/v1/dog-service/**").permitAll()
+                        .pathMatchers("/api/v1/reservation-service/**").permitAll()
                         .pathMatchers("/swagger-ui/**").permitAll()
                         .pathMatchers("/swagger-resources/**").permitAll()
                         .pathMatchers("/v3/api-docs/**").permitAll()

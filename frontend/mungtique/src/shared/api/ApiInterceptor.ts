@@ -30,7 +30,7 @@ const apiClient = (baseUrl: string): AxiosInstance => {
 
 const apiInterceptor = (baseUrl: string) => {
   const axiosInstance = apiClient(baseUrl);
-  console.log("apiInterceptor start");
+  //console.log("apiInterceptor start");
 
   axiosInstance.interceptors.response.use(
     (response) => response,
@@ -50,7 +50,7 @@ const apiInterceptor = (baseUrl: string) => {
             const authorizationHeader = response.headers["authorization"];
             if (authorizationHeader) {
               const accessToken = authorizationHeader.replace("Bearer ", "");
-              console.log("Received new access token: ", accessToken);
+              // console.log("Received new access token: ", accessToken);
               localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
               axiosInstance.defaults.headers.common[
                 "Authorization"

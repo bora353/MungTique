@@ -39,7 +39,7 @@ export default function LoginForm({ onsubmit }: LoginProps) {
     }
 
     try {
-      console.log("loginDTO", loginDTO);
+      //console.log("loginDTO", loginDTO);
       await onsubmit(loginDTO);
       navigate("/");
     } catch (error) {

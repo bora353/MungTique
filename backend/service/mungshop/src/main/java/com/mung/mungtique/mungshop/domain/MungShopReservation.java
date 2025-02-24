@@ -3,7 +3,7 @@ package com.mung.mungtique.mungshop.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "mung_shop_reservation")
@@ -18,7 +18,10 @@ public class MungShopReservation extends BaseTime {
     private Long mungShopReservationId;
 
     @Column(nullable = false)
-    private LocalDateTime reservationDateTime;
+    private LocalDate reservationDate;
+
+    @Column(nullable = false)
+    private String reservationTime;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;

@@ -6,3 +6,9 @@ export interface UserEntity {
   email: string;
   phone: string;
 }
+
+export interface UserDto {
+  username: string;
+  email: string;
+  phone: string;
+}

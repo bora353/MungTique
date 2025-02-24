@@ -14,8 +14,6 @@ export default function NaverMap({
   setSelectedMarker,
   selectedMarker,
 }: NaverMapProps) {
-  console.log("mungShops 데이터 확인:", mungShops);
-
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
