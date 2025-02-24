@@ -10,6 +10,7 @@ import com.mung.mungtique.user.domain.Authority;
 import com.mung.mungtique.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepoPort.findByEmail(email)
                 .map(user -> new User(user.getEmail(), user.getPassword(),
-                        true, true, true, true, new ArrayList<>())) // 권한 추가 가능
+                        true, true, true, true, List.of(new SimpleGrantedAuthority(user.getRole().name()))))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with Email: " + email));
     }
 
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
         if (isExist) throw new IllegalArgumentException("User with this email already exists.");
 
-        UserEntity userEntity = userMapper.toUserEntity(joinReq, Authority.ROLE_ADMIN.name());
+        UserEntity userEntity = userMapper.toUserEntity(joinReq, Authority.ROLE_USER);
         userEntity.setPassword(encodedPassword);
         UserEntity savedUserEntity = userRepoPort.save(userEntity);
         log.info("Create User Complete : {}", savedUserEntity);

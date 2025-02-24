@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -52,12 +53,29 @@ public class JwtUtil {
         return claims.getSubject();
     }
 
-    public String generateToken(String email, String type) {
+    public List<String> extractRoles(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        Object rolesObject = claims.get("roles");
+        if (rolesObject instanceof List<?>) {
+            return ((List<?>) rolesObject).stream()
+                    .map(Object::toString)
+                    .toList();
+        }
+        return List.of();
+    }
+
+    public String generateToken(String email, List<String> roles, String type) {
         Instant now = Instant.now();
         long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
         return Jwts.builder()
                 .subject(email)
+                .claim("roles", roles)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusMillis(expireTime)))
                 .signWith(secretKey)

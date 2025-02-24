@@ -1,6 +1,5 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,29 +8,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 @RestController
 @RequestMapping("/api/v1")
 public class MainController {
 
-    @Operation(summary = "메인 페이지")
+    /**
+     * 현재 게이트웨이 사용 중으로 사용 불가
+     */
     @GetMapping("/user-info")
     public String mainPage(){
-
-        // JWTFilter를 통과한 뒤 세션 확인
-        // 세션에서 현재 인증된 사용자 이름
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // 세션에서 현재 인증된 사용자 role
+        // TODO :
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "인증되지 않은 사용자";
+        }
 
-        return "Main Controller " + username + role;
+        String username = authentication.getName();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        StringBuilder roles = new StringBuilder();
+        for (GrantedAuthority authority : authorities) {
+            roles.append(authority.getAuthority()).append(" ");
+        }
+
+        return "Main Controller - 사용자: " + username + ", 권한: " + roles.toString().trim();
     }
 
     @GetMapping("/welcome")

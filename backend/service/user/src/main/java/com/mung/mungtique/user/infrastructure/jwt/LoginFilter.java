@@ -15,13 +15,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -78,13 +79,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         userService.updateLstLoginAt(user);
 
         // role
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        List<String> roles = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        log.info("successfulAuthentication - roles : {}", roles);
+
 /*        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();*/
 
-        String access = jwtUtil.generateToken(email, "access");
-        String refresh = jwtUtil.generateToken(email, "refresh");
+        String access = jwtUtil.generateToken(email, roles, "access");
+        String refresh = jwtUtil.generateToken(email, roles, "refresh");
 
         tokenService.saveRefreshToken(email, refresh);
 
