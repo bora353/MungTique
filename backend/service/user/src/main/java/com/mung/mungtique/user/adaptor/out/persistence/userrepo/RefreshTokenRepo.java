@@ -5,6 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface RefreshTokenRepo extends CrudRepository<RefreshToken, String> {
 
-    Boolean existsByRefreshToken(String refreshToken);
-    void deleteByRefreshToken(String refreshToken);
 }

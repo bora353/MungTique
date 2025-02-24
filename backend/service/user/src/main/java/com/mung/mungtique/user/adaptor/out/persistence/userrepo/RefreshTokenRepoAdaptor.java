@@ -5,6 +5,8 @@ import com.mung.mungtique.user.domain.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class RefreshTokenRepoAdaptor implements RefreshTokenRepoPort {
@@ -17,13 +19,8 @@ public class RefreshTokenRepoAdaptor implements RefreshTokenRepoPort {
     }
 
     @Override
-    public Boolean existByRefreshToken(String refreshToken) {
-        return tokenRepo.existsByRefreshToken(refreshToken);
-    }
-
-    @Override
-    public void deleteRefreshToken(String refreshToken) {
-        tokenRepo.deleteByRefreshToken(refreshToken);
+    public Optional<RefreshToken> findById(String email) {
+        return tokenRepo.findById(email);
     }
 
     @Override

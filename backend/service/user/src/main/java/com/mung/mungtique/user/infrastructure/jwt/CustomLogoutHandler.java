@@ -13,6 +13,8 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -23,24 +25,19 @@ public class CustomLogoutHandler implements LogoutHandler, LogoutSuccessHandler 
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String refreshToken = null;
-        Cookie[] cookies = request.getCookies();
+        Optional<String> refreshTokenOpt = Optional.ofNullable(request.getCookies())
+                .flatMap(cookies -> Arrays.stream(cookies)
+                        .filter(cookie -> "refresh".equals(cookie.getName()))
+                        .map(Cookie::getValue)
+                        .findFirst());
 
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    refreshToken = cookie.getValue();
-                    break; // 찾았으면 더 이상 반복할 필요 없음
-                }
-            }
-        }
-
-        if (refreshToken != null) {
-            tokenService.deleteRefreshToken(refreshToken);
-            log.info("delete RefreshToken complete");
-        } else {
-            log.warn("Refresh token not found in cookies.");
-        }
+        refreshTokenOpt.ifPresentOrElse(
+                refreshToken -> {
+                    tokenService.deleteRefreshToken(refreshToken);
+                    log.info("delete RefreshToken complete: {}", refreshToken);
+                },
+                () -> log.warn("Refresh token not found in cookies.")
+        );
     }
 
     @Override

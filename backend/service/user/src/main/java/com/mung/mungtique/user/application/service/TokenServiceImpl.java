@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -30,7 +29,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public Map<String, String> reissueToken(HttpServletRequest request) {
-        String refreshToken = extractRefreshTokenFromRequest(request).orElseThrow(() -> new NoSuchElementException("Refresh token not found"));
+        String refreshToken = extractRefreshToken(request).orElseThrow(() -> new NoSuchElementException("Refresh token not found"));
 
         validateRefreshToken(refreshToken);
 
@@ -40,7 +39,7 @@ public class TokenServiceImpl implements TokenService {
         String newRefresh = jwtUtil.generateToken(email, roles, "refresh");
 
         // DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
-        deleteAndSaveRefreshToken(refreshToken, email, newRefresh);
+        saveRefreshToken(email, newRefresh);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access", newAccess);
@@ -52,14 +51,15 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public void deleteRefreshToken(String refreshToken) {
-        refreshTokenRepoPort.deleteRefreshToken(refreshToken);
+        String email = jwtUtil.extractUsername(refreshToken);
+        refreshTokenRepoPort.deleteById(email);
     }
 
     @Override
     @Transactional
-    public RefreshToken saveRefreshToken(String email, String refreshToken) {
+    public RefreshToken saveRefreshToken(String email, String newRefreshToken) {
         refreshTokenRepoPort.deleteById(email);
-        RefreshToken token = createNewToken(email, refreshToken);
+        RefreshToken token = createNewToken(email, newRefreshToken);
         return refreshTokenRepoPort.save(token);
     }
 
@@ -68,31 +68,25 @@ public class TokenServiceImpl implements TokenService {
             throw new RuntimeException ("Invalid or expired refresh token");
         }
 
-        Boolean isExist = refreshTokenRepoPort.existByRefreshToken(refreshToken);
-        if (!isExist) {
-            throw new RuntimeException("Refresh token not found in the database");
+        String email = jwtUtil.extractUsername(refreshToken);
+        RefreshToken storedRefreshToken = refreshTokenRepoPort.findById(email)
+                .orElseThrow(() -> new RuntimeException("Refresh token not found in the database"));
+
+        if (!refreshToken.equals(storedRefreshToken.getRefreshToken())) {
+            throw new RuntimeException("Refresh token mismatch");
         }
     }
 
-    private Optional<String> extractRefreshTokenFromRequest(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if ("refresh".equals(cookie.getName())) {
-                return Optional.of(cookie.getValue());
-            }
-        }
-        return Optional.empty();
-    }
-
-    private void deleteAndSaveRefreshToken(String refreshToken, String email, String newRefresh) {
-        refreshTokenRepoPort.deleteRefreshToken(refreshToken);
-        refreshTokenRepoPort.deleteById(email);
-        RefreshToken token = createNewToken(email, newRefresh);
-        refreshTokenRepoPort.save(token);
+    private Optional<String> extractRefreshToken(HttpServletRequest request) {
+        return Optional.ofNullable(request.getCookies())
+                .flatMap(cookies -> Arrays.stream(cookies)
+                        .filter(cookie -> "refresh".equals(cookie.getName()))
+                        .map(Cookie::getValue)
+                        .findFirst());
     }
 
     private RefreshToken createNewToken(String email, String refreshToken) {
-        long expiration = Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME); // 만료 시간 (초 단위)
+        long expiration = Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
         return new RefreshToken(email, refreshToken, expiration);
     }
 }
