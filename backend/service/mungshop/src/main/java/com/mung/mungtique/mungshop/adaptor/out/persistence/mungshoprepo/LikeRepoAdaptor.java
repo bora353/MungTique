@@ -18,24 +18,24 @@ public class LikeRepoAdaptor implements LikeRepoPort {
 
     // 좋아요 증가 (INCR)
     public Long likeMungShopStatus(Long mungShopId, Long userId) {
-        Boolean alreadyLiked = redisTemplate.opsForSet().isMember(getUserSetKey(mungShopId), userId.toString());
+        Boolean alreadyLiked = redisTemplate.opsForSet().isMember(getUserSetKey(mungShopId), userId.toString()); // SISMEMBER
         if (Boolean.TRUE.equals(alreadyLiked)) {
             return getLikeCount(mungShopId);
         }
 
-        redisTemplate.opsForSet().add(getUserSetKey(mungShopId), userId.toString());
-        return redisTemplate.opsForValue().increment(getLikeKey(mungShopId));
+        redisTemplate.opsForSet().add(getUserSetKey(mungShopId), userId.toString()); // SADD
+        return redisTemplate.opsForValue().increment(getLikeKey(mungShopId)); // INCR
     }
 
     // 좋아요 취소 (DECR)
     public Long unlikeMungShopStatus(Long mungShopId, Long userId) {
-        Boolean liked = redisTemplate.opsForSet().isMember(getUserSetKey(mungShopId), userId.toString());
+        Boolean liked = redisTemplate.opsForSet().isMember(getUserSetKey(mungShopId), userId.toString()); // SISMEMBER
         if (Boolean.FALSE.equals(liked)) {
             return getLikeCount(mungShopId);
         }
 
-        redisTemplate.opsForSet().remove(getUserSetKey(mungShopId), userId.toString());
-        return redisTemplate.opsForValue().decrement(getLikeKey(mungShopId));
+        redisTemplate.opsForSet().remove(getUserSetKey(mungShopId), userId.toString()); // SREM
+        return redisTemplate.opsForValue().decrement(getLikeKey(mungShopId)); // DECR
     }
 
     // 좋아요 개수 조회 (GET)
