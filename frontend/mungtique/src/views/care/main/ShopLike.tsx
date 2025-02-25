@@ -2,7 +2,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MungShopLike } from "../../../shared/types/mungshop.interface";
 import { api } from "../../../shared/api/ApiInterceptor";
 import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 
@@ -12,6 +11,7 @@ interface ShopLikeProps {
 
 export default function ShopLike({ mungShopId }: ShopLikeProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarType, setSnackbarType] = useState<
@@ -20,18 +20,17 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
 
   const userId = localStorage.getItem("userId");
 
-  const params: Record<string, string | number> = { mungShopId };
-  if (userId) params.userId = userId;
-
   const fetchLikeStatus = async () => {
+    if (!userId) return;
+
     try {
-      const response = await api().get<boolean>(
-        "/mungshop-service/mungshops/like-status",
-        {
-          params,
-        }
+      const statusResponse = await api().get<boolean>(
+        `/mungshop-service/mungshops/${mungShopId}/like-status/${userId}`
       );
-      setIsLiked(response.data);
+      setIsLiked(statusResponse.data);
+
+      const countResponse = await api().get<number>(`/mungshop-service/mungshops/like-status?mungShopId=${mungShopId}`);
+      setLikeCount(countResponse.data);
     } catch (error) {
       console.error("Error fetching like status:", error);
     }
@@ -46,15 +45,19 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
     }
 
     try {
-      const endpoint = isLiked
-        ? `/mungshop-service/mungshops/${mungShopId}/unlike`
-        : `/mungshop-service/mungshops/${mungShopId}/like`;
+      let response;
 
-      await api().post<MungShopLike>(endpoint, {
-        userId,
-      });
-
-      setIsLiked(!isLiked);
+      if (isLiked) {
+        response = await api().delete<number>(
+          `/mungshop-service/mungshops/${mungShopId}/unlike/${userId}`
+        );
+      } else {
+        response = await api().post<number>(
+          `/mungshop-service/mungshops/${mungShopId}/like/${userId}`
+        );
+      }
+      setIsLiked((prev) => !prev);
+      setLikeCount(response.data);
     } catch (error) {
       console.error("Error handling like/unlike:", error);
     }
@@ -72,6 +75,7 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
         ) : (
           <FavoriteBorderIcon sx={{ color: "tomato" }} />
         )}
+      <span className="ml-2 text-sm text-[tomato]">{likeCount} </span>
       </Button>
       <MuiSnackbar
         message={snackbarMessage}

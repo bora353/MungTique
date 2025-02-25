@@ -2,7 +2,6 @@ package com.mung.mungtique.mungshop.adaptor.out.persistence.mungshoprepo;
 
 import com.mung.mungtique.mungshop.application.port.out.MungShopRepoPort;
 import com.mung.mungtique.mungshop.domain.MungShop;
-import com.mung.mungtique.mungshop.domain.MungShopLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,26 +13,10 @@ import java.util.Optional;
 public class MungShopRepoAdaptor implements MungShopRepoPort {
 
     private final MungShopRepo mungShopRepo;
-    private final MungShopLikeRepo mungShopLikeRepo;
 
     @Override
     public List<MungShop> findAll() {
         return mungShopRepo.findAll();
-    }
-
-    @Override
-    public MungShopLike save(MungShopLike mungShopLike) {
-        return mungShopLikeRepo.save(mungShopLike);
-    }
-
-    @Override
-    public Optional<MungShopLike> findByMungShopMungShopIdAndUserId(Long mungShopId, Long userId) {
-        return mungShopLikeRepo.findByMungShopMungShopIdAndUserId(mungShopId, userId);
-    }
-
-    @Override
-    public void delete(MungShopLike mungShopLike) {
-        mungShopLikeRepo.delete(mungShopLike);
     }
 
     @Override

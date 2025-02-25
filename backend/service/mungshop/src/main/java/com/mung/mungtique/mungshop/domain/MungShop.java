@@ -44,9 +44,9 @@ public class MungShop extends BaseTime {
     @Column(length = 200)
     private String storeImageUrl;
 
-    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "mungShop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MungShopPrice> prices;
 
-    @OneToMany(mappedBy = "mungShop", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MungShopLike> likes;
+//    @OneToMany(mappedBy = "mungShop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<MungShopLike> likes;
 }

@@ -3,7 +3,6 @@ package com.mung.mungtique.mungshop.application.service;
 import com.mung.mungtique.mungshop.adaptor.in.web.dto.reservation.MungShopReservationRes;
 import com.mung.mungtique.mungshop.application.port.in.MungShopReservationService;
 import com.mung.mungtique.mungshop.application.port.out.MungShopReservationRepoPort;
-import com.mung.mungtique.mungshop.application.service.mapper.MungShopMapper;
 import com.mung.mungtique.mungshop.application.service.mapper.MungShopMapperImpl;
 import com.mung.mungtique.mungshop.domain.MungShopReservation;
 import com.mung.mungtique.mungshop.domain.ReservationStatus;
