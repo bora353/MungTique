@@ -2,8 +2,13 @@ version: "3.7"
 services:
     redis:
         image: redis:latest
+        container_name: redis
+        restart: always
         ports:
             - 6379:6379
+        volumes:
+            - redis_data:/data
+        command: redis-server --appendonly yes --save 900 1 --save 300 10 --save 60 10000
         networks:
             - mungtique
 
@@ -132,6 +137,9 @@ services:
             - KAFKA_CLUSTERS_0_NAME=local
             - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-1:9092,kafka-2:9093,kafka-3:9094
             # - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+
+volumes:
+    redis_data:
 
 networks:
     mungtique:
