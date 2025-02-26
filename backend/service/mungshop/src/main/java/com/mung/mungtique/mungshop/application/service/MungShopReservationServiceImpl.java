@@ -5,7 +5,7 @@ import com.mung.mungtique.mungshop.application.port.in.MungShopReservationServic
 import com.mung.mungtique.mungshop.application.port.out.MungShopReservationRepoPort;
 import com.mung.mungtique.mungshop.application.service.mapper.MungShopMapperImpl;
 import com.mung.mungtique.mungshop.domain.MungShopReservation;
-import com.mung.mungtique.mungshop.domain.ReservationStatus;
+import com.mung.mungtique.mungshop.domain.MungShopReservationStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
 
     @Override
     public List<MungShopReservationRes> getAvailableReservationInfo(Long mungShopId) {
-        List<MungShopReservation> mungShopReservations = mungShopReservationRepoPort.findByMungShopIdAndStatus(mungShopId, ReservationStatus.NOT_RESERVED);
+        List<MungShopReservation> mungShopReservations = mungShopReservationRepoPort.findByMungShopIdAndStatus(mungShopId, MungShopReservationStatus.AVAILABLE);
         log.info("mungShopReservations: {}", mungShopReservations);
         return mapper.toMungShopReservationRes(mungShopReservations);
     }

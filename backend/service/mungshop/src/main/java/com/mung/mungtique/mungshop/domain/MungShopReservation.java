@@ -24,7 +24,7 @@ public class MungShopReservation extends BaseTime {
     private String reservationTime;
 
     @Enumerated(EnumType.STRING)
-    private ReservationStatus status;
+    private MungShopReservationStatus status;
 
     private Long mungShopId;
 }
