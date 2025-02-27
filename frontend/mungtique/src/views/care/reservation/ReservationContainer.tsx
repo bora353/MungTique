@@ -21,6 +21,7 @@ export default function ReservationContainer() {
   } = useReservationStore();
 
   useEffect(() => {
+    // TODO : 추후 매달마다 정보 가져오게 변경하기
     api()
       .get(
         `/mungshop-service/mungshops/reservation/${selectedMungShopId}/available`

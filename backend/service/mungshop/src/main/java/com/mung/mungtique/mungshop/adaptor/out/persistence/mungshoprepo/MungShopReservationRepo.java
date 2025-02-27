@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface MungShopReservationRepo extends JpaRepository<MungShopReservation, Long> {
     List<MungShopReservation> findByMungShopIdAndStatus(Long mungShopId, MungShopReservationStatus status);
+    Boolean existsByMungShopIdAndReservationTimeAndStatus(Long mungShopId, String reservationTime, MungShopReservationStatus status);
 }

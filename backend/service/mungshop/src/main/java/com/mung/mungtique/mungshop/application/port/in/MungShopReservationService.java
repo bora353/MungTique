@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface MungShopReservationService {
     List<MungShopReservationRes> getAvailableReservationInfo(Long mungShopId);
+    Boolean checkAvailableTime(Long mungShopId, String reservationTime);
 }

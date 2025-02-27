@@ -28,4 +28,9 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
         log.info("mungShopReservations: {}", mungShopReservations);
         return mapper.toMungShopReservationRes(mungShopReservations);
     }
+
+    @Override
+    public Boolean checkAvailableTime(Long mungShopId, String reservationTime) {
+        return mungShopReservationRepoPort.existsByMungShopIdAndReservationTimeAndStatus(mungShopId, reservationTime, MungShopReservationStatus.AVAILABLE);
+    }
 }

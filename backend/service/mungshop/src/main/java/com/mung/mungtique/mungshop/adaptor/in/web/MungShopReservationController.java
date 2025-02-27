@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +24,14 @@ public class MungShopReservationController {
         log.info("Mungshop reservation : mungshopId {}", mungShopId);
 
         return ResponseEntity.ok(mungShopReservationService.getAvailableReservationInfo(mungShopId));
+    }
+
+    @Operation(summary = "애견샵 예약 가능한 시간인지 체크한다")
+    @GetMapping("/mungshops/{mungShopId}/check-availability")
+    public ResponseEntity<Boolean> checkAvailableTime(
+                                            @PathVariable Long mungShopId,
+                                            @RequestParam String reservationTime) {
+        log.info("Mungshop check time availability : mungshopId {} resevationTime {}", mungShopId, reservationTime);
+        return ResponseEntity.ok(mungShopReservationService.checkAvailableTime(mungShopId, reservationTime));
     }
 }

@@ -1,19 +1,18 @@
-package com.mung.mungtique.mungshop.application.service.mapper;
+package com.mung.mungtique.reservation.application.service.mapper;
 
-import com.mung.mungtique.mungshop.adaptor.in.web.dto.mungshop.MungShopRes;
-import com.mung.mungtique.mungshop.adaptor.in.web.dto.reservation.MungShopReservationRes;
-import com.mung.mungtique.mungshop.domain.MungShop;
-import com.mung.mungtique.mungshop.domain.MungShopReservation;
+
+import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationReq;
+import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationRes;
+import com.mung.mungtique.reservation.domain.Reservation;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 
+
 @Mapper (componentModel = "spring")
-public interface MungShopMapper {
+public interface ReservationMapper {
 
-    @Mapping(source="mungShop.prices", target="mungShopPrices")
-    MungShopRes toMungShopDTO(MungShop mungShop);
+    Reservation toReservation(ReservationReq reservationReq);
 
-    List<MungShopReservationRes> toMungShopReservationRes(List<MungShopReservation> mungShopReservations);
+    List<ReservationRes> toReservationRes(List<Reservation> reservations);
 }

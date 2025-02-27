@@ -1,21 +1,31 @@
-package com.mung.mungtique.mungshop.adaptor.out.persistence.mungshoprepo;
+package com.mung.mungtique.reservation.adaptor.out.persistence;
 
-import com.mung.mungtique.mungshop.application.port.out.MungShopReservationRepoPort;
-import com.mung.mungtique.mungshop.domain.MungShopReservation;
-import com.mung.mungtique.mungshop.domain.ReservationStatus;
+import com.mung.mungtique.reservation.application.port.out.persistence.ReservationRepoPort;
+import com.mung.mungtique.reservation.domain.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class MungShopReservationRepoAdaptor implements MungShopReservationRepoPort {
+public class ReservationRepoAdaptor implements ReservationRepoPort {
 
-    private final MungShopReservationRepo mungShopReservationRepo;
+    private final ReservationRepo reservationRepo;
 
     @Override
-    public List<MungShopReservation> findByMungShopIdAndStatus(Long mungShopId, ReservationStatus reservationStatus) {
-        return mungShopReservationRepo.findByMungShopIdAndStatus(mungShopId, reservationStatus);
+    public Reservation save(Reservation reservation) {
+        return reservationRepo.save(reservation);
+    }
+
+    @Override
+    public List<Reservation> findByUserId(Long userId) {
+        return reservationRepo.findByUserId(userId);
+    }
+
+    @Override
+    public Optional<Reservation> findById(Long reservationId) {
+        return reservationRepo.findById(reservationId);
     }
 }

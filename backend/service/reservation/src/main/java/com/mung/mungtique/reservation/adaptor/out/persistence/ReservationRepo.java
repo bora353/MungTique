@@ -1,11 +1,11 @@
-package com.mung.mungtique.mungshop.adaptor.out.persistence.mungshoprepo;
+package com.mung.mungtique.reservation.adaptor.out.persistence;
 
-import com.mung.mungtique.mungshop.domain.MungShopReservation;
-import com.mung.mungtique.mungshop.domain.ReservationStatus;
+import com.mung.mungtique.reservation.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MungShopReservationRepo extends JpaRepository<MungShopReservation, Long> {
-    List<MungShopReservation> findByMungShopIdAndStatus(Long mungShopId, ReservationStatus status);
+
+public interface ReservationRepo extends JpaRepository<Reservation, Long> {
+    List<Reservation> findByUserId(Long userId);
 }

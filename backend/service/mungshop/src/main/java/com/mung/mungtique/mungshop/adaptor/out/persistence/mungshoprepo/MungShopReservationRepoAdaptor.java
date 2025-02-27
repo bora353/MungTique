@@ -18,4 +18,9 @@ public class MungShopReservationRepoAdaptor implements MungShopReservationRepoPo
     public List<MungShopReservation> findByMungShopIdAndStatus(Long mungShopId, MungShopReservationStatus mungShopReservationStatus) {
         return mungShopReservationRepo.findByMungShopIdAndStatus(mungShopId, mungShopReservationStatus);
     }
+
+    @Override
+    public Boolean existsByMungShopIdAndReservationTimeAndStatus(Long mungShopId, String reservationTime, MungShopReservationStatus status) {
+        return mungShopReservationRepo.existsByMungShopIdAndReservationTimeAndStatus(mungShopId, reservationTime, status);
+    }
 }

@@ -18,7 +18,7 @@ export default function ReservationConfirm() {
     requestMessage,
     setReserveUserName,
     setReserveUserPhone,
-    setRequestMessage
+    setRequestMessage,
   } = useReservationStore();
   const userId = localStorage.getItem("userId");
 
@@ -49,22 +49,25 @@ export default function ReservationConfirm() {
       // dogId추가
       dogName: selectedDog,
       serviceType: selectedService,
-      reservationDate: selectedDate?.format("YYYY-MM-DD"), 
+      reservationDate: selectedDate?.format("YYYY-MM-DD"),
       reservationTime: selectedTime,
+      userId: userId,
       username: reserveUserName,
       phone: reserveUserPhone,
-      requestMessage: requestMessage
+      requestMessage: requestMessage,
     };
 
     console.log("예약 요청 데이터:", reservationData);
 
     try {
-      const response = await api().post("/reservation-service/reservations", reservationData);
+      const response = await api().post(
+        "/reservation-service/reservations",
+        reservationData
+      );
       console.log("예약 성공:", response.data);
       alert("예약이 완료되었습니다!");
       localStorage.removeItem("reservation-storage");
       navigate("/mypage"); // TODO : 결제페이지로 넘어가게 해야겠구나
-      
     } catch (error) {
       console.error("예약 실패:", error);
       alert("예약에 실패했습니다. 다시 시도해주세요.");
@@ -86,7 +89,7 @@ export default function ReservationConfirm() {
         <div className="bg-gray-100 rounded-lg p-4 mt-3">
           <h3 className="font-semibold">🐶 {selectedMungShop} 방문 예약</h3>
           <p className="text-sm text-gray-600">
-            일정 
+            일정
             <span className="text-gray-800">
               {selectedDate?.format("M월 D일(ddd)")} {selectedTime}
             </span>

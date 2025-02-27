@@ -26,6 +26,9 @@ public record ReservationReq(
         @NotBlank(message = "예약 시간은 필수입니다.")
         String reservationTime,
 
+        @NotNull(message = "User ID는 필수입니다.")
+        Long userId,
+
         @NotBlank(message = "예약자 이름은 필수입니다.")
         String username,
 

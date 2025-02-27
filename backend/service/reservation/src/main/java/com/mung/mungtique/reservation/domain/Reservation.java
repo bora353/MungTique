@@ -36,6 +36,9 @@ public class Reservation extends BaseTime {
     @Column(length = 100)
     private String reservationTime;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @Column(length = 100)
     private String username;
 
@@ -44,4 +47,25 @@ public class Reservation extends BaseTime {
 
     @Column(length = 100)
     private String requestMessage;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservationStatus;
+
+    private Boolean isDeleted = false;
+
+    @PrePersist
+    public void setDefaultStatus() {
+        if (this.reservationStatus == null) {
+            this.reservationStatus = ReservationStatus.WAITING_FOR_PAYMENT;
+        }
+    }
+
+    public void paid() {
+        this.reservationStatus = ReservationStatus.PAID;
+    }
+
+    public void cancel() {
+        this.reservationStatus = ReservationStatus.CANCELED;
+        this.isDeleted = true;
+    }
 }
