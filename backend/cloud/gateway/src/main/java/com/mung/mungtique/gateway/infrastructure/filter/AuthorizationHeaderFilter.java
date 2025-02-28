@@ -46,7 +46,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             log.info("Request Path: {}", request.getURI().getPath());
 
             // 1. OAuth 인증 (쿠키)
-            HttpCookie authCookie = request.getCookies().getFirst("Authorization");
+            HttpCookie authCookie = request.getCookies().getFirst("Oauth2-Access-Token");
             if (authCookie != null) {
                 log.info("OAuth Cookie: {}", authCookie);
                 if (parseClaims(authCookie.getValue()) == null) {

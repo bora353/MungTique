@@ -1,9 +1,10 @@
 package com.mung.mungtique.user.adaptor.out.persistence.userrepo;
 
-import com.mung.mungtique.user.domain.UserOAuth2;
+import com.mung.mungtique.user.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UseOAuth2Repo extends JpaRepository<UserOAuth2, Long> {
+import java.util.Optional;
 
-    UserOAuth2 findByUsername(String username);
+public interface UseOAuth2Repo extends JpaRepository<UserEntity, Long> {
+    Optional<UserEntity> findByProviderAndProviderId(String provider, String providerId);
 }

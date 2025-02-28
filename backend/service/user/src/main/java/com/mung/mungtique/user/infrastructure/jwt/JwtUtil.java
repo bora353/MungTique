@@ -75,6 +75,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .subject(email)
+                .claim("category", "Local")
                 .claim("roles", roles)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plusMillis(expireTime)))
@@ -82,17 +83,17 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createOAuth2Jwt(String username, String role) {
+    public String createOAuth2Jwt(String username, String role, String type) {
         Instant now = Instant.now();
-        long expireTime = Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
+        long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
         // JWT 토큰 생성 및 서명하여 반환
         return Jwts.builder()
-                //.claim("category", "OAuth2") // JwtFilter에서 분류하기 위함
-                .claim("username", username) // 페이로드에 username, role 정보를 담아서 토큰을 생성
+                .subject(username)
+                .claim("category", "OAuth2") // JwtFilter에서 분류하기 위함
                 .claim("role", role)
                 .issuedAt(Date.from(now)) // 토큰 발급 시간 설정
-                .expiration(Date.from(now.plusMillis(expireTime))) // 토큰 만료 시간 설정
+                .expiration(Date.from(now.plusMillis(expireTime)))
                 .signWith(secretKey) // 시크릿키로 서명
                 .compact();
     }

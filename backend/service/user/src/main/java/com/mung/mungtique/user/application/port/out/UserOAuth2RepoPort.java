@@ -1,9 +1,10 @@
 package com.mung.mungtique.user.application.port.out;
 
-import com.mung.mungtique.user.domain.UserOAuth2;
+import com.mung.mungtique.user.domain.UserEntity;
+
+import java.util.Optional;
 
 public interface UserOAuth2RepoPort {
-    UserOAuth2 findByUsername(String username);
-
-    UserOAuth2 save(UserOAuth2 userOAuth2);
+    UserEntity save(UserEntity userOAuth2);
+    Optional<UserEntity> findByProviderAndProviderId(String provider, String providerId);
 }

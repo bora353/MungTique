@@ -4,8 +4,9 @@ import com.mung.mungtique.user.adaptor.in.web.dto.*;
 import com.mung.mungtique.user.application.port.in.CustomOauth2UserService;
 import com.mung.mungtique.user.application.port.out.UserOAuth2RepoPort;
 import com.mung.mungtique.user.domain.Authority;
-import com.mung.mungtique.user.domain.UserOAuth2;
+import com.mung.mungtique.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService implements CustomOauth2UserService {
 
     private final UserOAuth2RepoPort userOAuth2RepoPort;
@@ -23,64 +25,40 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService implem
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println(oAuth2User);
+        log.info("OAuth2User: {}", oAuth2User);
 
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2Res oAuth2Res = null;
+        // OAuth2 제공자별 데이터 파싱
+        String provider = userRequest.getClientRegistration().getRegistrationId();
+        OAuth2Res oAuth2Res = switch (provider) {
+            case "naver" -> new NaverRes(oAuth2User.getAttributes());
+            case "kakao" -> new KakaoRes(oAuth2User.getAttributes());
+            default -> throw new OAuth2AuthenticationException("Unsupported provider: " + provider);
+        };
 
-        if (registrationId.equals("naver")) {
-            oAuth2Res = new NaverRes(oAuth2User.getAttributes());
+        String providerId = oAuth2Res.getProviderId();
 
-        } else if (registrationId.equals("kakao")) {
-            oAuth2Res = new KakaoRes(oAuth2User.getAttributes());
-        } else {
-            throw new OAuth2AuthenticationException("Unsupported registration ID: " + registrationId);
-        }
+        // 기존 사용자 조회 또는 신규 저장
+        UserEntity user = userOAuth2RepoPort.findByProviderAndProviderId(provider, providerId)
+                .orElseGet(() -> createNewOAuth2User(provider, providerId, oAuth2Res));
 
-        // 리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만들기
-        String username = oAuth2Res.getProvider() + " " + oAuth2Res.getProviderId();
+        UserDTO userDTO = UserDTO.builder()
+                .username(user.getUsername())
+                .name(user.getUsername())
+                .role(user.getRole())
+                .build();
 
-        // DB
-        UserOAuth2 existData = userOAuth2RepoPort.findByUsername(username);
+        return new CustomOAuth2User(userDTO);
+    }
 
-        if (existData == null) {
-            UserOAuth2 userOAuth2 = UserOAuth2.builder()
-                    .username(username)
-                    .email(oAuth2Res.getEmail())
-                    .name(oAuth2Res.getName())
-                    .role(Authority.ROLE_USER)
-                    .build();
-
-            userOAuth2RepoPort.save(userOAuth2);
-
-            UserDTO userDTO = UserDTO.builder()
-                    .username(username)
-                    .name(oAuth2Res.getName())
-                    .role(Authority.ROLE_USER)
-                    .build();
-
-            // 꼭 정해진 타입으로 반환 필요
-            return new CustomOAuth2User(userDTO);
-
-        } else {
-            UserOAuth2 updateUser = UserOAuth2.builder()
-                    .username(existData.getUsername())
-                    .email(oAuth2Res.getEmail())
-                    .name(oAuth2Res.getName())
-                    .role(Authority.ROLE_USER)
-                    .build();
-
-            userOAuth2RepoPort.save(updateUser);
-
-            UserDTO userDTO = UserDTO.builder()
-                    .username(updateUser.getUsername())
-                    .name(updateUser.getName())
-                    .role(updateUser.getRole())
-                    .build();
-
-            return new CustomOAuth2User(userDTO);
-        }
+    private UserEntity createNewOAuth2User(String provider, String providerId, OAuth2Res oAuth2Res) {
+        UserEntity newUser = UserEntity.builder()
+                .provider(provider)
+                .providerId(providerId)
+                .email(oAuth2Res.getEmail())
+                .username(oAuth2Res.getName())
+                .role(Authority.ROLE_USER)
+                .build();
+        return userOAuth2RepoPort.save(newUser);
     }
 }

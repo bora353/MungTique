@@ -18,22 +18,28 @@ public class UserEntity extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String username;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = true)
     @Setter
     private String password;
 
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 20, nullable = true)
     private String phone;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
     private Authority role;
+
+    @Column(nullable = true)
+    private String provider; // 카카오, 네이버 등 구분
+
+    @Column(nullable = true)
+    private String providerId; // OAuth2 제공자의 사용자 ID
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginAt;
