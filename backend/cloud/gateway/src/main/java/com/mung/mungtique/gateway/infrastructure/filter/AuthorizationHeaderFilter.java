@@ -31,115 +31,83 @@ import java.util.Map;
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
-    @Value("${spring.jwt.secret}")
-    private String secret;
+    private final SecretKey secretKey;
 
-    public AuthorizationHeaderFilter() {
+    public AuthorizationHeaderFilter(@Value("${spring.jwt.secret}") String secret) {
         super(AuthorizationHeaderFilter.Config.class);
+        byte[] decodedKey = Base64.getDecoder().decode(secret);
+        this.secretKey = Keys.hmacShaKeyFor(decodedKey);
     }
 
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
-            String servicePath = exchange.getRequest().getURI().getPath();
-            log.info("serviceName: {}", servicePath);
-
             ServerHttpRequest request = exchange.getRequest();
+            log.info("Request Path: {}", request.getURI().getPath());
 
             // 1. OAuth 인증 (쿠키)
             HttpCookie authCookie = request.getCookies().getFirst("Authorization");
-            log.info("OAuth Cookie: {}", authCookie);
             if (authCookie != null) {
-                OAuthProcess(authCookie.getValue());
+                log.info("OAuth Cookie: {}", authCookie);
+                if (parseClaims(authCookie.getValue()) == null) {
+                    return onError(exchange, "Invalid OAuth JWT Token");
+                }
                 return chain.filter(exchange);
             }
 
             // 2. JWT 인증 (헤더)
-            if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                return onError(exchange, "no authorization header", HttpStatus.UNAUTHORIZED);
-            }
-
             String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-            String jwt = authorizationHeader.replace("Bearer ", "");
-
-            if (!isJwtValid(jwt)) {
-                return onError(exchange, "Invalid or expired JWT token", HttpStatus.UNAUTHORIZED);
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                return onError(exchange, "No Authorization header");
             }
-            
-            /*exchange.getRequest().mutate()
-                    .header("X-User-email", email)
-                    .build();*/
+
+            String jwt = authorizationHeader.substring(7);
+            Claims claims = parseClaims(jwt);
+            if (claims == null) {
+                return onError(exchange, "Invalid or expired JWT token");
+            }
 
             return chain.filter(exchange);
         });
     }
 
+    // JWT를 검증하고, 유효하면 Claims 객체를 반환. 유효하지 않으면 null 반환
+    private Claims parseClaims(String token) {
+        log.info("JWT Token: {}", token);
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException ex) {
+            log.warn("JWT token expired: {}", ex.getMessage());
+        } catch (JwtException ex) {
+            log.warn("Invalid JWT token: {}", ex.getMessage());
+        }
+        return null;
+    }
+
     // Mono, Flux -> Spring WebFlux (클라이언트 요청에 대한 반환값)
-    private Mono<Void> onError(ServerWebExchange exchange, String error, HttpStatus httpStatus) {
+    private Mono<Void> onError(ServerWebExchange exchange, String error) {
         ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(httpStatus);
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
         log.error(error);
 
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("result", "ERROR");
-        errorResponse.put("message", error);
-        String jsonResponse = null;
-        try {
-            jsonResponse = new ObjectMapper().writeValueAsString(errorResponse);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] bytes = jsonResponse.getBytes(StandardCharsets.UTF_8);
-
-//        byte[] bytes = "The requested token is invalid.".getBytes(StandardCharsets.UTF_8);
-        DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+        String jsonResponse = generateErrorResponse(error);
+        DataBuffer buffer = response.bufferFactory().wrap(jsonResponse.getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Flux.just(buffer));
     }
 
-    private boolean isJwtValid(String jwt) {
-        log.info("------ jwt : {}", jwt);
-        byte[] secretKeyBytes = Base64.getEncoder().encode(secret.getBytes());
-        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
-
-        boolean returnValue = true;
-        String subject = null;
-
+    private String generateErrorResponse(String error) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("result", "ERROR");
+        errorResponse.put("message", error);
         try {
-            subject = Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(jwt)
-                    .getPayload()
-                    .getSubject();
-            log.info("isJwtValid - subject(email) : {}", subject);
-        } catch (ExpiredJwtException ex) {
-            log.info("JWT token expired: {}", ex.getMessage());
-            returnValue = false;
-        } catch (JwtException ex) {
-            log.info("Invalid JWT token: {}", ex.getMessage());
-            returnValue = false;
+            return new ObjectMapper().writeValueAsString(errorResponse);
+        } catch (JsonProcessingException e) {
+            return "{\"result\":\"ERROR\",\"message\":\"Internal Server Error\"}";
         }
-
-        if (subject == null || subject.isEmpty()) {
-            returnValue = false;
-        }
-
-        return returnValue;
-    }
-
-    private void OAuthProcess(String token) {
-        byte[] secretKeyBytes = Base64.getEncoder().encode(secret.getBytes());
-        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
-
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        String username = claims.get("username", String.class);
-
-        log.info("OAuth isJwtValid - claim(username) : {}", username);
     }
 
     public static class Config {

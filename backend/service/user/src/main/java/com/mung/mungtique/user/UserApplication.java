@@ -17,4 +17,5 @@ public class UserApplication {
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder(); // 비밀번호 암호화
     }
+
 }

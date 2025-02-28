@@ -12,6 +12,8 @@ import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
+import java.util.List;
+
 @Configuration
 @EnableWebFlux
 @EnableWebFluxSecurity
@@ -26,8 +28,8 @@ public class CorsGlobalConfiguration {
         http.httpBasic((auth) -> auth.disable());
 
         http.authorizeExchange((auth) -> auth
-                        .pathMatchers("/actuator/**").permitAll()
-                        .pathMatchers("/h2-console/**").permitAll()
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .pathMatchers("/actuator/**", "/h2-console/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/join").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/mail-send").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/login").permitAll()
@@ -38,9 +40,8 @@ public class CorsGlobalConfiguration {
                         .pathMatchers("/api/v1/mungshop-service/**").permitAll()
                         .pathMatchers("/api/v1/dog-service/**").permitAll()
                         .pathMatchers("/api/v1/reservation-service/**").permitAll()
-                        .pathMatchers("/swagger-ui/**").permitAll()
-                        .pathMatchers("/swagger-resources/**").permitAll()
-                        .pathMatchers("/v3/api-docs/**").permitAll()
+                        .pathMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
+                        .pathMatchers("/api/v1/admin").hasRole("ADMIN")
                         .anyExchange().authenticated()
                 );
 
@@ -56,12 +57,10 @@ public class CorsGlobalConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.addAllowedHeader("Authorization");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.addExposedHeader("Authorization");
-        configuration.addExposedHeader("Set-Cookie");
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://example.com")); // TODO : 배포시 변경
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

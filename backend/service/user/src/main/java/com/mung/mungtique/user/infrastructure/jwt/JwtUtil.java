@@ -24,7 +24,7 @@ public class JwtUtil {
     private String REFRESH_TOKEN_EXPIRATION_TIME;
 
     public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
-        byte[] secretKeyBytes = Base64.getEncoder().encode(secret.getBytes());
+        byte[] secretKeyBytes = Base64.getDecoder().decode(secret);
         this.secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
     }
 

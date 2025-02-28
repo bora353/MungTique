@@ -1,6 +1,7 @@
 package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.*;
+import com.mung.mungtique.user.application.port.in.CustomOauth2UserService;
 import com.mung.mungtique.user.application.port.out.UserOAuth2RepoPort;
 import com.mung.mungtique.user.domain.Authority;
 import com.mung.mungtique.user.domain.UserOAuth2;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService {
+public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService implements CustomOauth2UserService {
 
     private final UserOAuth2RepoPort userOAuth2RepoPort;
 
