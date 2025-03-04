@@ -21,24 +21,24 @@ public class UserEntity extends BaseTime {
     @Column(length = 50, nullable = false)
     private String username;
 
-    @Column(length = 100, nullable = true)
+    @Column(length = 100)
     @Setter
     private String password;
 
     @Column(unique = true, length = 50, nullable = false)
     private String email;
 
-    @Column(length = 20, nullable = true)
+    @Column(length = 20)
     private String phone;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
     private Authority role;
 
-    @Column(nullable = true)
+    @Column
     private String provider; // 카카오, 네이버 등 구분
 
-    @Column(nullable = true)
+    @Column
     private String providerId; // OAuth2 제공자의 사용자 ID
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

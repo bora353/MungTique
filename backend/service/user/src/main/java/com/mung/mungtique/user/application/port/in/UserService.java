@@ -10,5 +10,5 @@ public interface UserService extends UserDetailsService {
     JoinRes createUser(JoinReq joinReq);
     UserEntity getUserDetailsByEmail(String email);
     UserRes getUserInfo(String userId);
-    void updateLstLoginAt(UserEntity user);
+    void updateLastLoginAt(UserEntity user);
 }

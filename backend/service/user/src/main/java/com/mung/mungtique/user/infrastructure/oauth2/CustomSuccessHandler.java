@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 
 @Component
 @RequiredArgsConstructor
@@ -38,18 +37,19 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         // OAuth2 User 정보 가져오기
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
-        String username = customUserDetails.getName();
+        String email = customUserDetails.getName();
+        Long userId = customUserDetails.getUserId();
 
         // 유저 역할(Role) 가져오기
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.iterator().next().getAuthority();
 
         // JWT 액세스 토큰 & 리프레시 토큰 생성
-        String accessToken = jwtUtil.createOAuth2Jwt(username, role, "access");
-        String refreshToken = jwtUtil.createOAuth2Jwt(username, role, "refresh");
+        String accessToken = jwtUtil.createOAuth2Token(email, role, userId, "access");
+        String refreshToken = jwtUtil.createOAuth2Token(email, role, userId, "refresh");
 
         // 리프레시 토큰 Redis 저장
-        tokenService.saveRefreshToken(username, refreshToken);
+        tokenService.saveRefreshToken(email, refreshToken);
 
         response.addCookie(createCookie("Oauth2-Access-Token", accessToken, (int) (Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) / 1000)));
         response.addCookie(createCookie("Oauth2-Refresh-Token", refreshToken, (int) (Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME) / 1000)));
@@ -62,9 +62,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(expiration); // 초단위 설정 필요
-        // cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        // cookie.setSecure(true);
 
         return cookie;
     }

@@ -11,7 +11,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
 
-    private final UserDTO userDTO;
+    private final Oauth2UserDTO oauth2UserDTO;
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -27,7 +27,7 @@ public class CustomOAuth2User implements OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return userDTO.role().toString();
+                return oauth2UserDTO.role().toString();
             }
         });
         return collection;
@@ -35,7 +35,11 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return userDTO.name();
+        return oauth2UserDTO.email();
+    }
+
+    public Long getUserId() {
+        return oauth2UserDTO.userId();
     }
 
 }

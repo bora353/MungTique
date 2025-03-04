@@ -18,7 +18,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -75,7 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         String email = ((User) authentication.getPrincipal()).getUsername();
         UserEntity user = userService.getUserDetailsByEmail(email);
-        userService.updateLstLoginAt(user);
+        userService.updateLastLoginAt(user);
 
         // role
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -85,13 +84,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         log.info("successfulAuthentication - roles : {}", roles);
 
-/*        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();*/
-
-        String access = jwtUtil.generateToken(email, roles, "access");
-        String refresh = jwtUtil.generateToken(email, roles, "refresh");
+        String access = jwtUtil.createToken(email, roles, "access");
+        String refresh = jwtUtil.createToken(email, roles, "refresh");
 
         tokenService.saveRefreshToken(email, refresh);
 

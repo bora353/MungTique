@@ -42,23 +42,26 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService implem
         UserEntity user = userOAuth2RepoPort.findByProviderAndProviderId(provider, providerId)
                 .orElseGet(() -> createNewOAuth2User(provider, providerId, oAuth2Res));
 
-        UserDTO userDTO = UserDTO.builder()
+        user.setLastLoginAt();
+        userOAuth2RepoPort.save(user);
+
+        Oauth2UserDTO oauth2UserDTO = Oauth2UserDTO.builder()
                 .username(user.getUsername())
-                .name(user.getUsername())
+                .email(user.getEmail())
                 .role(user.getRole())
+                .userId(user.getId())
                 .build();
 
-        return new CustomOAuth2User(userDTO);
+        return new CustomOAuth2User(oauth2UserDTO);
     }
 
     private UserEntity createNewOAuth2User(String provider, String providerId, OAuth2Res oAuth2Res) {
-        UserEntity newUser = UserEntity.builder()
+        return UserEntity.builder()
                 .provider(provider)
                 .providerId(providerId)
                 .email(oAuth2Res.getEmail())
                 .username(oAuth2Res.getName())
                 .role(Authority.ROLE_USER)
                 .build();
-        return userOAuth2RepoPort.save(newUser);
     }
 }

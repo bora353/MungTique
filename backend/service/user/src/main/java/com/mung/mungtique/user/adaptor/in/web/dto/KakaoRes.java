@@ -1,6 +1,7 @@
 package com.mung.mungtique.user.adaptor.in.web.dto;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class KakaoRes implements OAuth2Res {
 
@@ -11,8 +12,8 @@ public class KakaoRes implements OAuth2Res {
     public KakaoRes(Map<String, Object> attributes) {
 
         this.attributes = attributes;
-        this.kakaoAccountAttributes = (Map<String, Object>) attributes.get("kakao_account");
-        this.propertyAttributes = (Map<String, Object>) attributes.get("properties");
+        this.kakaoAccountAttributes = Optional.ofNullable((Map<String, Object>) attributes.get("kakao_account")).orElse(Map.of());
+        this.propertyAttributes = Optional.ofNullable((Map<String, Object>) attributes.get("properties")).orElse(Map.of());
     }
 
     @Override
@@ -27,7 +28,7 @@ public class KakaoRes implements OAuth2Res {
 
     @Override
     public String getEmail() {
-        return "kakao_email";
+        return "kakao_email_" + getProviderId();
         //return kakaoAccountAttributes.get("email").toString();
     }
 

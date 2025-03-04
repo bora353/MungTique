@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateLstLoginAt(UserEntity user) {
+    public void updateLastLoginAt(UserEntity user) {
         user.setLastLoginAt();
         userRepoPort.save(user);
     }

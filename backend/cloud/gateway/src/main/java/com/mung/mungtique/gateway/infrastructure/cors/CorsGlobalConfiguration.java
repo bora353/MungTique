@@ -37,6 +37,8 @@ public class CorsGlobalConfiguration {
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/reissue").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/v1/user-service/mail-check").permitAll()
                         .pathMatchers(HttpMethod.GET, "/api/v1/user-service/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/oauth2/authorization/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/user-service/oauth2/**").permitAll()
                         .pathMatchers("/api/v1/mungshop-service/**").permitAll()
                         .pathMatchers("/api/v1/dog-service/**").permitAll()
                         .pathMatchers("/api/v1/reservation-service/**").permitAll()

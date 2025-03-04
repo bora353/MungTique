@@ -4,5 +4,5 @@ import com.mung.mungtique.user.domain.Authority;
 import lombok.Builder;
 
 @Builder
-public record UserDTO (Authority role, String name, String username) {
+public record Oauth2UserDTO(Authority role, String email, String username, Long userId) {
 }

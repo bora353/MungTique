@@ -30,12 +30,7 @@ public class JwtUtil {
 
     public boolean validateRefreshToken(String token) {
         try {
-            Claims claims = Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-
+            Claims claims = parseClaims(token);
             Date expiration = claims.getExpiration();
 
             return !expiration.before(new Date());
@@ -45,22 +40,19 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        Claims claims = parseClaims(token);
+        return claims.get("username", String.class);
+    }
+
+    public String extractUserId(String token) {
+        Claims claims = parseClaims(token);
         return claims.getSubject();
     }
 
     public List<String> extractRoles(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
+        Claims claims = parseClaims(token);
         Object rolesObject = claims.get("roles");
+
         if (rolesObject instanceof List<?>) {
             return ((List<?>) rolesObject).stream()
                     .map(Object::toString)
@@ -69,7 +61,15 @@ public class JwtUtil {
         return List.of();
     }
 
-    public String generateToken(String email, List<String> roles, String type) {
+    private Claims parseClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public String createToken(String email, List<String> roles, String type) {
         Instant now = Instant.now();
         long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
@@ -83,13 +83,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createOAuth2Jwt(String username, String role, String type) {
+    public String createOAuth2Token(String username, String role, Long userId, String type) {
         Instant now = Instant.now();
         long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
         // JWT 토큰 생성 및 서명하여 반환
         return Jwts.builder()
-                .subject(username)
+                .subject(userId.toString())
+                .claim("username", username)
                 .claim("category", "OAuth2") // JwtFilter에서 분류하기 위함
                 .claim("role", role)
                 .issuedAt(Date.from(now)) // 토큰 발급 시간 설정
