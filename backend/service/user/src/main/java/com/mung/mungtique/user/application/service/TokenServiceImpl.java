@@ -33,10 +33,10 @@ public class TokenServiceImpl implements TokenService {
 
         validateRefreshToken(refreshToken);
 
-        String email = jwtUtil.extractUsername(refreshToken);
+        String email = jwtUtil.extractSubject(refreshToken);
         List<String> roles = jwtUtil.extractRoles(refreshToken);
-        String newAccess = jwtUtil.generateToken(email, roles,"access");
-        String newRefresh = jwtUtil.generateToken(email, roles, "refresh");
+        String newAccess = jwtUtil.createToken(email, roles,"access");
+        String newRefresh = jwtUtil.createToken(email, roles, "refresh");
 
         // DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         saveRefreshToken(email, newRefresh);
@@ -51,7 +51,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public void deleteRefreshToken(String refreshToken) {
-        String email = jwtUtil.extractUsername(refreshToken);
+        String email = jwtUtil.extractSubject(refreshToken);
         refreshTokenRepoPort.deleteById(email);
     }
 
@@ -68,7 +68,7 @@ public class TokenServiceImpl implements TokenService {
             throw new RuntimeException ("Invalid or expired refresh token");
         }
 
-        String email = jwtUtil.extractUsername(refreshToken);
+        String email = jwtUtil.extractSubject(refreshToken);
         RefreshToken storedRefreshToken = refreshTokenRepoPort.findById(email)
                 .orElseThrow(() -> new RuntimeException("Refresh token not found in the database"));
 

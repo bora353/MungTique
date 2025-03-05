@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,28 +35,35 @@ public class ReissueController {
 
     private final TokenService tokenService;
 
+    @Value("${spring.jwt.refresh-expiration}")
+    private String REFRESH_TOKEN_EXPIRATION_TIME;
+
     @Operation(summary = "access token 만료 시, refresh token을 통해 다시 reissue")
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         log.info("Reissue Start");
 
         try {
-            Map<String, String> tokens = tokenService.reissueToken(request);
+            Map<String, String> tokens;
+
+            tokens = tokenService.reissueToken(request);
             response.setHeader("Authorization", "Bearer " + tokens.get("access"));
-            response.addCookie(createCookie("refresh", tokens.get("refresh")));
-            return new ResponseEntity<>(HttpStatus.OK);
+            response.addCookie(createCookie("refresh", tokens.get("refresh"), (int) (Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME))));
+
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
+            log.error("Reissue 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    private Cookie createCookie(String key, String value) {
+    private Cookie createCookie(String key, String value, int expiration) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
+        cookie.setMaxAge(expiration); // 초단위 설정 필요
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        //cookie.setSecure(true);
+        // cookie.setSecure(true);
 
         return cookie;
     }

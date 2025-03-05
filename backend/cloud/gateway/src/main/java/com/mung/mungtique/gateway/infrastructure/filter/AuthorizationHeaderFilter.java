@@ -2,15 +2,17 @@ package com.mung.mungtique.gateway.infrastructure.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.netty.handler.codec.http.cookie.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import org.springframework.http.HttpCookie;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -45,17 +46,18 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             ServerHttpRequest request = exchange.getRequest();
             log.info("Request Path: {}", request.getURI().getPath());
 
+            HttpCookie oauth2AccessCookie = request.getCookies().getFirst("Oauth2-Access-Token");
+
             // 1. OAuth 인증 (쿠키)
-            HttpCookie authCookie = request.getCookies().getFirst("Oauth2-Access-Token");
-            if (authCookie != null) {
-                log.info("OAuth Cookie: {}", authCookie);
-                if (parseClaims(authCookie.getValue()) == null) {
+            if (oauth2AccessCookie != null) {
+                log.info("OAuth Access Cookie 인증: {}", oauth2AccessCookie);
+                if (parseClaims(oauth2AccessCookie.getValue()) == null) {
                     return onError(exchange, "Invalid OAuth JWT Token");
                 }
                 return chain.filter(exchange);
             }
 
-            // 2. JWT 인증 (헤더)
+            // 2. 로컬 JWT 인증 (헤더)
             String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 return onError(exchange, "No Authorization header");

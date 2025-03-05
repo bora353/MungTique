@@ -1,22 +1,60 @@
+import { useEffect } from "react";
 import { create } from "zustand";
 
 interface AuthState {
-  isLogin: boolean;
-  setIsLogin: (loggedIn: boolean, token?: string) => void;
+  isLocalLogin: boolean;
+  isOauth2Login: boolean;
+  setIsLocalLogin: (loggedIn: boolean, token?: string) => void;
+  setIsOauth2Login: (loggedIn: boolean, token?: string) => void;
 }
 
 const AUTH_TOKEN_KEY = "access";
+const OAUTH2_LOGIN_KEY = "oauth2";
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isLogin: !!localStorage.getItem(AUTH_TOKEN_KEY),
+  isLocalLogin: false,
+  isOauth2Login: false,
 
-  setIsLogin: (loggedIn: boolean, token?: string) => {
-    if (loggedIn && token) {
-      localStorage.setItem(AUTH_TOKEN_KEY, token);
-      set({ isLogin: true });
+  setIsLocalLogin: (login: boolean, token?: string) => {
+    if (login) {
+      if (token) {
+        localStorage.setItem(AUTH_TOKEN_KEY, token);
+      }
+      set({ isLocalLogin: true });
     } else {
+      // 로그아웃 시
       localStorage.removeItem(AUTH_TOKEN_KEY);
-      set({ isLogin: false });
+      localStorage.removeItem("userId");
+      set({ isLocalLogin: false });
+    }
+  },
+
+  setIsOauth2Login: (login: boolean) => {
+    if (login) {
+      localStorage.setItem(OAUTH2_LOGIN_KEY, "true");
+      set({ isOauth2Login: true });
+    } else {
+      localStorage.removeItem(OAUTH2_LOGIN_KEY);
+      set({ isOauth2Login: false });
     }
   },
 }));
+
+export const useAuthInit = () => {
+  const { setIsLocalLogin, setIsOauth2Login } = useAuthStore();
+
+  useEffect(() => {
+    const localAccessToken = localStorage.getItem(AUTH_TOKEN_KEY);
+    const oauth2Check = localStorage.getItem(OAUTH2_LOGIN_KEY);
+
+    console.log("localAccessToken : ", localAccessToken);
+    console.log("oauth2Check : ", oauth2Check);
+  
+    if (localAccessToken) {
+      setIsLocalLogin(true, localAccessToken);
+    }
+    if (oauth2Check) {
+      setIsOauth2Login(true);
+    }
+  }, [setIsLocalLogin, setIsOauth2Login]);
+};

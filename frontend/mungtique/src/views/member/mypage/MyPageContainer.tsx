@@ -3,38 +3,58 @@ import { useAuthStore } from "../login/hook/login.store";
 import MyMungContainer from "../mymung/MyMungContainer";
 import MuiButton from "../../../components/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Sidebar from "./Sidebar";
 import ReservationList from "./ReservationList";
 
-export default function MyPageContainer() {
+export default function MyPageContainer() {  
   const navigate = useNavigate();
   const AUTH_TOKEN_KEY = "access";
-  const { setIsLogin } = useAuthStore.getState();
-  const { logoutData } = useLogoutViewModelHook();
+  const OAUTH2_LOGIN_KEY = "oauth2";
+
+  const { setIsLocalLogin, isOauth2Login, setIsOauth2Login} = useAuthStore();
+  const { localLogoutData, oauth2LogoutData} = useLogoutViewModelHook();
   const [selectedMenu, setSelectedMenu] = useState<string>("home");
 
   const handleLogout = async () => {
-    const logoutResult = await logoutData();
+    try {
+      const logoutResult = await localLogoutData();
+  
+      if (logoutResult?.status === 200) {
+        localStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem("userId");
+        setIsLocalLogin(false);
+        navigate("/");
+      } else {
+        alert("로그아웃 실패");
+        console.error("로그아웃 실패: 서버 응답 없음");
+      }
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
+    }
+  };
 
-    if (logoutResult && logoutResult.status === 200) {
-      localStorage.removeItem(AUTH_TOKEN_KEY);
-      localStorage.removeItem("userId");
-      setIsLogin(false);
-      navigate("/login");
+  const handleOauth2Logout = async () => {
+    try {
+      const logoutResult = await oauth2LogoutData();
+    
+      if (logoutResult?.status === 200) {
+        localStorage.removeItem(OAUTH2_LOGIN_KEY);
+        localStorage.removeItem("userId");
+        setIsOauth2Login(false);
+        navigate("/");
+      } else {
+        alert("로그아웃 실패");
+        console.error("OAuth2 로그아웃 실패: 서버 응답 없음");
+      }
+    } catch (error) {
+      console.error("OAuth2 로그아웃 중 오류 발생:", error);
     }
   };
 
   const handleMyMung = () => {
     navigate("/mymung/register");
   };
-
-  useEffect(() => {
-    const storedAccessToken = localStorage.getItem("access");
-    if (storedAccessToken) {
-      setIsLogin(true, storedAccessToken);
-    }
-  }, [setIsLogin]);
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
@@ -43,7 +63,7 @@ export default function MyPageContainer() {
 
       {/* 메인 콘텐츠 영역 */}
       <div className="flex-1 p-6">
-        {/* 헤더 영역 - My Page + 버튼들 */}
+        {/* 헤더 영역 */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">My Page</h1>
           <div className="flex space-x-2">
@@ -54,13 +74,23 @@ export default function MyPageContainer() {
               variant="contained"
               onClick={handleMyMung}
             />
-            <MuiButton
-              value="로그아웃"
-              color="success"
-              type="button"
-              variant="outlined"
-              onClick={handleLogout}
-            />
+            {isOauth2Login ? (
+              <MuiButton
+                value="로그아웃"
+                color="success"
+                type="button"
+                variant="outlined"
+                onClick={handleOauth2Logout}
+              />
+            ) : (
+              <MuiButton
+                value="로그아웃"
+                color="success"
+                type="button"
+                variant="outlined"
+                onClick={handleLogout}
+              />
+            )}
           </div>
         </div>
 

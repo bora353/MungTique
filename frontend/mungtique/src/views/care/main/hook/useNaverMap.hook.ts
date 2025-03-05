@@ -11,7 +11,6 @@ export const useNaverMapHook = () => {
 
   const fetchMungShops = async () => {
     const response = await mungshopApi.getMungShops();
-    //return response.data;
     setMungShops(response.data);
   };
 

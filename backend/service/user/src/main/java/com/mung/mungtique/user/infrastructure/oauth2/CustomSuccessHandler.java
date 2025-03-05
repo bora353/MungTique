@@ -27,12 +27,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
-    @Value("${spring.jwt.access-expiration}")
-    private String ACCESS_TOKEN_EXPIRATION_TIME;
-
-    @Value("${spring.jwt.refresh-expiration}")
-    private String REFRESH_TOKEN_EXPIRATION_TIME;
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         // OAuth2 User 정보 가져오기
@@ -44,24 +38,22 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.iterator().next().getAuthority();
 
-        // JWT 액세스 토큰 & 리프레시 토큰 생성
+        // JWT 액세스 토큰 생성
         String accessToken = jwtUtil.createOAuth2Token(email, role, userId, "access");
-        String refreshToken = jwtUtil.createOAuth2Token(email, role, userId, "refresh");
 
-        // 리프레시 토큰 Redis 저장
-        tokenService.saveRefreshToken(email, refreshToken);
+        // 토큰 Redis 저장
+        tokenService.saveRefreshToken(email, accessToken);
 
-        response.addCookie(createCookie("Oauth2-Access-Token", accessToken, (int) (Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) / 1000)));
-        response.addCookie(createCookie("Oauth2-Refresh-Token", refreshToken, (int) (Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME) / 1000)));
+        response.addCookie(createCookie("Oauth2-Access-Token", accessToken));
 
         // 클라이언트 리다이렉트 (OAuth2 로그인 완료)
-        response.sendRedirect(allowedOrigins);
+        response.sendRedirect(allowedOrigins + "/oauth2/redirect");
     }
 
-    private Cookie createCookie(String key, String value, int expiration) {
+    private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(expiration); // 초단위 설정 필요
+        cookie.setMaxAge(60 * 60 * 24); // 초단위 설정 필요
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         // cookie.setSecure(true);

@@ -19,7 +19,12 @@ const login = async (loginDTO: Login) => {
   });
 };
 
-const logout = async () => await api().post(`/user-service/logout`, null);
+const localLogout = async () => await api().post(`/user-service/logout`, null);
+const oauth2Logout = async () => {
+  return await api().post(`/user-service/oauth2/logout`, null, {
+    withCredentials: true,
+  });
+};
 
 const mailSend = async (mailDTO: MailCheck) => {
   console.log("mailDTO", mailDTO);
@@ -34,7 +39,8 @@ const mailCheck = async (email: string, providedVerificationCode: string) =>
 export const userApi = {
   join,
   login,
-  logout,
+  localLogout,
+  oauth2Logout,
   mailSend,
   mailCheck,
 };

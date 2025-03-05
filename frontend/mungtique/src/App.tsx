@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomeAppBar from "./HomeAppBar";
-import { useAuthStore } from "./views/member/login/hook/login.store";
+import {useAuthInit, useAuthStore} from "./views/member/login/hook/login.store";
 import ReservationContainer from "./views/care/reservation/ReservationContainer";
 import MainContainer from "./views/mungtiqueMain/MainContainer";
 import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
@@ -15,10 +15,14 @@ import MungshopContainer from "./views/care/main/MungshopContainer";
 import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
 import ReservationConfirmContainer from "./views/care/reservation/ReservationConfirmContainer";
 import ReservationMungContainer from "./views/care/reservation/ReservationMungContainer";
+import PaymentContainer from "./views/care/payment/PaymentContainer";
+import OAuth2RedirectPage from "./views/member/login/OAuth2RedirectPage";
 
 function App() {
-  const isLogin = useAuthStore((state) => state.isLogin);
-  // console.log("login status : ", isLogin);
+  useAuthInit();
+  const { isLocalLogin, isOauth2Login } = useAuthStore();
+  const isAuthenticated = isLocalLogin || isOauth2Login;
+  console.log("login status : ", isAuthenticated);
 
   return (
     <div>
@@ -32,8 +36,9 @@ function App() {
             <Route path="/mungshop" element={<MungshopContainer />} />
             <Route path="/shop" element={<ShopContainer />} />
             <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
+            <Route path="/oauth2/redirect" element={<OAuth2RedirectPage />} />
 
-            {isLogin ? (
+            {isAuthenticated ? (
               <>
                 <Route path="/findinfo" element={<FindInfoContainer />} />
                 <Route path="/mypage" element={<MyPageContainer />} />
@@ -45,10 +50,7 @@ function App() {
                   path="/mymung/:dogId"
                   element={<MyMungUpdateContainer />}
                 />
-                <Route
-                  path="/reservation"
-                  element={<ReservationContainer />}
-                />
+                <Route path="/reservation" element={<ReservationContainer />} />
                 <Route
                   path="/reservation-mung"
                   element={<ReservationMungContainer />}
@@ -57,6 +59,7 @@ function App() {
                   path="/reservation-confirm"
                   element={<ReservationConfirmContainer />}
                 />
+                <Route path="/payment" element={<PaymentContainer />} />
                 {/* <Route
                   path="/mungimage/:dogId"
                   element={<MyMungImageUploadContainer />}

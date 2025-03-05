@@ -44,7 +44,7 @@ public class JwtUtil {
         return claims.get("username", String.class);
     }
 
-    public String extractUserId(String token) {
+    public String extractSubject(String token) {
         Claims claims = parseClaims(token);
         return claims.getSubject();
     }
@@ -85,7 +85,7 @@ public class JwtUtil {
 
     public String createOAuth2Token(String username, String role, Long userId, String type) {
         Instant now = Instant.now();
-        long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
+        //long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
         // JWT 토큰 생성 및 서명하여 반환
         return Jwts.builder()
@@ -94,7 +94,7 @@ public class JwtUtil {
                 .claim("category", "OAuth2") // JwtFilter에서 분류하기 위함
                 .claim("role", role)
                 .issuedAt(Date.from(now)) // 토큰 발급 시간 설정
-                .expiration(Date.from(now.plusMillis(expireTime)))
+                .expiration(Date.from(now.plusMillis(24 * 60 * 60 * 1000)))
                 .signWith(secretKey) // 시크릿키로 서명
                 .compact();
     }

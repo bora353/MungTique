@@ -6,14 +6,14 @@ const serverUrl = import.meta.env.VITE_GATEWAY_SERVER;
 const AUTH_TOKEN_KEY = "access";
 
 const apiClient = (baseUrl: string): AxiosInstance => {
-  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+  const accessToken = localStorage.getItem(AUTH_TOKEN_KEY);
 
   const instance = axios.create({
     baseURL: `${baseUrl}/api/v1/`,
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : undefined,
+      Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
     },
     // timeout: 3000,
   });
@@ -50,8 +50,9 @@ const apiInterceptor = (baseUrl: string) => {
             const authorizationHeader = response.headers["authorization"];
             if (authorizationHeader) {
               const accessToken = authorizationHeader.replace("Bearer ", "");
-              // console.log("Received new access token: ", accessToken);
               localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
+              console.log("Received new access token");
+
               axiosInstance.defaults.headers.common[
                 "Authorization"
               ] = `Bearer ${accessToken}`;
@@ -63,11 +64,12 @@ const apiInterceptor = (baseUrl: string) => {
             alert("Session expired. Please log in again.");
             signOut();
           }
-        } else if (message === "Refresh token not found in the database") {
+        } else if (message === "No Authorization header") {
           alert("Session expired. Please log in again.");
           signOut();
         }
       } else {
+        signOut();
         return Promise.reject(error); // 401이 아닌 오류에 대한 처리
       }
     }
