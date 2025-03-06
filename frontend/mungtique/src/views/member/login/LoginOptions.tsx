@@ -1,7 +1,3 @@
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-import MuiButton from "../../../components/buttons/MuiButton";
-
 export default function LoginOptions() {
   const naverUrl = import.meta.env.VITE_AUTH_SERVER_NAVER;
   const kakaoUrl = import.meta.env.VITE_AUTH_SERVER_KAKAO;
@@ -14,21 +10,7 @@ export default function LoginOptions() {
   };
 
   return (
-    <>
-      <div className="flex my-3 justify-end">
-        <Link to="/findinfo">
-          <Button color="primary" style={{ fontSize: "0.75rem" }}>
-            아이디 찾기
-          </Button>
-        </Link>
-        <Link to="/findinfo">
-          <Button color="primary" style={{ fontSize: "0.75rem" }}>
-            비밀번호 찾기
-          </Button>
-        </Link>
-      </div>
-
-      <div className="flex justify-center my-1">
+      <div className="flex justify-center my-1 mt-3">
         <div className="mx-1">
           <img
             src="/images/naver_login.png"
@@ -46,16 +28,5 @@ export default function LoginOptions() {
           />
         </div>
       </div>
-      <div className="my-5">
-        <Link to="/join">
-          <MuiButton
-            color="primary"
-            type="button"
-            value="뭉티끄 10초 회원가입"
-            variant="text"
-          />
-        </Link>
-      </div>
-    </>
   );
 }

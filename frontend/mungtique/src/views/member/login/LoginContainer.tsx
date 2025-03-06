@@ -28,19 +28,10 @@ export default function LoginContainer() {
   };
 
   return (
-    <div>
-      <div className="flex justify-center items-center mt-3">
-        <div className="text-center">
-          <img
-            src="/images/logo2.png"
-            alt="뭉티끄"
-            width="250"
-            className="mx-auto"
-          />
-
-          <LoginForm onsubmit={handleLocalLoginSubmit} />
-          <LoginOptions />
-        </div>
+    <div className="flex justify-center items-center h-screen bg-pink-50">
+      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
+        <LoginForm onsubmit={handleLocalLoginSubmit} />
+        <LoginOptions />
       </div>
     </div>
   );

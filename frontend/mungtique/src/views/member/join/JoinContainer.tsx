@@ -7,10 +7,10 @@ export default function JoinContainer() {
   const handleJoinSubmit = (joinDTO: Join) => joinData(joinDTO);
 
   return (
-    <div>
-      <div className="flex justify-center items-center min-h-screen bg-blue-100">
+    <div className="flex justify-center items-center min-h-screen bg-pink-50">
+      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center">
-          <h1 className="text-4xl text-blue-500">회원가입</h1>
+          <h1 className="text-3xl font-bold text-pink-500">회원가입</h1>
           <JoinForm onsubmit={handleJoinSubmit} />
         </div>
       </div>

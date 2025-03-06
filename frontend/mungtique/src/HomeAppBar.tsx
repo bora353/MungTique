@@ -5,7 +5,9 @@ export default function HomeAppBar() {
   return (
     <div>
       <MuiAppBar />
-      <Outlet />
+      <main style={{ marginTop: "80px" }}>
+        <Outlet />
+      </main>
     </div>
   );
 }

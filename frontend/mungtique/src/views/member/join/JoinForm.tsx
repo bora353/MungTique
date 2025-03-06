@@ -1,5 +1,4 @@
-import { Button, TextField, Typography } from "@mui/material";
-import { ErrorMessage, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
@@ -118,145 +117,219 @@ export default function JoinForm({ onsubmit }: JoinProps) {
         }
       }}
     >
-      {({ values, handleChange, handleBlur, isSubmitting }) => (
-        <Form>
-          <div>
-            <TextField
-              id="username"
-              name="username"
-              label="이름"
-              variant="standard"
-              value={values.username}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              sx={{ width: 330 }}
-              helperText={
-                <Typography sx={{ color: "red", fontSize: "0.75rem" }}>
-                  <ErrorMessage name="username" />
-                </Typography>
-              }
-              error={Boolean(ErrorMessage.name === "username")}
-            />
-          </div>
-          <div>
-            <TextField
-              id="phone"
-              name="phone"
-              label="휴대폰 번호"
-              variant="standard"
-              value={values.phone}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              sx={{ width: 330 }}
-              helperText={
-                <Typography sx={{ color: "red", fontSize: "0.75rem" }}>
-                  <ErrorMessage name="phone" />
-                </Typography>
-              }
-              error={Boolean(ErrorMessage.name === "phone")}
-            />
-          </div>
-          <div className="flex" style={{ gap: "8px", marginLeft: "110px" }}>
-            <TextField
-              id="email"
-              name="email"
-              label="이메일"
-              variant="standard"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              sx={{ width: 330 }}
-              helperText={
-                <Typography sx={{ color: "red", fontSize: "0.75rem" }}>
-                  <ErrorMessage name="email" />
-                </Typography>
-              }
-              error={Boolean(ErrorMessage.name === "email")}
-            />
-            <Button
-              type="button"
-              variant="outlined"
-              color="primary"
-              onClick={() => handleMailCheck(values.email)}
-              sx={{ width: 100, height: 40 }}
-            >
-              인증하기
-            </Button>
-          </div>
-          {isEmailVerified && (
-            <div className="flex" style={{ gap: "8px", marginLeft: "110px" }}>
-              <TextField
-                id="emailVerify"
-                name="emailVerify"
-                label="인증코드"
-                variant="standard"
-                value={values.emailVerify}
+      {({
+        values,
+        handleChange,
+        handleBlur,
+        isSubmitting,
+        errors,
+        touched,
+      }) => (
+        <Form className="space-y-5">
+          <div className="space-y-1">
+            <div className="relative">
+              <input
+                id="username"
+                name="username"
+                type="text"
+                value={values.username}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                sx={{ width: 330 }}
-                helperText={<ErrorMessage name="emailVerify" />}
-                error={Boolean(ErrorMessage.name === "emailVerify")}
+                className={`peer w-full border-0 border-b-2 ${
+                  touched.username && errors.username
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } focus:border-blue-500 focus:ring-0 focus:outline-none bg-transparent py-2 px-1 placeholder-transparent`}
+                placeholder="이름"
               />
-              <Button
-                type="button"
-                variant="outlined"
-                color="primary"
-                onClick={() =>
-                  handleMailCheckOK(values.email, values.emailVerify)
-                }
-                sx={{ width: 100, height: 40 }}
+              <label
+                htmlFor="username"
+                className="absolute left-1 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-blue-500"
               >
-                확인
-              </Button>
+                이름
+              </label>
             </div>
-          )}
-          <div>
-            <TextField
-              id="password"
-              name="password"
-              label="비밀번호"
-              type="password"
-              variant="standard"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              sx={{ width: 330 }}
-              helperText={
-                <Typography sx={{ color: "red", fontSize: "0.75rem" }}>
-                  <ErrorMessage name="password" />
-                </Typography>
-              }
-              error={Boolean(ErrorMessage.name === "password")}
-            />
+            {touched.username && errors.username && (
+              <p className="text-red-500 text-xs">{errors.username}</p>
+            )}
           </div>
-          <div>
-            <TextField
-              id="passwordCheck"
-              name="passwordCheck"
-              label="비밀번호 확인"
-              type="password"
-              variant="standard"
-              value={values.passwordCheck}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              sx={{ width: 330 }}
-              helperText={
-                <Typography sx={{ color: "red", fontSize: "0.75rem" }}>
-                  <ErrorMessage name="passwordCheck" />
-                </Typography>
-              }
-              error={Boolean(ErrorMessage.name === "passwordCheck")}
-            />
+
+          <div className="space-y-1">
+            <div className="relative">
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                value={values.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`peer w-full border-0 border-b-2 ${
+                  touched.phone && errors.phone
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } focus:border-blue-500 focus:ring-0 focus:outline-none bg-transparent py-2 px-1 placeholder-transparent`}
+                placeholder="휴대폰 번호"
+              />
+              <label
+                htmlFor="phone"
+                className="absolute left-1 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-blue-500"
+              >
+                휴대폰 번호
+              </label>
+            </div>
+            {touched.phone && errors.phone && (
+              <p className="text-red-500 text-xs">{errors.phone}</p>
+            )}
           </div>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ width: 330 }}
-            disabled={isSubmitting || !isEmailVerified}
-          >
-            가입하기
-          </Button>
+
+          <div className="space-y-1">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`peer w-full border-0 border-b-2 ${
+                    touched.email && errors.email
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } focus:border-blue-500 focus:ring-0 focus:outline-none bg-transparent py-2 px-1 placeholder-transparent`}
+                  placeholder="이메일"
+                />
+                <label
+                  htmlFor="email"
+                  className="absolute left-1 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-blue-500"
+                >
+                  이메일
+                </label>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleMailCheck(values.email)}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-200 min-w-[100px]"
+              >
+                인증하기
+              </button>
+            </div>
+            {touched.email && errors.email && (
+              <p className="text-red-500 text-xs">{errors.email}</p>
+            )}
+          </div>
+
+          <div>
+            {isEmailVerified && (
+              <div className="space-y-1">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      id="emailVerify"
+                      name="emailVerify"
+                      type="text"
+                      value={values.emailVerify}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`peer w-full border-0 border-b-2 ${
+                        touched.emailVerify && errors.emailVerify
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      } focus:border-blue-500 focus:ring-0 focus:outline-none bg-transparent py-2 px-1 placeholder-transparent`}
+                      placeholder="인증코드"
+                    />
+                    <label
+                      htmlFor="emailVerify"
+                      className="absolute left-1 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-blue-500"
+                    >
+                      인증코드
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleMailCheckOK(values.email, values.emailVerify)
+                    }
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition duration-200 min-w-[100px]"
+                  >
+                    확인
+                  </button>
+                </div>
+                {touched.emailVerify && errors.emailVerify && (
+                  <p className="text-red-500 text-xs">{errors.emailVerify}</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`peer w-full border-0 border-b-2 ${
+                  touched.password && errors.password
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } focus:border-blue-500 focus:ring-0 focus:outline-none bg-transparent py-2 px-1 placeholder-transparent`}
+                placeholder="비밀번호"
+              />
+              <label
+                htmlFor="password"
+                className="absolute left-1 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-blue-500"
+              >
+                비밀번호
+              </label>
+            </div>
+            {touched.password && errors.password && (
+              <p className="text-red-500 text-xs">{errors.password}</p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <div className="relative">
+              <input
+                id="passwordCheck"
+                name="passwordCheck"
+                type="password"
+                value={values.passwordCheck}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`peer w-full border-0 border-b-2 ${
+                  touched.passwordCheck && errors.passwordCheck
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } focus:border-blue-500 focus:ring-0 focus:outline-none bg-transparent py-2 px-1 placeholder-transparent`}
+                placeholder="비밀번호 확인"
+              />
+              <label
+                htmlFor="passwordCheck"
+                className="absolute left-1 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-blue-500"
+              >
+                비밀번호 확인
+              </label>
+            </div>
+            {touched.passwordCheck && errors.passwordCheck && (
+              <p className="text-red-500 text-xs">{errors.passwordCheck}</p>
+            )}
+          </div>
+
+          <button
+              type="submit"
+              disabled={isSubmitting || !isEmailVerified}
+              className={`w-full py-3 px-4 mt-6 rounded-md font-medium text-white transition duration-200 ${
+                isSubmitting || !isEmailVerified
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
+            >
+              가입하기
+            </button>
+
           <MuiSnackbar
             message={snackbarMessage}
             severity={snackbarType}

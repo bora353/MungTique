@@ -1,14 +1,8 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import StorefrontIcon from "@mui/icons-material/Storefront";
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Toolbar,
-  Typography
-} from "@mui/material";
+import { FaDog } from "react-icons/fa";
+
+import { AppBar, Box, Button, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -37,37 +31,20 @@ export default function MuiAppBar() {
 
   return (
     <ThemeProvider theme={customTheme}>
-      <AppBar
-        position="sticky"
-        color="inherit"
-        sx={{ backgroundColor: "#FAF9F1" }}
-      >
-        <Container maxWidth="lg">
-          <Toolbar disableGutters>
-            {/* 로고 및 홈 버튼 */}
-            <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-              <RouterLink to="/">
-                <img
-                  src="/images/logo.png"
-                  alt="뭉티끄"
-                  width="140"
-                  height="80"
-                />
-              </RouterLink>
-            </Box>
-
-            {/* 네비게이션 메뉴 */}
+      <AppBar position="fixed" color="inherit">
+        {/* 헤더 */}
+        <header className="bg-white shadow-md">
+          <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+            <RouterLink to="/" className="flex items-center">
+              <FaDog className="text-pink-500 text-3xl mr-2" />
+              <h1 className="text-2xl font-bold text-gray-800">뭉티끄</h1>
+            </RouterLink>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               {[
                 {
                   path: "/mungshop",
                   icon: <ContentCutIcon sx={{ color: "#F7B5D8" }} />,
                   label: "뭉샵",
-                },
-                {
-                  path: "/shop",
-                  icon: <StorefrontIcon sx={{ color: "skyblue" }} />,
-                  label: "스토어",
                 },
                 {
                   path: "/mypage",
@@ -97,8 +74,8 @@ export default function MuiAppBar() {
                 </Button>
               ))}
             </Box>
-          </Toolbar>
-        </Container>
+          </div>
+        </header>
       </AppBar>
     </ThemeProvider>
   );

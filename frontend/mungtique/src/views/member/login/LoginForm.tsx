@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import MuiInput from "../../../components/inputs/MuiInput";
-import MuiButton from "../../../components/buttons/MuiButton";
+import { Link, useNavigate } from "react-router-dom";
 import { Login } from "../../../shared/types/login.interface";
 import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
-import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   onsubmit: (loginDTO: Login) => void;
@@ -49,38 +47,79 @@ export default function LoginForm({ onsubmit }: LoginProps) {
   };
 
   return (
-    <div className="m-5">
+    <div>
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-pink-500">반갑습니다!</h2>
+      </div>
+
+      {/* Snackbar */}
       <MuiSnackbar
         message={snackbarMessage}
         severity={"error"}
         open={openSnackbar}
         onClose={() => setOpenSnackbar(false)}
       />
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <MuiInput
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            이메일
+          </label>
+          <input
+            type="email"
             name="email"
-            placeholder="email"
             value={email}
             onChange={handleEmailChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition"
+            placeholder="이메일 주소를 입력하세요"
           />
         </div>
-        <MuiInput
-          name="password"
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <div className="my-3">
-          <MuiButton
-            value="로그인"
-            variant={"contained"}
-            color={"primary"}
-            type={"submit"}
+
+        <div>
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            비밀번호
+          </label>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={handlePasswordChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent transition"
+            placeholder="비밀번호를 입력하세요"
           />
+        </div>
+
+        <div className="pt-2">
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-pink-400 to-pink-500 text-white py-2 rounded-lg hover:from-pink-500 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300 transition duration-200 font-medium"
+          >
+            로그인
+          </button>
         </div>
       </form>
+
+      {/* Additional links */}
+      <div className="mt-6 text-center text-sm">
+        <Link to="/findinfo" className="text-blue-500 hover:text-blue-600">
+          아이디 찾기 
+        </Link>
+        &nbsp; | &nbsp;
+        <Link to="/findinfo" className="text-blue-500 hover:text-blue-600">
+          비밀번호 찾기
+        </Link>
+
+        <div className="mt-2">
+          계정이 없으신가요?{" "}
+            <Link
+            to="/join"
+            className="text-pink-500 hover:text-pink-600 font-medium"
+            >
+            회원가입
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
