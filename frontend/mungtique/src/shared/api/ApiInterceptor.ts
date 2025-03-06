@@ -4,6 +4,7 @@ export interface ApiInterceptor {}
 
 const serverUrl = import.meta.env.VITE_GATEWAY_SERVER;
 const AUTH_TOKEN_KEY = "access";
+const OAUTH2_LOGIN_KEY = "oauth2";
 
 const apiClient = (baseUrl: string): AxiosInstance => {
   const accessToken = localStorage.getItem(AUTH_TOKEN_KEY);
@@ -30,7 +31,7 @@ const apiClient = (baseUrl: string): AxiosInstance => {
 
 const apiInterceptor = (baseUrl: string) => {
   const axiosInstance = apiClient(baseUrl);
-  //console.log("apiInterceptor start");
+  console.log("apiInterceptor start");
 
   axiosInstance.interceptors.response.use(
     (response) => response,
@@ -69,7 +70,7 @@ const apiInterceptor = (baseUrl: string) => {
           signOut();
         }
       } else {
-        signOut();
+        //signOut();
         return Promise.reject(error); // 401이 아닌 오류에 대한 처리
       }
     }
@@ -81,6 +82,7 @@ const apiInterceptor = (baseUrl: string) => {
 function signOut() {
   const axiosInstance = apiClient(serverUrl);
   localStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem(OAUTH2_LOGIN_KEY);
   localStorage.removeItem("userId");
 
   axiosInstance

@@ -22,8 +22,6 @@ export default function ReservationConfirm() {
   } = useReservationStore();
   const userId = localStorage.getItem("userId");
 
-  // TODO : 예약정보 전체 reservation 서비스로 보내기 (보내면서 로컬스토리지 지우기)
-
   useEffect(() => {
     if (!userId) {
       alert("로그인이 필요합니다.");
@@ -65,6 +63,7 @@ export default function ReservationConfirm() {
         reservationData
       );
       console.log("예약 성공:", response.data);
+
       alert("예약이 완료되었습니다!");
       localStorage.removeItem("reservation-storage");
       navigate("/mypage"); // TODO : 결제페이지로 넘어가게 해야겠구나

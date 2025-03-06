@@ -51,7 +51,7 @@ public class ReissueController {
             response.addCookie(createCookie("refresh", tokens.get("refresh"), (int) (Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME))));
 
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             log.error("Reissue 실패: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
