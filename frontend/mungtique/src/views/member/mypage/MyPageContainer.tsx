@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import ReservationList from "./ReservationList";
+import MyMungCard from "../mymung/MyMungCard";
 
 export default function MyPageContainer() {  
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ export default function MyPageContainer() {
         </div>
 
         {/* 콘텐츠 영역 */}
-        {selectedMenu === "home" && <MyMungContainer />}
+        {selectedMenu === "home" && <MyMungCard />}
         {selectedMenu === "reservation" && <ReservationList />}
         {selectedMenu === "favorites" && <p>단골샵(찜하기) 내용</p>}
         {selectedMenu === "points" && <p>포인트 정보</p>}

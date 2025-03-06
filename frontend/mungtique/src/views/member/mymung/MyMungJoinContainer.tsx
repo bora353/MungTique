@@ -9,7 +9,7 @@ export default function MyMungJoinContainer() {
 
   return (
     <div>
-      <div className="flex justify-center items-center min-h-screen bg-blue-100">
+      <div className="flex justify-center items-center min-h-screen bg-pink-50">
         <div className="text-center">
           <MyMungJoinForm onsubmit={handleMungJoinSubmit} />
         </div>

@@ -10,7 +10,7 @@ import MuiButton from "../../../components/buttons/MuiButton";
 import { api } from "../../../shared/api/ApiInterceptor";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
 import MyMungImageUploadForm from "./MyMungImageUploadForm";
-import AddIcon from "@mui/icons-material/Add";
+import { Box } from "@mui/material";
 
 export default function MyMungCard() {
   const navigate = useNavigate();
@@ -69,16 +69,38 @@ export default function MyMungCard() {
           </Grid>
         ) : (
           myMungs.map((mung) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={mung.dogId}>
+            <Grid item xs={12} sm={6} md={5} lg={4} key={mung.dogId}>
               <Card sx={{ borderRadius: 3, boxShadow: 3, overflow: "hidden" }}>
                 <CardActionArea onClick={() => handleCardClick(mung.dogId)}>
-                  <CardMedia
+                  {/* <CardMedia
                     component="img"
                     height="180"
+                    width="100%"
                     image={mung.imageUrl || "https://placehold.co/200x150"}
                     alt={mung.dogName}
                     sx={{ objectFit: "cover" }}
+                  /> */}
+                  <Box sx={{ 
+                  width: "100%", 
+                  height: "200px", 
+                  overflow: "hidden",
+                  position: "relative"
+                }}>
+                  <CardMedia
+                    component="img"
+                    image={mung.imageUrl || "https://placehold.co/200x150"}
+                    alt={mung.dogName}
+                    sx={{ 
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center"
+                    }}
                   />
+                </Box>
                   <CardContent>
                     <Typography variant="h6" fontWeight="bold" color="primary">
                       {mung.dogName}
@@ -106,7 +128,6 @@ export default function MyMungCard() {
                     type="button"
                     value="이미지 등록"
                     variant="contained"
-                    startIcon={<AddIcon />}
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       handleImageUploadClick(mung.dogId);
