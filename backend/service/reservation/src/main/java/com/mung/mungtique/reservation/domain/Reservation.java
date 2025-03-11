@@ -23,8 +23,15 @@ public class Reservation extends BaseTime {
     @Column(length = 20, nullable = false)
     private String storeName;
 
+    @Column(nullable = false)
+    private Long dogId;
+
     @Column(length = 50, nullable = false)
     private String dogName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 100)
+    private BreedType breedType;
 
     @Column(length = 50, nullable = false)
     @Enumerated(EnumType.STRING)

@@ -5,7 +5,6 @@ import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationRes;
 import com.mung.mungtique.reservation.application.port.in.ReservationService;
 import com.mung.mungtique.reservation.application.port.out.persistence.ReservationRepoPort;
 import com.mung.mungtique.reservation.application.port.out.web.MungShopApiPort;
-import com.mung.mungtique.reservation.application.service.mapper.ReservationMapper;
 import com.mung.mungtique.reservation.application.service.mapper.ReservationMapperImpl;
 import com.mung.mungtique.reservation.domain.Reservation;
 import lombok.AllArgsConstructor;
@@ -47,7 +46,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservationRes> getReservationsByUser(Long userId) {
         List<Reservation> reservations = reservationRepoPort.findByUserId(userId);
-        return mapper.toReservationRes(reservations);
+        return mapper.toReservationResList(reservations);
     }
 
     /**
@@ -63,5 +62,11 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepoPort.save(reservation);
 
         return true;
+    }
+
+    @Override
+    public ReservationRes getReservation(Long reservationId) {
+        Reservation reservation = reservationRepoPort.findById(reservationId).orElseThrow(() -> new IllegalStateException("예약번호로 예약정보를 찾을 수 없습니다."));
+        return mapper.toReservationRes(reservation);
     }
 }

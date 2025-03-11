@@ -1,5 +1,6 @@
 package com.mung.mungtique.reservation.adaptor.in.web.dto;
 
+import com.mung.mungtique.reservation.domain.BreedType;
 import com.mung.mungtique.reservation.domain.ServiceType;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +15,13 @@ public record ReservationReq(
         @NotBlank(message = "MungShop 이름은 필수입니다.")
         String storeName,
 
+        @NotNull(message = "Dog ID는 필수입니다.")
+        Long dogId,
+
         @NotBlank(message = "반려견 정보는 필수입니다.") String dogName,
+
+        @NotBlank(message = "반려견 종은 필수입니다.")
+        BreedType breedType,
 
         @NotBlank(message = "서비스 선택은 필수입니다.")
         ServiceType serviceType,

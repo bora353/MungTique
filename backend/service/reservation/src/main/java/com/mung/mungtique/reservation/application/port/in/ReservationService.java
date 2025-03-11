@@ -9,4 +9,5 @@ public interface ReservationService {
     Long create(ReservationReq reservationReq);
     List<ReservationRes> getReservationsByUser(Long userId);
     Boolean cancelReservation(Long reservationId);
+    ReservationRes getReservation(Long reservationId);
 }

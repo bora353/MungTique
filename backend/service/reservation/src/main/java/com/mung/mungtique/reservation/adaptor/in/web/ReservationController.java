@@ -27,6 +27,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.create(reservationReq));
     }
 
+    @Operation(summary = "예약 번호로 예약 목록 조회")
+    @GetMapping("/reservations/{reservationId}")
+    public ResponseEntity<ReservationRes> getReservation(@PathVariable Long reservationId) {
+        return ResponseEntity.ok(reservationService.getReservation(reservationId));
+    }
+
     @Operation(summary = "특정 유저의 예약 목록 조회")
     @GetMapping("/reservations/user/{userId}")
     public ResponseEntity<List<ReservationRes>> getReservationsByUser(@PathVariable Long userId) {
