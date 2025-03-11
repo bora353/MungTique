@@ -20,6 +20,7 @@ import ReservationMungContainer from "./views/care/reservation/ReservationMungCo
 import PaymentContainer from "./views/care/payment/PaymentContainer";
 import OAuth2RedirectPage from "./views/member/login/OAuth2RedirectPage";
 import LoadingScreen from "./views/mungtiqueMain/LoadingScreen";
+import PaymentCompleteContainer from "./views/care/payment/PaymentCompleteContainer";
 
 function App() {
   useAuthInit();
@@ -68,6 +69,7 @@ function App() {
                   element={<ReservationConfirmContainer />}
                 />
                 <Route path="/payment" element={<PaymentContainer />} />
+                <Route path="/payment/complete" element={<PaymentCompleteContainer />} />
                 {/* <Route
                   path="/mungimage/:dogId"
                   element={<MyMungImageUploadContainer />}
