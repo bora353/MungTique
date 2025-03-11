@@ -9,7 +9,7 @@ dependencies {
     // feign client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     // testCode h2
-    testImplementation 'com.h2database:h2:1.3.176'
+    testImplementation 'com.h2database:h2'
 }
 
 
