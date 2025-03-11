@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum ServiceType {
 
     CUT("커트"),
-    WASH("샴푸"),
+    WASH("목욕"),
     FULL("전체 서비스");
 
     private final String text;
