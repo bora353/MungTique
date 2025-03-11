@@ -31,7 +31,7 @@ const apiClient = (baseUrl: string): AxiosInstance => {
 
 const apiInterceptor = (baseUrl: string) => {
   const axiosInstance = apiClient(baseUrl);
-  console.log("apiInterceptor start");
+  // console.log("apiInterceptor start");
 
   axiosInstance.interceptors.response.use(
     (response) => response,
