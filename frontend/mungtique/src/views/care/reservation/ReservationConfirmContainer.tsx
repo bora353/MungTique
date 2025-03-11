@@ -1,16 +1,20 @@
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useReservationStore } from "./reservation.store";
 import { api } from "../../../shared/api/ApiInterceptor";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { UserDto } from "../../../shared/types/user.interface";
 
 export default function ReservationConfirm() {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
   const {
     selectedMungShop,
     selectedMungShopId,
+    selectedDogId,
     selectedDog,
     selectedService,
+    breedType,
     selectedDate,
     selectedTime,
     reserveUserName,
@@ -20,7 +24,41 @@ export default function ReservationConfirm() {
     setReserveUserPhone,
     setRequestMessage,
   } = useReservationStore();
-  const userId = localStorage.getItem("userId");
+
+  const handleReservationSubmit = async () => {
+    const reservationData = {
+      mungShopId: selectedMungShopId,
+      storeName: selectedMungShop,
+      dogId: selectedDogId,
+      dogName: selectedDog,
+      breedType: breedType,
+      serviceType: selectedService,
+      reservationDate: selectedDate?.format("YYYY-MM-DD"),
+      reservationTime: selectedTime,
+      userId: userId,
+      username: reserveUserName,
+      phone: reserveUserPhone,
+      requestMessage: requestMessage,
+    };
+
+    console.log("예약 요청 데이터:", reservationData);
+
+    try {
+      const response = await api().post(
+        "/reservation-service/reservations",
+        reservationData
+      );
+      const reservationId = response.data;
+      console.log("예약 성공:", reservationId);
+
+      localStorage.removeItem("reservation-storage");
+
+      navigate("/payment", { state: { reservationId } });
+    } catch (error) {
+      console.error("예약 실패:", error);
+      alert("예약에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
 
   useEffect(() => {
     if (!userId) {
@@ -40,66 +78,9 @@ export default function ReservationConfirm() {
       });
   }, [userId]);
 
-  const handleReservationSubmit = async () => {
-    const reservationData = {
-      mungShopId: selectedMungShopId,
-      storeName: selectedMungShop,
-      // dogId추가
-      dogName: selectedDog,
-      serviceType: selectedService,
-      reservationDate: selectedDate?.format("YYYY-MM-DD"),
-      reservationTime: selectedTime,
-      userId: userId,
-      username: reserveUserName,
-      phone: reserveUserPhone,
-      requestMessage: requestMessage,
-    };
-
-    console.log("예약 요청 데이터:", reservationData);
-
-    try {
-      const response = await api().post(
-        "/reservation-service/reservations",
-        reservationData
-      );
-      console.log("예약 성공:", response.data);
-
-      alert("예약이 완료되었습니다!");
-      localStorage.removeItem("reservation-storage");
-      navigate("/mypage"); // TODO : 결제페이지로 넘어가게 해야겠구나
-    } catch (error) {
-      console.error("예약 실패:", error);
-      alert("예약에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
-
   return (
     <div className="fixed inset-0  bg-gray-50 flex justify-center items-center">
       <div className="bg-white w-full max-w-md rounded-lg shadow-lg p-6 relative mt-6">
-        {/* 상단 헤더 */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">예약하기</h2>
-          <button className="text-gray-500 hover:text-gray-700">❌</button>
-        </div>
-        <p className="text-gray-500 text-sm">
-          아래 내용이 맞는지 확인해 주세요.
-        </p>
-        {/* 예약 정보 */}
-        <div className="bg-gray-100 rounded-lg p-4 mt-3">
-          <h3 className="font-semibold">🐶 {selectedMungShop} 방문 예약</h3>
-          <p className="text-sm text-gray-600">
-            일정
-            <span className="text-gray-800">
-              {selectedDate?.format("M월 D일(ddd)")} {selectedTime}
-            </span>
-          </p>
-          <p className="text-sm text-gray-600">
-            강아지 <span className="text-gray-800">{selectedDog}</span>
-          </p>
-          <p className="text-sm text-gray-600">
-            서비스 <span className="text-gray-800">{selectedService}</span>
-          </p>
-        </div>
         {/* 예약자 정보 */}
         <div className="mt-6">
           <h3 className="text-lg font-semibold">예약자 정보</h3>

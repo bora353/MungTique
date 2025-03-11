@@ -6,9 +6,9 @@ import { MyMung } from "../../../shared/types/mungjoin.interface";
 
 export default function ReservationMungContainer() {
   const navigate = useNavigate();
-  const { selectedDog, selectedService, setSelectedDog, setSelectedService } =
+  const { selectedDog, breedType, selectedService, setSelectedDogId, setSelectedDog, setBreedType, setSelectedService } =
     useReservationStore();
-  const [dogs, setDogs] = useState<{ dogId: number; dogName: string }[]>([]);
+  const [dogs, setDogs] = useState<{ dogId: number; dogName: string, breedType: string }[]>([]);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function ReservationMungContainer() {
         const dogData = response.data.map((dog: MyMung) => ({
           dogId: dog.dogId,
           dogName: dog.dogName,
+          breedType: dog.breedType
         }));
         setDogs(dogData);
       })
@@ -40,6 +41,7 @@ export default function ReservationMungContainer() {
 
     console.log("선택된 강아지:", selectedDog);
     console.log("선택된 서비스:", selectedService);
+    console.log("선택된 서비스:", breedType);
 
     navigate("/reservation-confirm");
   };
@@ -69,7 +71,10 @@ export default function ReservationMungContainer() {
                     ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700"
                 }`}
-                onClick={() => setSelectedDog(dog.dogName)}
+                onClick={() => {setSelectedDog(dog.dogName);
+                                setSelectedDogId(dog.dogId);
+                                setBreedType(dog.breedType)}
+                        }
               >
                 {dog.dogName}
               </button>
