@@ -19,6 +19,7 @@ export type PaymentMethod = 'CARD' | 'BANK_TRANSFER' | 'MOBILE' | 'KAKAO_PAY';
 
 export interface PaymentInfo {
   reservationId: number;
+  userId: string;
   amount: number;
   paymentMethod: PaymentMethod;
   cardNumber?: string;

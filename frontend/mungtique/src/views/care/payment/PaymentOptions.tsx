@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { PaymentInfo, PaymentMethod } from "./payment.interface";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 interface PaymentOptionsProps {
   reservationId: number | undefined;
   amount: number | undefined;
 }
 
-export default function PaymentOptions({ reservationId, amount }: PaymentOptionsProps) {
+export default function PaymentOptions({
+  reservationId,
+  amount,
+}: PaymentOptionsProps) {
   const navigate = useNavigate();
 
   // 결제 정보 상태
@@ -15,6 +19,7 @@ export default function PaymentOptions({ reservationId, amount }: PaymentOptions
     reservationId: reservationId ?? 0,
     amount: amount ?? 0,
     paymentMethod: "CARD",
+    userId: localStorage.getItem("userId") ?? "",
   });
 
   // 카드 입력 상태
@@ -57,7 +62,7 @@ export default function PaymentOptions({ reservationId, amount }: PaymentOptions
     });
   };
 
-  // 결제 처리 
+  // 결제 처리
   const handlePayment = () => {
     // 결제 수단별 유효성 검사
     if (paymentInfo.paymentMethod === "CARD") {
@@ -102,17 +107,29 @@ export default function PaymentOptions({ reservationId, amount }: PaymentOptions
     // TODO :
     // '예약하기 & 결제하기' 버튼 클릭 시 결제 진행
     // 결제가 완료되면 예약 확정
+    api()
+      .post<number>(`/payment-service/payments`, {
+        ...paymentInfo,
+        ...(paymentInfo.paymentMethod === "CARD" ? cardInfo : {}),
+        ...(paymentInfo.paymentMethod === "BANK_TRANSFER" ? bankInfo : {}),
+      })
+      .then((response) => {
+        const paymentId = response.data;
+        console.log("paymentId", paymentId);
 
-    // 결제 성공 가정 - 결제 완료 페이지로 이동
-    alert("결제가 완료되었습니다.");
-    navigate("/payment/complete", {
-      state: {
-        paymentId: paymentId, // api 반환 결과
-        reservationId: reservationId,
-        amount: paymentInfo.amount,
-        paymentMethod: paymentInfo.paymentMethod,
-      },
-    });
+        alert("결제가 완료되었습니다.");
+        navigate("/payment/complete", {
+          state: {
+            paymentId: paymentId,
+            reservationId: reservationId,
+            amount: paymentInfo.amount,
+            paymentMethod: paymentInfo.paymentMethod,
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("예약 정보를 불러오는데 실패했습니다:", error);
+      });
   };
 
   const handleCancel = () => {
@@ -251,7 +268,7 @@ export default function PaymentOptions({ reservationId, amount }: PaymentOptions
           </div>
         )}
         {/* 카카오페이 안내 */}
-        {(paymentInfo.paymentMethod === "KAKAO_PAY") && (
+        {paymentInfo.paymentMethod === "KAKAO_PAY" && (
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="text-center">
               결제하기 버튼을 누르면 카카오페이로 이동합니다.

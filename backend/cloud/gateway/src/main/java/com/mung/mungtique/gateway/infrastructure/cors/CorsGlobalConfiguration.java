@@ -42,6 +42,7 @@ public class CorsGlobalConfiguration {
                         .pathMatchers("/api/v1/mungshop-service/**").permitAll()
                         .pathMatchers("/api/v1/dog-service/**").permitAll()
                         .pathMatchers("/api/v1/reservation-service/**").permitAll()
+                        .pathMatchers("/api/v1/payment-service/**").permitAll()
                         .pathMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                         .pathMatchers("/api/v1/admin").hasRole("ADMIN")
                         .anyExchange().authenticated()

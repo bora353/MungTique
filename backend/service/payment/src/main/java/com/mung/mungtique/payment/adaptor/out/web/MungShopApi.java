@@ -1,0 +1,18 @@
+package com.mung.mungtique.payment.adaptor.out.web;
+
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Component
+@FeignClient(name = "mungshop-service")
+public interface MungShopApi {
+
+    @GetMapping("/api/v1/mungshops/{mungShopId}/check-availability")
+    boolean checkAvailableTime(@PathVariable("mungShopId") Long mungShopId,
+                                @RequestParam String reservationTime);
+}
+
