@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaDog, FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface PetShop {
   id: number;
@@ -10,6 +11,7 @@ interface PetShop {
 }
 
 export default function MainContainer() {
+  const navigate = useNavigate();
   const [featuredShops, setFeaturedShops] = useState<PetShop[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -51,6 +53,11 @@ export default function MainContainer() {
     setIsLoading(false);
   }, []);
 
+
+  const handleClick = () => {
+    navigate("/mungshop"); 
+  };
+
   return (
     <div className="min-h-screen bg-pink-50">
       {/* 메인 배너 */}
@@ -63,7 +70,8 @@ export default function MainContainer() {
             뭉티끄에서 쉽고 빠르게 예약하고 사랑하는 반려견에게 최고의 케어를
             선물하세요
           </p>
-          <button className="bg-white text-pink-500 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-100 transition duration-300 flex items-center mx-auto">
+          <button className="bg-white text-pink-500 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-100 transition duration-300 flex items-center mx-auto"
+            onClick={handleClick}>
             <FaCalendarAlt className="mr-2" />
             지금 예약하기
           </button>

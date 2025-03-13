@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PaymentInfo, PaymentMethod } from "./payment.interface";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../shared/api/ApiInterceptor";
@@ -14,10 +14,24 @@ export default function PaymentOptions({
 }: PaymentOptionsProps) {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log("PaymentOptions props 업데이트:", { reservationId, amount });
+    
+    if (reservationId !== undefined && amount !== undefined) {
+      setPaymentInfo({
+        ...paymentInfo,
+        reservationId,
+        amount,
+      });
+    }
+
+    console.log(paymentInfo)
+  }, [amount]);
+
   // 결제 정보 상태
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
-    reservationId: reservationId ?? 0,
-    amount: amount ?? 0,
+    reservationId: 0,
+    amount: 0,
     paymentMethod: "CARD",
     userId: localStorage.getItem("userId") ?? "",
   });
@@ -47,9 +61,28 @@ export default function PaymentOptions({
   // 카드 정보 변경 핸들러
   const handleCardInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    const formatCardNumber = (num: string) => {
+      return num
+        .replace(/\D/g, "") // 숫자만 남기기
+        .replace(/(\d{4})/g, "$1-") // 4자리마다 "-" 추가
+        .replace(/-$/, ""); // 마지막 "-" 제거
+    };
+
+    const formatExpiryDate = (date: string) => {
+      return date
+        .replace(/\D/g, "") // 숫자만 남기기
+        .replace(/(\d{2})(\d{1,2})?/, (_, m, y) => (y ? `${m}/${y}` : m)); // MM/YY 형식
+    };
+
     setCardInfo({
       ...cardInfo,
-      [name]: value,
+      [name]:
+        name === "cardNumber"
+          ? formatCardNumber(value)
+          : name === "cardExpiry"
+          ? formatExpiryDate(value)
+          : value,
     });
   };
 
@@ -97,16 +130,12 @@ export default function PaymentOptions({
       });
     }
 
-    // 결제 API 호출 (실제 구현 필요)
     console.log("결제 정보:", {
       ...paymentInfo,
       ...(paymentInfo.paymentMethod === "CARD" ? cardInfo : {}),
       ...(paymentInfo.paymentMethod === "BANK_TRANSFER" ? bankInfo : {}),
     });
 
-    // TODO :
-    // '예약하기 & 결제하기' 버튼 클릭 시 결제 진행
-    // 결제가 완료되면 예약 확정
     api()
       .post<number>(`/payment-service/payments`, {
         ...paymentInfo,

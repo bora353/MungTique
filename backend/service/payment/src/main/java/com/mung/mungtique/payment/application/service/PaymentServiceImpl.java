@@ -3,6 +3,7 @@ package com.mung.mungtique.payment.application.service;
 import com.mung.mungtique.payment.adaptor.in.web.dto.PaymentReq;
 import com.mung.mungtique.payment.adaptor.in.web.dto.PaymentRes;
 import com.mung.mungtique.payment.application.port.in.PaymentService;
+import com.mung.mungtique.payment.application.port.out.message.ReservationEventPort;
 import com.mung.mungtique.payment.application.port.out.persistence.PaymentRepoPort;
 import com.mung.mungtique.payment.application.service.mapper.PaymentMapperImpl;
 import com.mung.mungtique.payment.domain.Payment;
@@ -19,17 +20,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepoPort paymentRepoPort;
+    private final ReservationEventPort reservationEventPort;
     private final PaymentMapperImpl mapper;
 
     @Override
+    @Transactional
     public long processPayment(PaymentReq paymentRequest) {
         Payment payment = mapper.toPayment(paymentRequest);
 
-        return switch (payment.getPaymentMethod()) {
+        long paymentId = switch (payment.getPaymentMethod()) {
             case CARD -> processCardPayment(payment);
             case BANK_TRANSFER -> processBankTransfer(payment);
             default -> throw new IllegalArgumentException("지원하지 않는 결제 방식입니다: " + payment.getPaymentMethod());
         };
+
+        sendPaymentSuccessEvent(payment);
+
+        return paymentId;
+    }
+
+    private void sendPaymentSuccessEvent(Payment payment) {
+        reservationEventPort.sendPaymentSuccessEvent(mapper.toPaymentSuccessMessage(payment));
     }
 
     @Override

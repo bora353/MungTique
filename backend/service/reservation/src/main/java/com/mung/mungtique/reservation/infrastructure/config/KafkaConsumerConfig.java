@@ -1,5 +1,6 @@
 package com.mung.mungtique.reservation.infrastructure.config;
 
+import com.mung.mungtique.reservation.adaptor.in.message.dto.PaymentSuccessMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -48,9 +49,9 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory(Object.class));
+    public ConcurrentKafkaListenerContainerFactory<String, PaymentSuccessMessage> paymentKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PaymentSuccessMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory(PaymentSuccessMessage.class));
         factory.setCommonErrorHandler(new DefaultErrorHandler((record, ex) -> {
             log.error("Error is {} : data {}", ex.getMessage(), record);
         }, new FixedBackOff(100, 3)));

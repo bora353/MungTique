@@ -1,5 +1,6 @@
 package com.mung.mungtique.reservation.application.service;
 
+import com.mung.mungtique.reservation.adaptor.in.message.dto.PaymentSuccessMessage;
 import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationReq;
 import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationRes;
 import com.mung.mungtique.reservation.application.port.in.ReservationService;
@@ -68,5 +69,17 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationRes getReservation(Long reservationId) {
         Reservation reservation = reservationRepoPort.findById(reservationId).orElseThrow(() -> new IllegalStateException("예약번호로 예약정보를 찾을 수 없습니다."));
         return mapper.toReservationRes(reservation);
+    }
+
+    @Override
+    @Transactional
+    public Reservation updateReservationToPaid(PaymentSuccessMessage message) {
+        Reservation reservation = reservationRepoPort.findById(message.reservationId()).orElseThrow(() -> new IllegalStateException("예약번호로 예약정보를 찾을 수 없습니다."));
+
+        log.info("결제 ID {}로 결제가 완료되었습니다.", message.paymentId());
+        reservation.paid(message.paymentId());
+        log.info("예약 상태가 'PAID'로 변경되었습니다.");
+
+        return reservation;
     }
 }

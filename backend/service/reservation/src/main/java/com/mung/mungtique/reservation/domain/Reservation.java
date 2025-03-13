@@ -60,6 +60,8 @@ public class Reservation extends BaseTime {
 
     private Boolean isDeleted = false;
 
+    private Long paymentId;
+
     @PrePersist
     public void setDefaultStatus() {
         if (this.reservationStatus == null) {
@@ -67,7 +69,8 @@ public class Reservation extends BaseTime {
         }
     }
 
-    public void paid() {
+    public void paid(Long paymentId) {
+        this.paymentId = paymentId;
         this.reservationStatus = ReservationStatus.PAID;
     }
 

@@ -20,7 +20,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @Operation(summary = "결제 요청 처리")
-    @PostMapping("/payments/process")
+    @PostMapping("/payments")
     public ResponseEntity<Long> processPayment(@Valid @RequestBody PaymentReq paymentRequest) {
         return ResponseEntity.ok(paymentService.processPayment(paymentRequest));
     }
