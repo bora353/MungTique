@@ -1,26 +1,25 @@
 import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
 import { useAuthStore } from "../login/hook/login.store";
-import MyMungContainer from "../mymung/MyMungContainer";
 import MuiButton from "../../../components/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
-import ReservationList from "./ReservationList";
 import MyMungCard from "../mymung/MyMungCard";
+import MyReservationList from "./MyReservationList";
 
-export default function MyPageContainer() {  
+export default function MyPageContainer() {
   const navigate = useNavigate();
   const AUTH_TOKEN_KEY = "access";
   const OAUTH2_LOGIN_KEY = "oauth2";
 
-  const { setIsLocalLogin, isOauth2Login, setIsOauth2Login} = useAuthStore();
-  const { localLogoutData, oauth2LogoutData} = useLogoutViewModelHook();
+  const { setIsLocalLogin, isOauth2Login, setIsOauth2Login } = useAuthStore();
+  const { localLogoutData, oauth2LogoutData } = useLogoutViewModelHook();
   const [selectedMenu, setSelectedMenu] = useState<string>("home");
 
   const handleLogout = async () => {
     try {
       const logoutResult = await localLogoutData();
-  
+
       if (logoutResult?.status === 200) {
         localStorage.removeItem(AUTH_TOKEN_KEY);
         localStorage.removeItem("userId");
@@ -38,7 +37,7 @@ export default function MyPageContainer() {
   const handleOauth2Logout = async () => {
     try {
       const logoutResult = await oauth2LogoutData();
-    
+
       if (logoutResult?.status === 200) {
         localStorage.removeItem(OAUTH2_LOGIN_KEY);
         localStorage.removeItem("userId");
@@ -96,10 +95,13 @@ export default function MyPageContainer() {
         </div>
 
         {/* 콘텐츠 영역 */}
-        {selectedMenu === "home" && <MyMungCard />}
-        {selectedMenu === "reservation" && <ReservationList />}
-        {selectedMenu === "favorites" && <p>단골샵(찜하기) 내용</p>}
-        {selectedMenu === "points" && <p>포인트 정보</p>}
+        <div>
+          {/* 메뉴 버튼들 */}
+          {selectedMenu === "home" && <MyMungCard />}
+          {selectedMenu === "reservation" && <MyReservationList />}
+          {selectedMenu === "favorites" && <p>단골샵(찜하기) 내용</p>}
+          {selectedMenu === "points" && <p>포인트 정보</p>}
+        </div>
       </div>
     </div>
   );

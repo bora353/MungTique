@@ -16,7 +16,7 @@ export default function PaymentOptions({
 
   useEffect(() => {
     console.log("PaymentOptions props 업데이트:", { reservationId, amount });
-    
+
     if (reservationId !== undefined && amount !== undefined) {
       setPaymentInfo({
         ...paymentInfo,
@@ -25,7 +25,7 @@ export default function PaymentOptions({
       });
     }
 
-    console.log(paymentInfo)
+    console.log(paymentInfo);
   }, [amount]);
 
   // 결제 정보 상태
@@ -64,15 +64,15 @@ export default function PaymentOptions({
 
     const formatCardNumber = (num: string) => {
       return num
-        .replace(/\D/g, "") // 숫자만 남기기
-        .replace(/(\d{4})/g, "$1-") // 4자리마다 "-" 추가
-        .replace(/-$/, ""); // 마지막 "-" 제거
+        .replace(/\D/g, "")
+        .replace(/(\d{4})/g, "$1-")
+        .replace(/-$/, "");
     };
 
     const formatExpiryDate = (date: string) => {
       return date
-        .replace(/\D/g, "") // 숫자만 남기기
-        .replace(/(\d{2})(\d{1,2})?/, (_, m, y) => (y ? `${m}/${y}` : m)); // MM/YY 형식
+        .replace(/\D/g, "")
+        .replace(/(\d{2})(\d{1,2})?/, (_, m, y) => (y ? `${m}/${y}` : m));
     };
 
     setCardInfo({
@@ -139,7 +139,12 @@ export default function PaymentOptions({
     api()
       .post<number>(`/payment-service/payments`, {
         ...paymentInfo,
-        ...(paymentInfo.paymentMethod === "CARD" ? cardInfo : {}),
+        ...(paymentInfo.paymentMethod === "CARD"
+          ? {
+              ...cardInfo,
+              cardNumber: cardInfo.cardNumber.split("-").join(""),
+            }
+          : {}),
         ...(paymentInfo.paymentMethod === "BANK_TRANSFER" ? bankInfo : {}),
       })
       .then((response) => {
@@ -151,8 +156,6 @@ export default function PaymentOptions({
           state: {
             paymentId: paymentId,
             reservationId: reservationId,
-            amount: paymentInfo.amount,
-            paymentMethod: paymentInfo.paymentMethod,
           },
         });
       })

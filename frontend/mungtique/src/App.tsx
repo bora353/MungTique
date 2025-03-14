@@ -1,26 +1,26 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomeAppBar from "./HomeAppBar";
+import MungshopContainer from "./views/care/main/MungshopContainer";
+import PaymentCompleteContainer from "./views/care/payment/PaymentCompleteContainer";
+import PaymentContainer from "./views/care/payment/PaymentContainer";
+import ReservationConfirmContainer from "./views/care/reservation/ReservationConfirmContainer";
+import ReservationContainer from "./views/care/reservation/ReservationContainer";
+import ReservationMungContainer from "./views/care/reservation/ReservationMungContainer";
+import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
+import JoinContainer from "./views/member/join/JoinContainer";
+import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";
 import {
   useAuthInit,
   useAuthStore,
 } from "./views/member/login/hook/login.store";
-import ReservationContainer from "./views/care/reservation/ReservationContainer";
-import MainContainer from "./views/mungtiqueMain/MainContainer";
-import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
-import JoinContainer from "./views/member/join/JoinContainer";
-import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";
 import LoginContainer from "./views/member/login/LoginContainer";
-import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
-import MyPageContainer from "./views/member/mypage/MyPageContainer";
-import MungshopContainer from "./views/care/main/MungshopContainer";
-import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
-import ReservationConfirmContainer from "./views/care/reservation/ReservationConfirmContainer";
-import ReservationMungContainer from "./views/care/reservation/ReservationMungContainer";
-import PaymentContainer from "./views/care/payment/PaymentContainer";
 import OAuth2RedirectPage from "./views/member/login/OAuth2RedirectPage";
+import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
+import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
+import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import LoadingScreen from "./views/mungtiqueMain/LoadingScreen";
-import PaymentCompleteContainer from "./views/care/payment/PaymentCompleteContainer";
+import MainContainer from "./views/mungtiqueMain/MainContainer";
 
 function App() {
   useAuthInit();

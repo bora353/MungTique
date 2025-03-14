@@ -1,4 +1,4 @@
-export interface ReservationData {
+export interface ReservationInfo {
   reservationId: number;
   mungShopId: number;
   storeName: string;
@@ -15,7 +15,7 @@ export interface ReservationData {
   reservationStatus: string;
 }
 
-export type PaymentMethod = 'CARD' | 'BANK_TRANSFER' | 'MOBILE' | 'KAKAO_PAY';
+export type PaymentMethod = "CARD" | "BANK_TRANSFER" | "KAKAO_PAY";
 
 export interface PaymentInfo {
   reservationId: number;

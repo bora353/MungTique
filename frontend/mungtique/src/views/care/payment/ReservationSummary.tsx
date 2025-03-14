@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
-import { ReservationData } from "./payment.interface";
+import { ReservationInfo } from "./payment.interface";
 
 interface ReservationSummaryProps {
-  reservation : ReservationData | undefined;
+  reservation: ReservationInfo | undefined;
 }
 
-export default function ReservationSummary({reservation} : ReservationSummaryProps) {
+export default function ReservationSummary({
+  reservation,
+}: ReservationSummaryProps) {
   const getServiceTypeText = (type: string) => {
     const typeMap: Record<string, string> = {
       WASH: "목욕",
@@ -39,7 +41,7 @@ export default function ReservationSummary({reservation} : ReservationSummaryPro
             <p className="text-gray-600">예약일시</p>
             <p className="font-medium">
               {/* {selectedDate?.format("M월 D일(ddd)")} */}
-              {dayjs(reservation?.reservationDate).format('MM월 DD일')} {" "}
+              {dayjs(reservation?.reservationDate).format("MM월 DD일")}{" "}
               {reservation?.reservationTime}
             </p>
           </div>

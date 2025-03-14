@@ -40,7 +40,7 @@ public class ReservationController {
     }
 
     @Operation(summary = "예약 취소")
-    @DeleteMapping("/reservations/{reservationId}")
+    @DeleteMapping("/reservations/{reservationId}/cancel")
     public ResponseEntity<Boolean> deleteReservation(@PathVariable Long reservationId) {
         // soft delete 사용
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
