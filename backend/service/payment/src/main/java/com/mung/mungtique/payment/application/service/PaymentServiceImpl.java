@@ -34,6 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
             default -> throw new IllegalArgumentException("지원하지 않는 결제 방식입니다: " + payment.getPaymentMethod());
         };
 
+        payment.completePayment();
         sendPaymentSuccessEvent(payment);
 
         return paymentId;

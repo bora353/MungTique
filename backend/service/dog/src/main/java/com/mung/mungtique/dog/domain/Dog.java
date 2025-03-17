@@ -6,8 +6,6 @@ import lombok.*;
 @Entity
 @Table(name = "dog")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dog extends BaseTime {
     @Id
@@ -37,6 +35,19 @@ public class Dog extends BaseTime {
 
     private Long userId;
 
-    @OneToOne(mappedBy = "dog", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder
+    private Dog(Long dogId, String dogName, BreedType breedType, int weight, int age, Gender gender, FixedStatus fixed, Long userId, Image image) {
+        this.dogId = dogId;
+        this.dogName = dogName;
+        this.breedType = breedType;
+        this.weight = weight;
+        this.age = age;
+        this.gender = gender;
+        this.fixed = fixed;
+        this.userId = userId;
+        this.image = image;
+    }
+
+    @OneToOne(mappedBy = "dog", cascade = CascadeType.ALL)
     private Image image;
 }

@@ -8,8 +8,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "reservation")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation extends BaseTime {
 
@@ -62,14 +60,27 @@ public class Reservation extends BaseTime {
 
     private Long paymentId;
 
-    @PrePersist
-    public void setDefaultStatus() {
-        if (this.reservationStatus == null) {
-            this.reservationStatus = ReservationStatus.WAITING_FOR_PAYMENT;
-        }
+    @Builder
+    private Reservation(Long reservationId, Long mungShopId, String storeName, Long dogId, String dogName, BreedType breedType, ServiceType serviceType, LocalDate reservationDate, String reservationTime, Long userId, String username, String phone, String requestMessage, ReservationStatus reservationStatus, Boolean isDeleted, Long paymentId) {
+        this.reservationId = reservationId;
+        this.mungShopId = mungShopId;
+        this.storeName = storeName;
+        this.dogId = dogId;
+        this.dogName = dogName;
+        this.breedType = breedType;
+        this.serviceType = serviceType;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+        this.userId = userId;
+        this.username = username;
+        this.phone = phone;
+        this.requestMessage = requestMessage;
+        this.reservationStatus = ReservationStatus.WAITING_FOR_PAYMENT;
+        this.isDeleted = isDeleted;
+        this.paymentId = paymentId;
     }
 
-    public void paid(Long paymentId) {
+    public void confirmPayment(Long paymentId) {
         this.paymentId = paymentId;
         this.reservationStatus = ReservationStatus.PAID;
     }

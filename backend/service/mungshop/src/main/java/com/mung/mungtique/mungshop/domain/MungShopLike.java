@@ -6,8 +6,6 @@ import lombok.*;
 @Entity
 @Table(name = "mung_shop_like")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MungShopLike extends BaseTime {
 
@@ -22,4 +20,10 @@ public class MungShopLike extends BaseTime {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Builder
+    private MungShopLike(Long mungShopLikeId, MungShop mungShop, Long userId) {
+        this.mungShopLikeId = mungShopLikeId;
+        this.mungShop = mungShop;
+        this.userId = userId;
+    }
 }

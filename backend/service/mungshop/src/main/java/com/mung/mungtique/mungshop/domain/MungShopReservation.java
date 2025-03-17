@@ -8,8 +8,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "mung_shop_reservation")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MungShopReservation extends BaseTime {
 
@@ -27,4 +25,13 @@ public class MungShopReservation extends BaseTime {
     private MungShopReservationStatus status;
 
     private Long mungShopId;
+
+    @Builder
+    private MungShopReservation(Long mungShopReservationId, LocalDate reservationDate, String reservationTime, MungShopReservationStatus status, Long mungShopId) {
+        this.mungShopReservationId = mungShopReservationId;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+        this.status = status;
+        this.mungShopId = mungShopId;
+    }
 }

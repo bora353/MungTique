@@ -37,7 +37,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
 
-        helper.setFrom("mungtique@mung.com"); // TODO : 이메일의 발신자 주소 설정 (작동 안함)
+        helper.setFrom("no-reply@mungtique.com"); // TODO : 이메일의 발신자 주소 설정 (작동 안함)
         helper.setTo(email);
         helper.setSubject("뭉티끄 이메일 인증 메일입니다.");
 

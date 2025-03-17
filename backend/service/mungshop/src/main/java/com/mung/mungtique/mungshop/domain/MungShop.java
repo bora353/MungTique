@@ -9,8 +9,6 @@ import java.util.List;
 @Entity
 @Table(name = "mung_shop")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MungShop extends BaseTime {
 
@@ -49,4 +47,18 @@ public class MungShop extends BaseTime {
 
 //    @OneToMany(mappedBy = "mungShop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<MungShopLike> likes;
+
+    @Builder
+    private MungShop(Long mungShopId, String storeName, String storeAddress, BreedType breedType, String businessHours, ClosingDayType closingDays, BigDecimal latitude, BigDecimal longitude, String storeImageUrl, List<MungShopPrice> prices) {
+        this.mungShopId = mungShopId;
+        this.storeName = storeName;
+        this.storeAddress = storeAddress;
+        this.breedType = breedType;
+        this.businessHours = businessHours;
+        this.closingDays = closingDays;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.storeImageUrl = storeImageUrl;
+        this.prices = prices;
+    }
 }

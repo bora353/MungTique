@@ -6,8 +6,6 @@ import lombok.*;
 @Entity
 @Table(name = "mung_shop_price")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MungShopPrice extends BaseTime {
 
@@ -29,4 +27,13 @@ public class MungShopPrice extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mung_shop_id", nullable = false)
     private MungShop mungShop;
+
+    @Builder
+    private MungShopPrice(Long mungShopPriceId, BreedType breedType, ServiceType serviceType, int price, MungShop mungShop) {
+        this.mungShopPriceId = mungShopPriceId;
+        this.breedType = breedType;
+        this.serviceType = serviceType;
+        this.price = price;
+        this.mungShop = mungShop;
+    }
 }

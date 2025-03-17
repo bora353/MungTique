@@ -77,7 +77,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepoPort.findById(message.reservationId()).orElseThrow(() -> new IllegalStateException("예약번호로 예약정보를 찾을 수 없습니다."));
 
         log.info("결제 ID {}로 결제가 완료되었습니다.", message.paymentId());
-        reservation.paid(message.paymentId());
+        reservation.confirmPayment(message.paymentId());
         log.info("예약 상태가 'PAID'로 변경되었습니다.");
 
         return reservation;

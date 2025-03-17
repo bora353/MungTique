@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "mung_user")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity extends BaseTime {
 
@@ -43,6 +41,19 @@ public class UserEntity extends BaseTime {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginAt;
+
+    @Builder
+    private UserEntity(Long id, String username, String password, String email, String phone, Authority role, String provider, String providerId, LocalDateTime lastLoginAt) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.lastLoginAt = lastLoginAt;
+    }
 
     public void setLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
