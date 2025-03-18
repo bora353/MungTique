@@ -25,7 +25,7 @@ public class PaymentRepoAdaptor implements PaymentRepoPort {
     }
 
     @Override
-    public Optional<Payment> findById(Long reservationId) {
-        return paymentRepo.findById(reservationId);
+    public Optional<Payment> findById(Long paymentId) {
+        return paymentRepo.findById(paymentId);
     }
 }

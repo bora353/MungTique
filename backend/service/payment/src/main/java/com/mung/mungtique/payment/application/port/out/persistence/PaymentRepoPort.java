@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface PaymentRepoPort {
     Payment save(Payment reservation);
     List<Payment> findByUserId(Long userId);
-    Optional<Payment> findById(Long reservationId);
+    Optional<Payment> findById(Long paymentId);
 }
