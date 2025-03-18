@@ -1,18 +1,15 @@
-package com.study.lecture.testcode.spring;
+package com.mung.mungtique.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.lecture.testcode.spring.api.controller.order.OrderController;
-import com.study.lecture.testcode.spring.api.controller.product.ProductController;
-import com.study.lecture.testcode.spring.api.service.order.OrderService;
-import com.study.lecture.testcode.spring.api.service.product.ProductService;
+import com.mung.mungtique.payment.adaptor.in.web.PaymentController;
+import com.mung.mungtique.payment.application.port.in.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = {
-        OrderController.class,
-        ProductController.class
+        PaymentController.class
 })
 public abstract class ControllerTestSupport {
 
@@ -22,9 +19,6 @@ public abstract class ControllerTestSupport {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    @MockitoBean
-    protected OrderService orderService;
-
-    @MockitoBean // MockBean은 deprecated
-    protected ProductService productService;
+    @MockBean
+    protected PaymentService paymentService;
 }
