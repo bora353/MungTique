@@ -5,7 +5,6 @@ import com.mung.mungtique.payment.adaptor.in.web.dto.PaymentReq;
 import com.mung.mungtique.payment.domain.PaymentMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 
 import static org.mockito.Mockito.when;
@@ -14,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PaymentController.class)
 class PaymentControllerTest extends ControllerTestSupport {
 
     @DisplayName("카드 결제 요청 처리한다.")

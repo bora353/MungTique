@@ -6,7 +6,6 @@ import com.mung.mungtique.payment.adaptor.out.message.dto.PaymentSuccessMessage;
 import com.mung.mungtique.payment.domain.Payment;
 import com.mung.mungtique.payment.domain.PaymentMethod;
 import com.mung.mungtique.payment.domain.PaymentStatus;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -14,15 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PaymentMapperTest {
 
-    private PaymentMapper paymentMapper;
-
-    @BeforeEach
-    public void setUp() {
-        paymentMapper = Mappers.getMapper(PaymentMapper.class);
-    }
+    private final PaymentMapper paymentMapper = Mappers.getMapper(PaymentMapper.class);
 
     @Test
-    public void testToPaymentRes() {
+    public void toPaymentRes() {
         // Given
         Payment cardPayment = Payment.builder()
                 .reservationId(1L)
@@ -46,7 +40,7 @@ class PaymentMapperTest {
     }
 
     @Test
-    public void testToPayment() {
+    public void toPayment() {
         // Given
         PaymentReq cardReq = PaymentReq.builder()
                 .reservationId(1L)
@@ -73,7 +67,7 @@ class PaymentMapperTest {
     }
 
     @Test
-    public void testToPaymentSuccessMessage() {
+    public void toPaymentSuccessMessage() {
         // Given
         Payment cardPayment = Payment.builder()
                 .reservationId(1L)

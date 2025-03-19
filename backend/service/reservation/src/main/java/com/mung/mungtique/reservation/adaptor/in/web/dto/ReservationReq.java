@@ -5,9 +5,11 @@ import com.mung.mungtique.reservation.domain.ServiceType;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
+@Builder
 public record ReservationReq(
         @NotNull(message = "MungShop ID는 필수입니다.")
         Long mungShopId,

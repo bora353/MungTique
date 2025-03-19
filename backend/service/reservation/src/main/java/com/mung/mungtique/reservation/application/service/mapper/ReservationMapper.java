@@ -13,7 +13,6 @@ import java.util.List;
 public interface ReservationMapper {
 
     Reservation toReservation(ReservationReq reservationReq);
-
     List<ReservationRes> toReservationResList(List<Reservation> reservations);
     ReservationRes toReservationRes(Reservation reservations);
 }

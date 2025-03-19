@@ -23,6 +23,11 @@ public class PaymentServiceImpl implements PaymentService {
     private final ReservationEventPort reservationEventPort;
     private final PaymentMapperImpl mapper;
 
+    /** // TODO :
+     * 결제하기전에 뭉샵에 시간 가능한지 카프카로 한번 체크하고
+     * 결제완료되면 그 시간 이용 못하게 카프카 보내서 바꾸자
+     */
+
     @Override
     @Transactional
     public long processPayment(PaymentReq paymentRequest) {

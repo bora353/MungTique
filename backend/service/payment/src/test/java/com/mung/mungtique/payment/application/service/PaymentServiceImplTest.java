@@ -20,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -32,7 +31,7 @@ class PaymentServiceImplTest {
     private PaymentRepo paymentRepo;
     @MockBean
     private ReservationEventPort reservationEventPort;
-    @MockBean
+    @Autowired
     private PaymentMapperImpl paymentMapper;
     @Autowired
     private PaymentServiceImpl paymentService;
@@ -69,8 +68,6 @@ class PaymentServiceImplTest {
 
         PaymentSuccessMessage successMessage = new PaymentSuccessMessage(1L, 1L);
 
-        when(paymentMapper.toPayment(cardReq)).thenReturn(cardPayment);
-        when(paymentMapper.toPaymentSuccessMessage(cardPayment)).thenReturn(successMessage);
         doNothing().when(reservationEventPort).sendPaymentSuccessEvent(successMessage);
 
         // when
@@ -96,7 +93,7 @@ class PaymentServiceImplTest {
                 .build();
 
         Payment bankPayment = Payment.builder()
-                .reservationId(1L)
+                .reservationId(2L)
                 .userId(999L)
                 .amount(40000)
                 .paymentMethod(PaymentMethod.BANK_TRANSFER)
@@ -106,11 +103,10 @@ class PaymentServiceImplTest {
                 .paymentStatus(PaymentStatus.PENDING)
                 .build();
 
-        paymentRepoPort.save(cardPayment);
-        paymentRepoPort.save(bankPayment);
+        Payment savedPayment = paymentRepoPort.save(bankPayment);
 
         // when
-        PaymentRes payment = paymentService.getPayment(2L);
+        PaymentRes payment = paymentService.getPayment(savedPayment.getPaymentId());
 
         // then
         Assertions.assertThat(payment)

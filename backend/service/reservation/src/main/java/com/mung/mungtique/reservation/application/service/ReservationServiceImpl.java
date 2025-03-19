@@ -60,8 +60,6 @@ public class ReservationServiceImpl implements ReservationService {
 
         // 소프트 딜리트 (상태 변경)
         reservation.cancel();
-        reservationRepoPort.save(reservation);
-
         return true;
     }
 

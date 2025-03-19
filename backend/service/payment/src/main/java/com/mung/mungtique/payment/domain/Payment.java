@@ -8,6 +8,7 @@ import lombok.*;
 @Table(name = "payment")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Payment extends BaseTime {
 
     @Id
