@@ -1,52 +1,96 @@
 package com.mung.mungtique.user.adaptor.in.web;
 
+import com.mung.mungtique.user.ControllerTestSupport;
 import com.mung.mungtique.user.adaptor.in.web.dto.JoinReq;
-import com.mung.mungtique.user.domain.UserEntity;
+import com.mung.mungtique.user.adaptor.in.web.dto.JoinRes;
+import com.mung.mungtique.user.adaptor.in.web.dto.UserRes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class UserControllerTest {
+public class UserControllerTest extends ControllerTestSupport {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
+    @DisplayName("user 회원가입한다.")
     @Test
-    @DisplayName("/join으로 JoinDTO를 Post방식으로 보내면 회원가입할 수 있다")
-    void joinProcessTest() {
-        // given
+    public void registerUser() throws Exception {
+        // Given
         JoinReq joinReq = JoinReq.builder()
-                            .username("bora")
-                            .password("1234")
-                            .passwordCheck("1234")
-                            .email("bora@bora.com")
-                            .phone("010-1234-5678")
-                            .build();
+                .username("이보라")
+                .password("123456")
+                .passwordCheck("123456")
+                .email("mungtique@gmail.com")
+                .phone("010-1234-5678")
+                .build();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        JoinRes joinRes = JoinRes.builder()
+                .id(1L)
+                .username("이보라")
+                .password("123456")
+                .email("mungtique@gmail.com")
+                .phone("010-1234-5678")
+                .build();
 
-        HttpEntity<JoinReq> requestEntity = new HttpEntity<>(joinReq, headers);
+        when(userService.createUser(joinReq)).thenReturn(joinRes);
 
-        // when
-        ResponseEntity<UserEntity> responseEntity = restTemplate.postForEntity("/api/v1/join", requestEntity, UserEntity.class);
+        // When // Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/join")
+                        .content(objectMapper.writeValueAsString(joinReq))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.username").value("이보라"))
+                .andExpect(jsonPath("$.email").value("mungtique@gmail.com"));
+    }
 
-        // then
-        //assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        //assertThat(responseEntity.getBody()).isNotNull();
-        //assertThat(responseEntity.getBody().getUsername()).isEqualTo("bora");
+    @DisplayName("user 회원가입 시 Conflict 상태가 발생한다.")
+    @Test
+    public void registerUser_Conflict() throws Exception {
+        // Given
+        JoinReq joinReq = JoinReq.builder()
+                .username("이보라")
+                .password("123456")
+                .passwordCheck("123456")
+                .email("mungtique@gmail.com")
+                .phone("010-1234-5678")
+                .build();
 
-        // TODO : 이게 아닌데...
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND); // 리다이렉션 상태
-        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/user/login"); // 리다이렉션 경로
+        when(userService.createUser(joinReq)).thenThrow(new IllegalArgumentException());
+
+        // When // Then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/join")
+                        .content(objectMapper.writeValueAsString(joinReq))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @DisplayName("user 정보를 가져온다.")
+    @Test
+    public void getUserById() throws Exception {
+        // Given
+        String userId = "1L";
+        UserRes userRes = UserRes.builder()
+                .username("이보라")
+                .email("mungtique@gmail.com")
+                .phone("010-1234-5678")
+                .build();
+
+        when(userService.getUserInfo(userId)).thenReturn(userRes);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/{userId}", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("이보라"))
+                .andExpect(jsonPath("$.email").value("mungtique@gmail.com"));
     }
 }

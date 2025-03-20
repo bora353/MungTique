@@ -55,19 +55,7 @@ class PaymentServiceImplTest {
                 .cardCVC("353")
                 .build();
 
-        Payment cardPayment = Payment.builder()
-                .reservationId(1L)
-                .userId(999L)
-                .amount(30000)
-                .paymentMethod(PaymentMethod.CARD)
-                .cardNumber("123456780000")
-                .cardExpiry("12/34")
-                .cardCVC("353")
-                .paymentStatus(PaymentStatus.PENDING)
-                .build();
-
         PaymentSuccessMessage successMessage = new PaymentSuccessMessage(1L, 1L);
-
         doNothing().when(reservationEventPort).sendPaymentSuccessEvent(successMessage);
 
         // when
