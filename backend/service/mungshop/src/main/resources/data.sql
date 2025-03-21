@@ -6,58 +6,6 @@ VALUES
     ('센트럴동물병원', '경기 화성시 동탄지성로 102 하나로프라자', 'ALL', '9:30 AM - 20:00 PM', 'SUNDAY', '37.2081031', '127.0641932','/images/mungshop/shop4.jpg'),
     ('멍화만사성', '경기 화성시 동탄지성로 143 2층', 'ALL', '8:00 AM - 20:30 PM', 'TUESDAY', '37.2095214', '127.0595995','/images/mungshop/shop5.jpg');
 
-INSERT INTO mung_shop_reservation (reservation_date, reservation_time, status, mung_shop_id)
-VALUES
-    (CURRENT_DATE, '10:00', 'AVAILABLE', 1),
-    (CURRENT_DATE, '11:00', 'BOOKED', 1),
-    (CURRENT_DATE, '12:00', 'BOOKED', 1),
-    (CURRENT_DATE, '14:00', 'BOOKED', 1),
-    (CURRENT_DATE, '15:00', 'AVAILABLE', 1),
-    (CURRENT_DATE, '16:00', 'BOOKED', 1),
-    (CURRENT_DATE, '17:00', 'AVAILABLE', 1),
-    (CURRENT_DATE + INTERVAL '1' DAY, '10:00', 'AVAILABLE', 1),
-    (CURRENT_DATE + INTERVAL '1' DAY, '14:00', 'AVAILABLE', 1),
-
-    (CURRENT_DATE, '10:00', 'BOOKED', 2),
-    (CURRENT_DATE, '11:00', 'AVAILABLE', 2),
-    (CURRENT_DATE, '12:00', 'AVAILABLE', 2),
-    (CURRENT_DATE, '14:00', 'BOOKED', 2),
-    (CURRENT_DATE, '15:00', 'AVAILABLE', 2),
-    (CURRENT_DATE, '16:00', 'BOOKED', 2),
-    (CURRENT_DATE, '17:00', 'BOOKED', 2),
-    (CURRENT_DATE + INTERVAL '1' DAY, '14:00', 'AVAILABLE', 2),
-    (CURRENT_DATE + INTERVAL '1' DAY, '15:00', 'AVAILABLE', 2),
-
-    (CURRENT_DATE, '10:00', 'BOOKED', 3),
-    (CURRENT_DATE, '11:00', 'AVAILABLE', 3),
-    (CURRENT_DATE, '12:00', 'BOOKED', 3),
-    (CURRENT_DATE, '14:00', 'AVAILABLE', 3),
-    (CURRENT_DATE, '15:00', 'AVAILABLE', 3),
-    (CURRENT_DATE, '16:00', 'BOOKED', 3),
-    (CURRENT_DATE, '17:00', 'AVAILABLE', 3),
-    (CURRENT_DATE + INTERVAL '1' DAY, '11:00', 'AVAILABLE', 3),
-    (CURRENT_DATE + INTERVAL '1' DAY, '16:00', 'AVAILABLE', 3),
-
-    (CURRENT_DATE, '10:00', 'BOOKED', 4),
-    (CURRENT_DATE, '11:00', 'AVAILABLE', 4),
-    (CURRENT_DATE, '12:00', 'BOOKED', 4),
-    (CURRENT_DATE, '14:00', 'AVAILABLE', 4),
-    (CURRENT_DATE, '15:00', 'AVAILABLE', 4),
-    (CURRENT_DATE, '16:00', 'BOOKED', 4),
-    (CURRENT_DATE, '17:00', 'AVAILABLE', 4),
-    (CURRENT_DATE + INTERVAL '1' DAY, '14:00', 'AVAILABLE', 4),
-    (CURRENT_DATE + INTERVAL '1' DAY, '16:00', 'AVAILABLE', 4),
-
-    (CURRENT_DATE, '10:00', 'BOOKED', 5),
-    (CURRENT_DATE, '11:00', 'AVAILABLE', 5),
-    (CURRENT_DATE, '12:00', 'BOOKED', 5),
-    (CURRENT_DATE, '14:00', 'AVAILABLE', 5),
-    (CURRENT_DATE, '15:00', 'AVAILABLE', 5),
-    (CURRENT_DATE, '16:00', 'BOOKED', 5),
-    (CURRENT_DATE, '17:00', 'AVAILABLE', 5),
-    (CURRENT_DATE + INTERVAL '1' DAY, '10:00', 'AVAILABLE', 5),
-    (CURRENT_DATE + INTERVAL '1' DAY, '16:00', 'AVAILABLE', 5);
-
 
 INSERT INTO mung_shop_price (breed_type, service_type, price, mung_shop_id)
 VALUES
