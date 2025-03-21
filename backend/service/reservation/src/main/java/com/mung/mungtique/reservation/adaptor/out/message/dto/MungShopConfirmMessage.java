@@ -1,4 +1,4 @@
-package com.mung.mungtique.reservation.adaptor.out.message;
+package com.mung.mungtique.reservation.adaptor.out.message.dto;
 
 import lombok.Builder;
 

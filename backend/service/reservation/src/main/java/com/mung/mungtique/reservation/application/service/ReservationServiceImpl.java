@@ -3,7 +3,9 @@ package com.mung.mungtique.reservation.application.service;
 import com.mung.mungtique.reservation.adaptor.in.message.dto.PaymentSuccessMessage;
 import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationReq;
 import com.mung.mungtique.reservation.adaptor.in.web.dto.ReservationRes;
+import com.mung.mungtique.reservation.adaptor.out.message.dto.MungShopConfirmMessage;
 import com.mung.mungtique.reservation.application.port.in.ReservationService;
+import com.mung.mungtique.reservation.application.port.out.message.MungShopEventPort;
 import com.mung.mungtique.reservation.application.port.out.persistence.ReservationRepoPort;
 import com.mung.mungtique.reservation.application.port.out.web.MungShopApiPort;
 import com.mung.mungtique.reservation.application.service.mapper.ReservationMapperImpl;
@@ -25,12 +27,13 @@ public class ReservationServiceImpl implements ReservationService {
     private final MungShopApiPort mungShopApiPort;
     private final ReservationRepoPort reservationRepoPort;
     private final ReservationMapperImpl mapper;
+    private final MungShopEventPort mungShopEventPort;
 
     @Override
     @Transactional
     public Long create(ReservationReq request) {
         // MungShop 서비스에서 예약 가능 시간 확인
-        boolean isAvailable = mungShopApiPort.checkAvailableTime(request.mungShopId(), request.reservationTime());
+        boolean isAvailable = mungShopApiPort.lockAndCheckAvailability(request.mungShopId(), request.reservationTime());
         log.info("isAvailable: {}", isAvailable);
 
         if (!isAvailable) {
@@ -79,5 +82,12 @@ public class ReservationServiceImpl implements ReservationService {
         log.info("예약 상태가 'PAID'로 변경되었습니다.");
 
         return reservation;
+    }
+
+    @Override
+    public void sendReservationConfirmToMungShop(PaymentSuccessMessage message) {
+        Reservation reservation = reservationRepoPort.findById(message.reservationId()).orElseThrow(() -> new IllegalStateException("예약번호로 예약정보를 찾을 수 없습니다."));
+        MungShopConfirmMessage event = mapper.toMungShopConfirmMessage(reservation.getMungShopId(), reservation.getReservationDate(), reservation.getReservationTime());
+        mungShopEventPort.sendReservationConfirmToMungShop(event);
     }
 }

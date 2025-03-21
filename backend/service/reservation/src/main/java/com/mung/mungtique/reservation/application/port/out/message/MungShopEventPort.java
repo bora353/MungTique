@@ -1,8 +1,8 @@
-package com.mung.mungtique.payment.application.port.out.message;
+package com.mung.mungtique.reservation.application.port.out.message;
 
-import com.mung.mungtique.payment.adaptor.out.message.dto.PaymentSuccessMessage;
+import com.mung.mungtique.reservation.adaptor.out.message.dto.MungShopConfirmMessage;
 
-public interface ReservationEventPort {
+public interface MungShopEventPort {
 
-    void sendPaymentSuccessEvent(PaymentSuccessMessage message);
+    void sendReservationConfirmToMungShop(MungShopConfirmMessage event);
 }

@@ -1,7 +1,10 @@
 package com.mung.mungtique.mungshop.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -33,5 +36,17 @@ public class MungShopReservation extends BaseTime {
         this.reservationTime = reservationTime;
         this.status = status;
         this.mungShopId = mungShopId;
+    }
+
+    public MungShopReservation confirmReservation(MungShopReservation reservation) {
+        this.reservationDate = reservation.getReservationDate();
+        this.reservationTime = reservation.getReservationTime();
+        this.status = MungShopReservationStatus.BOOKED;
+
+        return this;
+    }
+
+    public void changeAvailableTime() {
+        this.status = MungShopReservationStatus.AVAILABLE;
     }
 }

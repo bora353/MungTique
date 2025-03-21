@@ -6,21 +6,38 @@ import com.mung.mungtique.mungshop.domain.MungShopReservationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class MungShopReservationRepoAdaptor implements MungShopReservationRepoPort {
 
-    private final MungShopReservationRepo mungShopReservationRepo;
+    private final MungShopReservationRepo reservationRepo;
 
     @Override
     public List<MungShopReservation> findByMungShopIdAndStatus(Long mungShopId, MungShopReservationStatus mungShopReservationStatus) {
-        return mungShopReservationRepo.findByMungShopIdAndStatus(mungShopId, mungShopReservationStatus);
+        return reservationRepo.findByMungShopIdAndStatus(mungShopId, mungShopReservationStatus);
     }
 
     @Override
-    public Boolean existsByMungShopIdAndReservationTimeAndStatus(Long mungShopId, String reservationTime, MungShopReservationStatus status) {
-        return mungShopReservationRepo.existsByMungShopIdAndReservationTimeAndStatus(mungShopId, reservationTime, status);
+    public int updateStatusIfAvailable(Long mungShopId, String reservationTime, MungShopReservationStatus oldStatus, MungShopReservationStatus newStatus) {
+        return reservationRepo.updateStatusIfAvailable(mungShopId, reservationTime, oldStatus, newStatus);
+    }
+
+    @Override
+    public Optional<MungShopReservation> findById(Long mungShopId) {
+        return reservationRepo.findById(mungShopId);
+    }
+
+    @Override
+    public List<MungShopReservation> findReservationsWithStatusUpdatedBefore(MungShopReservationStatus status, LocalDateTime expirationTime) {
+        return reservationRepo.findExpiredReservationsByStatus(status, expirationTime);
+    }
+
+    @Override
+    public MungShopReservation save(MungShopReservation reservation) {
+        return reservationRepo.save(reservation);
     }
 }

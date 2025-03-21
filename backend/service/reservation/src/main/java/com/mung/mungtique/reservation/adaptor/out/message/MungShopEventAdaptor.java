@@ -1,7 +1,7 @@
-package com.mung.mungtique.payment.adaptor.out.message;
+package com.mung.mungtique.reservation.adaptor.out.message;
 
-import com.mung.mungtique.payment.adaptor.out.message.dto.PaymentSuccessMessage;
-import com.mung.mungtique.payment.application.port.out.message.ReservationEventPort;
+import com.mung.mungtique.reservation.adaptor.out.message.dto.MungShopConfirmMessage;
+import com.mung.mungtique.reservation.application.port.out.message.MungShopEventPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,22 +13,21 @@ import java.util.concurrent.CompletableFuture;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ReservationEventAdaptor implements ReservationEventPort {
+public class MungShopEventAdaptor implements MungShopEventPort {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
-    public void sendPaymentSuccessEvent(PaymentSuccessMessage event) {
-
+    public void sendReservationConfirmToMungShop(MungShopConfirmMessage event) {
         CompletableFuture<SendResult<String, Object>> future =
-                kafkaTemplate.send("payment-success-topic", event);
+                kafkaTemplate.send("payment-mungshop-success-topic", event);
 
         future.whenComplete((result, failure) -> {
             if (result != null) {
-                log.info("예약 시스템에 결제 완료 이벤트 전송 성공: {}",
+                log.info("뭉샵에 결제 완료 이벤트 전송 성공: {}",
                         result.getProducerRecord().value());
             } else if (failure != null) {
-                log.error("예약 시스템에 결제 완료 이벤트 전송 실패. 오류 메시지: {}", failure.getMessage(), failure);
+                log.error("뭉샵에 결제 완료 이벤트 전송 실패. 오류 메시지: {}", failure.getMessage(), failure);
             }
         });
     }

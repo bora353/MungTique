@@ -21,14 +21,14 @@ public class ReservationEventAdaptor implements ReservationEventPort {
     public void sendPaymentSuccessEvent(PaymentSuccessMessage event) {
 
         CompletableFuture<SendResult<String, Object>> future =
-                kafkaTemplate.send("payment-success-topic", event);
+                kafkaTemplate.send("payment-reservation-success-topic", event);
 
         future.whenComplete((result, failure) -> {
             if (result != null) {
-                log.info("결제 완료 이벤트 전송 성공: {}",
+                log.info("예약 시스템에 결제 완료 이벤트 전송 성공: {}",
                         result.getProducerRecord().value());
             } else if (failure != null) {
-                log.error("결제 완료 이벤트 전송 실패. 오류 메시지: {}", failure.getMessage(), failure);
+                log.error("예약 시스템에 결제 완료 이벤트 전송 실패. 오류 메시지: {}", failure.getMessage(), failure);
             }
         });
     }

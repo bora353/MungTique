@@ -28,10 +28,10 @@ public class MungShopReservationController {
 
     @Operation(summary = "애견샵 예약 가능한 시간인지 체크한다")
     @GetMapping("/mungshops/{mungShopId}/check-availability")
-    public ResponseEntity<Boolean> checkAvailableTime(
+    public ResponseEntity<Boolean> lockAndCheckAvailability(
                                             @PathVariable Long mungShopId,
                                             @RequestParam String reservationTime) {
         log.info("Mungshop check time availability : mungshopId {} resevationTime {}", mungShopId, reservationTime);
-        return ResponseEntity.ok(mungShopReservationService.checkAvailableTime(mungShopId, reservationTime));
+        return ResponseEntity.ok(mungShopReservationService.lockAndCheckAvailability(mungShopId, reservationTime));
     }
 }

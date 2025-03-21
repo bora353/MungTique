@@ -1,5 +1,6 @@
 package com.mung.mungtique.mungshop.infrastructure.config;
 
+import com.mung.mungtique.mungshop.adaptor.in.message.dto.MungShopConfirmMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -48,9 +49,9 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory(Object.class));
+    public ConcurrentKafkaListenerContainerFactory<String, MungShopConfirmMessage> mungShopKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MungShopConfirmMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory(MungShopConfirmMessage.class));
         factory.setCommonErrorHandler(new DefaultErrorHandler((record, ex) -> {
             log.error("Error is {} : data {}", ex.getMessage(), record);
         }, new FixedBackOff(100, 3)));

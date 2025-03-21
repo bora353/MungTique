@@ -14,7 +14,7 @@ public class MungShopApiAdaptor implements MungShopApiPort {
     private final MungShopApi mungShopApi;
 
     @Override
-    public boolean checkAvailableTime(Long mungShopId, String reservationTime) {
-        return mungShopApi.checkAvailableTime(mungShopId, reservationTime);
+    public boolean lockAndCheckAvailability(Long mungShopId, String reservationTime) {
+        return mungShopApi.lockAndCheckAvailability(mungShopId, reservationTime);
     }
 }

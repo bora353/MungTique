@@ -14,10 +14,11 @@ public class PaymentConsumer {
 
     private final ReservationService reservationService;
 
-    @KafkaListener(topics = "payment-success-topic", containerFactory = "paymentKafkaListenerContainerFactory")
+    @KafkaListener(topics = "payment-reservation-success-topic", containerFactory = "paymentKafkaListenerContainerFactory")
     public void paymentSuccessListener(PaymentSuccessMessage message) {
         log.info("결제 완료 이벤트 수신: {}", message);
 
         reservationService.updateReservationToPaid(message);
+        reservationService.sendReservationConfirmToMungShop(message);
     }
 }

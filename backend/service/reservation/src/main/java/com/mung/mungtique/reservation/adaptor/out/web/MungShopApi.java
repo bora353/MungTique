@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "mungshop-service")
 public interface MungShopApi {
 
-//    @GetMapping("/api/v1/mungshop-service/mungshops/{mungShopId}/check-availability")
     @GetMapping("/api/v1/mungshops/{mungShopId}/check-availability")
-    boolean checkAvailableTime(@PathVariable("mungShopId") Long mungShopId,
+    boolean lockAndCheckAvailability(@PathVariable("mungShopId") Long mungShopId,
                                 @RequestParam String reservationTime);
 }
 

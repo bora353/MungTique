@@ -12,6 +12,6 @@ public interface ReservationService {
     List<ReservationRes> getReservationsByUser(Long userId);
     Boolean cancelReservation(Long reservationId);
     ReservationRes getReservation(Long reservationId);
-
     Reservation updateReservationToPaid(PaymentSuccessMessage message);
+    void sendReservationConfirmToMungShop(PaymentSuccessMessage message);
 }
