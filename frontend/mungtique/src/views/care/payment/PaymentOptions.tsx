@@ -64,17 +64,23 @@ export default function PaymentOptions({
 
     const formatCardNumber = (num: string) => {
       return num
-        .replace(/\D/g, "")
-        .replace(/(\d{4})/g, "$1-")
-        .replace(/-$/, "");
+        .replace(/\D/g, "") // 숫자만 남김
+        .slice(0, 16) // 12자리로 제한
+        .replace(/(\d{4})/g, "$1-") // 4자리마다 '-' 추가
+        .replace(/-$/, ""); // 마지막 '-' 제거
     };
-
+  
     const formatExpiryDate = (date: string) => {
       return date
-        .replace(/\D/g, "")
+        .replace(/\D/g, "") // 숫자만 남김
+        .slice(0, 4) // 4자리로 제한 (MMYY 형식)
         .replace(/(\d{2})(\d{1,2})?/, (_, m, y) => (y ? `${m}/${y}` : m));
     };
-
+  
+    const formatCVC = (cvc: string) => {
+      return cvc.replace(/\D/g, "").slice(0, 3); // 숫자만, 3자리 제한
+    };
+  
     setCardInfo({
       ...cardInfo,
       [name]:
@@ -82,6 +88,8 @@ export default function PaymentOptions({
           ? formatCardNumber(value)
           : name === "cardExpiry"
           ? formatExpiryDate(value)
+          : name === "cardCVC"
+          ? formatCVC(value)
           : value,
     });
   };
@@ -99,10 +107,18 @@ export default function PaymentOptions({
   const handlePayment = () => {
     // 결제 수단별 유효성 검사
     if (paymentInfo.paymentMethod === "CARD") {
-      if (!cardInfo.cardNumber || !cardInfo.cardExpiry || !cardInfo.cardCVC) {
-        alert("카드 정보를 모두 입력해주세요.");
-        return;
-      }
+      if (!/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(cardInfo.cardNumber)) {
+        alert("카드번호는 16자리 숫자여야 합니다.");
+    return;
+  }
+  if (!/^\d{2}\/\d{2}$/.test(cardInfo.cardExpiry)) {
+    alert("유효기간은 MM/YY 형식이어야 합니다.");
+    return;
+  }
+  if (!/^\d{3}$/.test(cardInfo.cardCVC)) {
+    alert("CVC는 3자리 숫자여야 합니다.");
+    return;
+  }
 
       // 카드 정보 추가
       setPaymentInfo({

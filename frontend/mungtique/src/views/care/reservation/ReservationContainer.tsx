@@ -21,6 +21,12 @@ export default function ReservationContainer() {
   } = useReservationStore();
 
   useEffect(() => {
+    if (!selectedDate) {
+      setSelectedDate(dayjs().add(1, "day")); 
+    }
+  }, [selectedDate, setSelectedDate]);
+
+  useEffect(() => {
     // TODO : 추후 매달마다 정보 가져오게 변경하기
     api()
       .get(
@@ -102,6 +108,7 @@ export default function ReservationContainer() {
             <StaticDatePicker
               value={selectedDate}
               onChange={(newDate) => setSelectedDate(newDate)}
+              shouldDisableDate={(date) => date.isBefore(dayjs(), "day") || date.isSame(dayjs(), "day")} 
               slots={{ actionBar: () => null }}
             />
           </LocalizationProvider>
