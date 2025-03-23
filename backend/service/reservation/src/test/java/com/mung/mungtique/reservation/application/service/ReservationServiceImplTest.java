@@ -65,7 +65,7 @@ class ReservationServiceImplTest {
                 .requestMessage("잘 부탁드려요~")
                 .build();
 
-        when(mungShopApiPort.lockAndCheckAvailability(reservationReq.mungShopId(), reservationReq.reservationTime())).thenReturn(true);
+        when(mungShopApiPort.lockAndCheckAvailability(reservationReq.mungShopId(), reservationReq.reservationDate(), reservationReq.reservationTime())).thenReturn(true);
 
         // when
         long reservationId = reservationService.create(reservationReq);
