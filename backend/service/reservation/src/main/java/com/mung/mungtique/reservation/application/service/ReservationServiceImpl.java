@@ -33,7 +33,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public Long create(ReservationReq request) {
         // MungShop 서비스에서 예약 가능 시간 확인
-        boolean isAvailable = mungShopApiPort.lockAndCheckAvailability(request.mungShopId(), request.reservationTime());
+        boolean isAvailable = mungShopApiPort.lockAndCheckAvailability(request.mungShopId(), request.reservationDate(), request.reservationTime());
         log.info("isAvailable: {}", isAvailable);
 
         if (!isAvailable) {
