@@ -12,6 +12,7 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useReservationStore } from "../reservation/reservation.store";
+import { api } from "../../../shared/api/ApiInterceptor";
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -25,11 +26,40 @@ export default function MapMarkerInfo({
   onSearch,
 }: MarkerInfoProps) {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
   const [activeTab, setActiveTab] = useState("홈");
-  const {
-    setSelectedMungShop,
-    setSelectedMungShopId,
-  } = useReservationStore();
+  const { setSelectedMungShop, setSelectedMungShopId } = useReservationStore();
+
+  const handleReservationClick = async () => {
+    if (!userId) {
+      alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+      navigate("/login");
+      return;
+    }
+
+    if (!selectedMarker) {
+      alert("매장이 선택되지 않았습니다.");
+      return;
+    }
+
+    try {
+      const response = await api().get(`/dog-service/dogs/${userId}`);
+
+      console.log(response.data);
+
+      if (response.data.length === 0) {
+        alert("마이뭉 먼저 등록해주세요.");
+        navigate("/mypage");
+        return;
+      }
+
+      setSelectedMungShopId(selectedMarker.mungShopId);
+      setSelectedMungShop(selectedMarker.storeName);
+      navigate(`/reservation`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div style={{ width: "27%", overflowY: "auto", maxHeight: "100%" }}>
@@ -60,11 +90,7 @@ export default function MapMarkerInfo({
                   color="warning"
                   variant="contained"
                   fullWidth
-                  onClick={() => {
-                    navigate(`/reservation`);
-                    setSelectedMungShopId(selectedMarker.mungShopId);
-                    setSelectedMungShop(selectedMarker.storeName);
-                  }}
+                  onClick={handleReservationClick}
                 >
                   예약하기
                 </Button>
