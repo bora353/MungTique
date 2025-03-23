@@ -16,7 +16,7 @@ public class PaymentConsumer {
 
     @KafkaListener(topics = "payment-mungshop-success-topic", containerFactory = "mungShopKafkaListenerContainerFactory")
     public void paymentSuccessListener(MungShopConfirmMessage message) {
-        log.info("결제 완료 이벤트 수신: {}", message);
+        log.info("뭉샵 - 결제 완료 이벤트 수신: {}", message);
 
         mungShopReservationService.confirmReservation(message);
     }

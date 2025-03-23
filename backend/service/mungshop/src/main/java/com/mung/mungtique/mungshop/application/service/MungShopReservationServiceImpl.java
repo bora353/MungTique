@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,9 +40,10 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
 
     @Transactional
     @Override
-    public Boolean lockAndCheckAvailability(Long mungShopId, String reservationTime) {
+    public Boolean lockAndCheckAvailability(Long mungShopId, LocalDate reservationDate, String reservationTime) {
         int updatedRows = reservationRepoPort.updateStatusIfAvailable(
                                                                         mungShopId,
+                                                                        reservationDate,
                                                                         reservationTime,
                                                                         MungShopReservationStatus.AVAILABLE,
                                                                         MungShopReservationStatus.PENDING_PAYMENT
@@ -53,9 +55,13 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
     @Transactional
     @Override
     public MungShopReservation confirmReservation(MungShopConfirmMessage message) {
-        MungShopReservation reservation = reservationRepoPort.findById(message.mungShopId()).orElseThrow(() -> new IllegalStateException("예약을 찾을 수 없습니다."));
-
-        return reservation.confirmReservation(reservation);
+        log.info(message.mungShopId());
+        MungShopReservation reservation = reservationRepoPort.findByMungShopIdAndReservationDateAndReservationTime(
+                message.mungShopId(),
+                message.reservationDate(),
+                message.reservationTime()).orElseThrow(() -> new IllegalStateException("예약을 찾을 수 없습니다."));
+        log.info("reservation: {}", reservation);
+        return reservation.confirmReservation();
     }
 
     @Transactional
@@ -78,15 +84,16 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
     @Override
     public void initializeReservationSlots() {
         List<MungShop> shops = mungShopRepoPort.findAll();
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(clock);
 
-        // 앞으로 7일간 데이터 생성
-        for (int dayOffset = 0; dayOffset < 7; dayOffset++) {
+        List<MungShopReservation> reservations = new ArrayList<>();
+
+        // 내일부터 7일간 데이터 생성
+        for (int dayOffset = 1; dayOffset <= 7; dayOffset++) {
             LocalDate date = today.plusDays(dayOffset);
 
             for (MungShop shop : shops) {
-                // 10:00부터 20:00까지 1시간 간격으로 생성
-                for (int hour = 10; hour <= 17; hour++) {
+                for (int hour = 9; hour <= 18; hour++) {
                     String time = String.format("%02d:00", hour);
 
                     MungShopReservation reservation = MungShopReservation.builder()
@@ -96,10 +103,11 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
                             .status(MungShopReservationStatus.AVAILABLE)
                             .build();
 
-                    reservationRepoPort.save(reservation);
+                    reservations.add(reservation);
                 }
             }
         }
+        reservationRepoPort.saveAll(reservations);
     }
 }
 

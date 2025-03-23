@@ -6,6 +6,7 @@ import com.mung.mungtique.mungshop.domain.MungShopReservationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +23,8 @@ public class MungShopReservationRepoAdaptor implements MungShopReservationRepoPo
     }
 
     @Override
-    public int updateStatusIfAvailable(Long mungShopId, String reservationTime, MungShopReservationStatus oldStatus, MungShopReservationStatus newStatus) {
-        return reservationRepo.updateStatusIfAvailable(mungShopId, reservationTime, oldStatus, newStatus);
+    public int updateStatusIfAvailable(Long mungShopId, LocalDate reservationDate, String reservationTime, MungShopReservationStatus oldStatus, MungShopReservationStatus newStatus) {
+        return reservationRepo.updateStatusIfAvailable(mungShopId, reservationDate, reservationTime, oldStatus, newStatus);
     }
 
     @Override
@@ -39,5 +40,15 @@ public class MungShopReservationRepoAdaptor implements MungShopReservationRepoPo
     @Override
     public MungShopReservation save(MungShopReservation reservation) {
         return reservationRepo.save(reservation);
+    }
+
+    @Override
+    public List<MungShopReservation> saveAll(List<MungShopReservation> reservations) {
+        return reservationRepo.saveAll(reservations);
+    }
+
+    @Override
+    public Optional<MungShopReservation> findByMungShopIdAndReservationDateAndReservationTime(Long mungShopId, LocalDate reservationDate, String reservationTime) {
+        return reservationRepo.findByMungShopIdAndReservationDateAndReservationTime(mungShopId, reservationDate, reservationTime);
     }
 }

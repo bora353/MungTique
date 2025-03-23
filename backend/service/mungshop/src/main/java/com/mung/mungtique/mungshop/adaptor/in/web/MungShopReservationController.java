@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,12 +27,14 @@ public class MungShopReservationController {
         return ResponseEntity.ok(mungShopReservationService.getAvailableReservationInfo(mungShopId));
     }
 
-    @Operation(summary = "애견샵 예약 가능한 시간인지 체크한다")
+    @Operation(summary = "애견샵 예약 가능한 시간인지 체크하고 10분간 시간에 lock 건다.")
     @GetMapping("/mungshops/{mungShopId}/check-availability")
     public ResponseEntity<Boolean> lockAndCheckAvailability(
-                                            @PathVariable Long mungShopId,
-                                            @RequestParam String reservationTime) {
-        log.info("Mungshop check time availability : mungshopId {} resevationTime {}", mungShopId, reservationTime);
-        return ResponseEntity.ok(mungShopReservationService.lockAndCheckAvailability(mungShopId, reservationTime));
+            @PathVariable Long mungShopId,
+            @RequestParam LocalDate reservationDate,
+            @RequestParam String reservationTime) {
+        log.info("Mungshop check time availability : mungshopId {} reservationDate {} reservationTime {}", mungShopId, reservationDate, reservationTime);
+
+        return ResponseEntity.ok(mungShopReservationService.lockAndCheckAvailability(mungShopId, reservationDate, reservationTime));
     }
 }

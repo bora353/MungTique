@@ -38,9 +38,7 @@ public class MungShopReservation extends BaseTime {
         this.mungShopId = mungShopId;
     }
 
-    public MungShopReservation confirmReservation(MungShopReservation reservation) {
-        this.reservationDate = reservation.getReservationDate();
-        this.reservationTime = reservation.getReservationTime();
+    public MungShopReservation confirmReservation() {
         this.status = MungShopReservationStatus.BOOKED;
 
         return this;

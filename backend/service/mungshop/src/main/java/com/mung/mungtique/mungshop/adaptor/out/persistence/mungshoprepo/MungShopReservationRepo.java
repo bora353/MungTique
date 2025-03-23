@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface MungShopReservationRepo extends JpaRepository<MungShopReservation, Long> {
     List<MungShopReservation> findByMungShopIdAndStatus(Long mungShopId, MungShopReservationStatus status);
@@ -16,9 +18,11 @@ public interface MungShopReservationRepo extends JpaRepository<MungShopReservati
     @Modifying
     @Query("UPDATE MungShopReservation m SET m.status = :newStatus " +
             "WHERE m.mungShopId = :mungShopId " +
+            "AND m.reservationDate = :reservationDate " +
             "AND m.reservationTime = :reservationTime " +
             "AND m.status = :oldStatus")
     int updateStatusIfAvailable(@Param("mungShopId") Long mungShopId,
+                                @Param("reservationDate") LocalDate reservationDate,
                                 @Param("reservationTime") String reservationTime,
                                 @Param("oldStatus") MungShopReservationStatus oldStatus,
                                 @Param("newStatus") MungShopReservationStatus newStatus);
@@ -29,4 +33,8 @@ public interface MungShopReservationRepo extends JpaRepository<MungShopReservati
     List<MungShopReservation> findExpiredReservationsByStatus(
             @Param("status") MungShopReservationStatus status,
             @Param("updatedBefore") LocalDateTime updatedBefore);
+
+    Optional<MungShopReservation> findByMungShopId(Long mungShopId);
+
+    Optional<MungShopReservation> findByMungShopIdAndReservationDateAndReservationTime(Long mungShopId, LocalDate reservationDate, String reservationTime);
 }
