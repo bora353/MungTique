@@ -29,7 +29,8 @@ public class CorsGlobalConfiguration {
 
         http.authorizeExchange((auth) -> auth
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .pathMatchers("/actuator/**", "/h2-console/**").permitAll()
+                        .pathMatchers("/h2-console/**").permitAll()
+                        .pathMatchers("/payment-service/actuator/**", "/user-service/actuator/**", "/mungshop-service/actuator/**", "/dog-service/actuator/**", "/reservation-service/actuator/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/join").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/mail-send").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/user-service/login").permitAll()
