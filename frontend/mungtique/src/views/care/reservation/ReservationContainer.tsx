@@ -107,7 +107,7 @@ export default function ReservationContainer() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <StaticDatePicker
               value={selectedDate}
-              onChange={(newDate) => setSelectedDate(newDate)}
+              onChange={(newDate) => {setSelectedDate(newDate); setSelectedTime(null);}}
               shouldDisableDate={(date) => date.isBefore(dayjs(), "day") || date.isSame(dayjs(), "day")} 
               slots={{ actionBar: () => null }}
             />
@@ -116,7 +116,6 @@ export default function ReservationContainer() {
       </div>
       {/* 시간 선택 */}
       <div className="w-full max-w-md bg-white p-4 mt-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold">오후</h2>
         <div className="grid grid-cols-4 gap-2 mt-2">
           {allTimes.map((time) => (
             <button

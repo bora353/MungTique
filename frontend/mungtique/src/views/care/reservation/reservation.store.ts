@@ -30,6 +30,7 @@ interface ReservationStore {
   setReserveUserName: (name: string) => void;
   setReserveUserPhone: (phone: string) => void;
   setRequestMessage: (request: string) => void;
+  resetStore: () => void;
 }
 
 export const useReservationStore = create<ReservationStore>()(
@@ -59,6 +60,20 @@ export const useReservationStore = create<ReservationStore>()(
       setReserveUserName: (name) => set({ reserveUserName: name }),
       setReserveUserPhone: (phone) => set({ reserveUserPhone: phone }),
       setRequestMessage: (messeage) => set({ requestMessage: messeage }),
+      resetStore: () => set({
+        selectedMungShopId: null,
+        selectedMungShop: null,
+        selectedDogId: null,
+        selectedDog: null,
+        selectedService: null,
+        selectedDate: null,
+        selectedTime: null,
+        breedType: null,
+        availableTimes: [],
+        reserveUserName: null,
+        reserveUserPhone: null,
+        requestMessage: null
+      }),
     }),
     {
       name: "reservation-storage", // localStorage에 저장될 키 이름

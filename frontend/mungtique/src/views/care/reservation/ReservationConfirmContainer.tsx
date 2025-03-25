@@ -23,6 +23,7 @@ export default function ReservationConfirm() {
     setReserveUserName,
     setReserveUserPhone,
     setRequestMessage,
+    resetStore
   } = useReservationStore();
 
   const handleReservationSubmit = async () => {
@@ -52,6 +53,7 @@ export default function ReservationConfirm() {
       console.log("예약 성공:", reservationId);
 
       localStorage.removeItem("reservation-storage");
+      resetStore();
 
       navigate("/payment", { state: { reservationId } });
     } catch (error) {
