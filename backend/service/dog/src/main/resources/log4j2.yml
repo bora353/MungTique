@@ -10,7 +10,7 @@ Configuration:
       - name: "charset-UTF-8"
         value: "UTF-8"
       - name: "pattern"
-        value: "%highlight{[%-5level]} %d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%F] %c{1} - %msg%n"
+        value: "%highlight{[%-5level] [%X{traceId},%X{spanId}]} %d{yyyy-MM-dd HH:mm:ss.SSS}\t [%t][%F] %c{1} - %msg%n"
       - name : "log-file-path"
         value : "./logs/${service-name}.log"
       - name : "archive-directory"
