@@ -37,10 +37,10 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         config.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, KafkaProperties.IsolationLevel.READ_COMMITTED.toString().toLowerCase());
 
-        JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(type);
+        JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(type, false);
         jsonDeserializer.addTrustedPackages("*");
         jsonDeserializer.setRemoveTypeHeaders(false);
-        jsonDeserializer.setUseTypeMapperForKey(true);
+        jsonDeserializer.setUseTypeHeaders(true);
 
         ErrorHandlingDeserializer<String> keyDeserializer = new ErrorHandlingDeserializer<>(new StringDeserializer());
         ErrorHandlingDeserializer<T> valueDeserializer = new ErrorHandlingDeserializer<>(jsonDeserializer);
@@ -53,8 +53,8 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, MungShopConfirmMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory(MungShopConfirmMessage.class));
         factory.setCommonErrorHandler(new DefaultErrorHandler((record, ex) -> {
-            log.error("Error is {} : data {}", ex.getMessage(), record);
-        }, new FixedBackOff(100, 3)));
+            log.error("Kafka Consumer Error: {} \nRecord: {}", ex.getMessage(), record, ex);
+        }, new FixedBackOff(1000, 3)));
         factory.setConcurrency(1);
         factory.setAutoStartup(true);
 

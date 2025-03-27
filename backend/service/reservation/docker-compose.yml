@@ -1,26 +1,23 @@
-version: '3.8'
-
 services:
   reservation-service:
     container_name: reservation-service
-    image: mungtique/reservation:${MUNGTIQUE_VERSION}
+    image: gaeun0811/reservation-service:${MUNGTIQUE_VERSION}
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - RESERVATION_DB_URL=${RESERVATION_DB_URL}
+      - DB_URL=${RESERVATION_DB_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
       - KAFKA_URI=${KAFKA_URI}
       - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
-
+      - ZIPKIN_SERVER_URL=${ZIPKIN_SERVER_URL}
     ports:
-      - "8083:8080"
+      - "8085:8080"
     volumes:
       - ${HOST_OPERATION_DIR_PATH}/reservation/logs:/logs
     depends_on:
-      reservation-db:
-        condition: service_healthy
+      - reservation-db
     networks:
       - mungtique
 
@@ -31,19 +28,19 @@ services:
     environment:
       POSTGRES_USER: ${PG_ID}
       POSTGRES_PASSWORD: ${PG_PW}
-      POSTGRES_DB: reservation
     ports:
-      - "54324:5432"
+      - "54325:5432"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/reservation/sql-init:/docker-entrypoint-initdb.d
-      - ${HOST_OPERATION_DIR_PATH}/mount/reservation/db:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#      - ${HOST_OPERATION_DIR_PATH}/reservation/sql-init:/docker-entrypoint-initdb.d
+#      - ${HOST_OPERATION_DIR_PATH}/mount/reservation/db:/var/lib/postgresql/data
+      - reservation-db-init:/docker-entrypoint-initdb.d
+      - reservation-db-data:/var/lib/postgresql/data
     networks:
       - mungtique
+
+volumes:
+  reservation-db-data:
+  reservation-db-init:
 
 networks:
   mungtique:

@@ -15,7 +15,7 @@ allprojects {
 
 subprojects {
 	group = 'com.mung.mungtique'
-	version = '0.0.1-SNAPSHOT'
+	version = '1.0'
 
 	apply {
 		plugin 'java'

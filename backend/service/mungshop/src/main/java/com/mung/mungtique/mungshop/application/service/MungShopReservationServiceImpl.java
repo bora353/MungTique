@@ -34,7 +34,6 @@ public class MungShopReservationServiceImpl implements MungShopReservationServic
     @Override
     public List<MungShopReservationRes> getAvailableReservationInfo(Long mungShopId) {
         List<MungShopReservation> mungShopReservations = reservationRepoPort.findByMungShopIdAndStatus(mungShopId, MungShopReservationStatus.AVAILABLE);
-        log.info("mungShopReservations: {}", mungShopReservations);
         return mapper.toMungShopReservationRes(mungShopReservations);
     }
 

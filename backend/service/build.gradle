@@ -14,8 +14,8 @@ allprojects {
 }
 
 subprojects {
-    group = 'com.mung'
-    version = '0.0.1-SNAPSHOT'
+    group = 'com.mung.mungtique'
+    version = '1.0'
 
     apply plugin: "java"
     apply plugin: "org.springframework.boot"

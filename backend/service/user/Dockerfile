@@ -7,3 +7,6 @@ ENV TZ=Asia/Seoul
 ARG JAR_FILE=./build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
+
+#docker build -t gaeun0811/user-service:1.0 .
+#docker push gaeun0811/user-service:1.0

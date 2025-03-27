@@ -1,8 +1,9 @@
-version: '3.8'
-
 include:
-  - ./user/docker-compose.yml
-  - ./care/docker-compose.yml
+#  - ./user/docker-compose.yml
+#  - ./dog/docker-compose.yml
+  - ./mungshop/docker-compose.yml
+#  - ./reservation/docker-compose.yml
+#  - ./payment/docker-compose.yml
 
 networks:
   mungtique:

@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
   eureka-1:
-    image: mungtique/eureka:${PRODUCT_VERSION}
+    image: gaeun0811/eureka:${PRODUCT_VERSION}
     container_name: eureka-1
     restart: always
     ports:
@@ -36,7 +34,7 @@ services:
 #      retries: 10
 
   gateway:
-    image: mungtique/gateway:${PRODUCT_VERSION}
+    image: gaeun0811/gateway:${PRODUCT_VERSION}
     container_name: gateway
     restart: always
     depends_on:

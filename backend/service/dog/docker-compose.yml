@@ -1,26 +1,23 @@
-version: '3.8'
-
 services:
   dog-service:
     container_name: dog-service
-    image: mungtique/dog:${MUNGTIQUE_VERSION}
+    image: gaeun0811/dog-service:${MUNGTIQUE_VERSION}
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - dog_DB_URL=${dog_DB_URL}
+      - DB_URL=${DOG_DB_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
       - KAFKA_URI=${KAFKA_URI}
       - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
-
+      - ZIPKIN_SERVER_URL=${ZIPKIN_SERVER_URL}
     ports:
       - "8083:8080"
     volumes:
       - ${HOST_OPERATION_DIR_PATH}/dog/logs:/logs
     depends_on:
-      dog-db:
-        condition: service_healthy
+      - dog-db
     networks:
       - mungtique
 
@@ -31,19 +28,19 @@ services:
     environment:
       POSTGRES_USER: ${PG_ID}
       POSTGRES_PASSWORD: ${PG_PW}
-      POSTGRES_DB: dog
     ports:
-      - "54324:5432"
+      - "54323:5432"
     volumes:
-      - ${HOST_OPERATION_DIR_PATH}/dog/sql-init:/docker-entrypoint-initdb.d
-      - ${HOST_OPERATION_DIR_PATH}/mount/dog/db:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#      - ${HOST_OPERATION_DIR_PATH}/dog/sql-init:/docker-entrypoint-initdb.d
+#      - ${HOST_OPERATION_DIR_PATH}/mount/dog/db:/var/lib/postgresql/data
+      - dog-db-init:/docker-entrypoint-initdb.d
+      - dog-db-data:/var/lib/postgresql/data
     networks:
       - mungtique
+
+volumes:
+  dog-db-data:
+  dog-db-init:
 
 networks:
   mungtique:

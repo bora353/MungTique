@@ -19,24 +19,24 @@ scrape_configs: # 스크랩할 대상
   - job_name: "user-service"
     metrics_path: "/user-service/actuator/prometheus"
     static_configs:
-      - targets: ["192.168.219.107:8000"]
+      - targets: ["gateway:8000"]
 
   - job_name: "mungshop-service"
     metrics_path: "/mungshop-service/actuator/prometheus"
     static_configs:
-      - targets: ["192.168.219.107:8000"]
+      - targets: ["gateway:8000"]
 
   - job_name: "dog-service"
     metrics_path: "/dog-service/actuator/prometheus"
     static_configs:
-      - targets: ["192.168.219.107:8000"]
+      - targets: ["gateway:8000"]
 
   - job_name: "reservation-service"
     metrics_path: "/reservation-service/actuator/prometheus"
     static_configs:
-      - targets: ["192.168.219.107:8000"]
+      - targets: ["gateway:8000"]
 
   - job_name: "payment-service"
     metrics_path: "/payment-service/actuator/prometheus"
     static_configs:
-      - targets: ["192.168.219.107:8000"]
+      - targets: ["gateway:8000"]

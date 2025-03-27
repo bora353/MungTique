@@ -8,4 +8,5 @@ ARG JAR_FILE=./build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 
-#docker build -t mungtique/eureka:0.0.1 .
+#docker build -t gaeun0811/eureka:1.0 .
+#docker push gaeun0811/eureka:1.0

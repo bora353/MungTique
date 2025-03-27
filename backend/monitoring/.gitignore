@@ -3,3 +3,4 @@
 /postgresql/**
 /grafana/grafana-volume/**
 /prometheus/prometheus-volume/**
+/prometheus/config/*.log

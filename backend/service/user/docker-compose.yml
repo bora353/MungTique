@@ -1,26 +1,25 @@
-version: '3.8'
-
 services:
   user-service:
     container_name: user-service
-    image: mungtique/user:${MUNGTIQUE_VERSION}
+    image: gaeun0811/user-service:${MUNGTIQUE_VERSION}
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - DB_URL=${USER_DB_URL}
+      - PG_ID=${PG_ID}
+      - PG_PW=${PG_PW}
       - KAFKA_URI=${KAFKA_URI}
       - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
-      - PG_ID=${PG_ID}
-      - PG_PW=${PG_PW}
       - REDIS_IP=${REDIS_IP}
       - REDIS_PORT=${REDIS_PORT}
+      - ZIPKIN_SERVER_URL=${ZIPKIN_SERVER_URL}
     ports:
       - "8082:8080"
     volumes:
       - ${HOST_OPERATION_DIR_PATH}/user/logs:/logs
     depends_on:
-      user-db:
-        condition: service_healthy
+      - user-db
     networks:
       - mungtique
 
@@ -32,17 +31,12 @@ services:
       POSTGRES_USER: ${PG_ID}
       POSTGRES_PASSWORD: ${PG_PW}
     ports:
-      - "54323:5432"
+      - "54322:5432"
     volumes:
 #      - ${HOST_OPERATION_DIR_PATH}/user/sql-init:/docker-entrypoint-initdb.d
 #      - ${HOST_OPERATION_DIR_PATH}/user/db:/var/lib/postgresql/data
       - user-db-init:/docker-entrypoint-initdb.d
       - user-db-data:/var/lib/postgresql/data
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER}" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
     networks:
       - mungtique
 
