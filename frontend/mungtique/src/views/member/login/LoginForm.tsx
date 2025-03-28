@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Login } from "../../../shared/types/login.interface";
 import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 
@@ -8,7 +8,6 @@ interface LoginProps {
 }
 
 export default function LoginForm({ onsubmit }: LoginProps) {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -39,7 +38,6 @@ export default function LoginForm({ onsubmit }: LoginProps) {
     try {
       //console.log("loginDTO", loginDTO);
       await onsubmit(loginDTO);
-      navigate("/");
     } catch (error) {
       setSnackbarMessage("로그인에 실패했습니다.");
       setOpenSnackbar(true);

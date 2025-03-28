@@ -68,7 +68,7 @@ export default function MyPageContainer() {
           <h1 className="text-2xl font-bold">My Page</h1>
           <div className="flex space-x-2">
             <MuiButton
-              value="반려뭉 등록"
+              value="🐶 등록"
               color="warning"
               type="button"
               variant="contained"

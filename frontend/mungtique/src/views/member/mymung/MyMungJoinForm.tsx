@@ -10,6 +10,9 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarType, setSnackbarType] = useState<
+    "error" | "warning" | "info" | "success"
+  >("error");
 
   const [mungJoinForm, setMungJoinForm] = useState({
     dogName: "",
@@ -49,6 +52,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
     console.log("mungJoinDTO", mungJoinDTO);
     onsubmit(mungJoinDTO);
+    setSnackbarType("info");
     setSnackbarMessage("등록 완료! 마이페이지로 이동합니다.");
     setOpenSnackbar(true);
 
@@ -59,15 +63,15 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
   return (
     <div className="p-8 max-w-md mx-auto bg-white rounded-3xl shadow-lg border-2 border-pink-200">
-    <div className="flex flex-col items-center mb-6">
-      <h1 className="text-3xl font-bold text-pink-500">
-        My Mung 등록
-        <span className="ml-2" role="img" aria-label="dog">
-          🐶
-        </span>
-      </h1>
-      <div className="w-16 h-1 bg-pink-300 rounded-full mt-2"></div>
-    </div>
+      <div className="flex flex-col items-center mb-6">
+        <h1 className="text-3xl font-bold text-pink-500">
+          My Mung 등록
+          <span className="ml-2" role="img" aria-label="dog">
+            🐶
+          </span>
+        </h1>
+        <div className="w-16 h-1 bg-pink-300 rounded-full mt-2"></div>
+      </div>
 
       {/* 폼 입력 */}
       <form onSubmit={handleSubmit} className="mt-6">
@@ -87,8 +91,8 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           />
         </div>
 
- {/* 품종 선택 */}
- <div className="mb-5">
+        {/* 품종 선택 */}
+        <div className="mb-5">
           <label className="block text-pink-600 text-sm font-medium mb-2">
             품종 <span className="text-pink-400">♥</span>
           </label>
@@ -107,8 +111,8 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           </select>
         </div>
 
-             {/* 몸무게와 나이 입력 (2열 배치) */}
-             <div className="grid grid-cols-2 gap-4 mb-5">
+        {/* 몸무게와 나이 입력 (2열 배치) */}
+        <div className="grid grid-cols-2 gap-4 mb-5">
           {/* 몸무게 입력 */}
           <div>
             <label className="block text-pink-600 text-sm font-medium mb-2">
@@ -124,8 +128,8 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
             />
           </div>
 
-           {/* 나이 입력 */}
-           <div>
+          {/* 나이 입력 */}
+          <div>
             <label className="block text-pink-600 text-sm font-medium mb-2">
               나이 <span className="text-pink-400">♥</span>
             </label>
@@ -140,8 +144,8 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           </div>
         </div>
 
-         {/* 성별 선택 */}
-         <div className="mb-5">
+        {/* 성별 선택 */}
+        <div className="mb-5">
           <label className="block text-pink-600 text-sm font-medium mb-2">
             성별 <span className="text-pink-400">♥</span>
           </label>
@@ -170,7 +174,6 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
             </button>
           </div>
         </div>
-
 
         {/* 중성화 여부 선택 */}
         <div className="mb-6">
@@ -210,7 +213,9 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
             className="w-full p-4 bg-pink-500 hover:bg-pink-600 text-white font-medium rounded-xl shadow-md transition-colors flex items-center justify-center"
           >
             <span className="mr-2">마이뭉 등록 완료</span>
-            <span role="img" aria-label="paw">🐾</span>
+            <span role="img" aria-label="paw">
+              🐾
+            </span>
           </button>
         </div>
       </form>

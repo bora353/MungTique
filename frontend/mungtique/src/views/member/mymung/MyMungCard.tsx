@@ -62,7 +62,7 @@ export default function MyMungCard() {
             >
               <CardContent className="text-center">
                 <Typography variant="body1" color="text.secondary">
-                  반려견 정보를 등록하세요! 🐾
+                  강아지 정보를 등록하세요! 🐾
                 </Typography>
               </CardContent>
             </Card>

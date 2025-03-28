@@ -119,7 +119,7 @@ export default function PaymentCompleteContainer() {
                 </span>
               </div>
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-gray-500">반려견</span>
+                <span className="text-gray-500">강아지 이름</span>
                 <span className="font-medium text-gray-800">
                   {reservation?.dogName} ({reservation?.breedType})
                 </span>

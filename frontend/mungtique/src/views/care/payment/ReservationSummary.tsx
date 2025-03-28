@@ -28,7 +28,7 @@ export default function ReservationSummary({
             <p className="font-medium">🐶 {reservation?.storeName} </p>
           </div>
           <div>
-            <p className="text-gray-600">반려뭉 이름</p>
+            <p className="text-gray-600">강아지 이름</p>
             <p className="font-medium">{reservation?.dogName}</p>
           </div>
           <div>

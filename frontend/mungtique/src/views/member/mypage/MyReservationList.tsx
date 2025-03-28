@@ -280,7 +280,7 @@ export default function MyReservationList() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">반려견 정보</p>
+                        <p className="text-sm text-gray-500">강아지 정보</p>
                         <div className="mt-2 space-y-2">
                           <div className="flex justify-between">
                             <span className="text-sm text-gray-500">이름</span>
