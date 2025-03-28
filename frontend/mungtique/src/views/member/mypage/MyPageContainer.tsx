@@ -65,7 +65,7 @@ export default function MyPageContainer() {
       <div className="flex-1 p-6">
         {/* 헤더 영역 */}
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">My Page</h1>
+          <h1 className="text-2xl font-bold">나의 뭉티끄</h1>
           <div className="flex space-x-2">
             <MuiButton
               value="🐶 등록"

@@ -24,7 +24,7 @@ export default function Sidebar({ setSelectedMenu }: SidebarProps) {
             }`}
             onClick={() => handleMenuClick("home")}
           >
-            🏠 홈
+            🐶 뭉티끄
           </li>
           <li
             className={`p-2 rounded cursor-pointer ${

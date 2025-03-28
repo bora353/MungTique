@@ -43,11 +43,7 @@ export default function MyMungCard() {
 
   return (
     <div className="p-6 bg-gray-50 rounded-lg shadow-md">
-      <Typography variant="h5" fontWeight="bold" className="mb-4 text-gray-800">
-        나의 🐶
-      </Typography>
-
-      <Grid container spacing={3}>
+       <Grid container spacing={3}>
         {myMungs.length === 0 ? (
           <Grid item xs={12} className="flex justify-center">
             <Card
