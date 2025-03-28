@@ -10,11 +10,6 @@ services:
       - EUREKA_SERVER_CLUSTER_URL=${EUREKA_SERVER_CLUSTER_URL_1}
     networks:
       - mungtique
-    healthcheck:
-      test: ["CMD-SHELL", 'curl --fail --silent localhost:8761/actuator/health | grep ''"status":"UP"'' || exit 1']
-      interval: 10s
-      timeout: 2s
-      retries: 10
 
 #  eureka-2:
 #    image: mungtique/eureka:${PRODUCT_VERSION}
@@ -38,8 +33,7 @@ services:
     container_name: gateway
     restart: always
     depends_on:
-      eureka-1:
-        condition: service_healthy
+      - eureka-1
     ports:
       - "8000:8000"
     environment:

@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -65,11 +64,13 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**", "/h2-console/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/join", "/reissue").permitAll()
 
-                        .requestMatchers("/**").access(
-                                new WebExpressionAuthorizationManager("hasIpAddress('localhost') " +
-                                        "or hasIpAddress('127.0.0.1') or hasIpAddress('192.168.219.107')")) // host pc ip address
+//                        .requestMatchers("/**").access(
+//                                new WebExpressionAuthorizationManager("hasIpAddress('localhost') " +
+//                                        "or hasIpAddress('127.0.0.1') or hasIpAddress('192.168.219.107')")) // host pc ip address
 
-                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll() // TODO: 추후 수정 필요
+
+                                .anyRequest().authenticated()
                 )
 
                 // jwt 로그인 필터 적용 (UsernamePasswordAuthenticationFilter를 대체해서 실행)

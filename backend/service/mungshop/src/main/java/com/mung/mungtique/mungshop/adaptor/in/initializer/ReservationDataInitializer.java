@@ -1,4 +1,4 @@
-package com.mung.mungtique.mungshop.adaptor.in.scheduler;
+package com.mung.mungtique.mungshop.adaptor.in.initializer;
 
 import com.mung.mungtique.mungshop.application.port.in.MungShopReservationService;
 import lombok.RequiredArgsConstructor;
