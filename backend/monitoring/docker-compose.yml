@@ -16,7 +16,7 @@ services:
       - mungtique
   
   zipkin-mysql:
-    image: mysql:5.7
+    image: mysql
     container_name: zipkin-mysql
     platform: linux/amd64
     volumes:
@@ -69,52 +69,52 @@ services:
     networks:
       - mungtique
 
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    ports:
-      - "5432:5432"
-    restart: always
-    environment:
-      POSTGRES_USER: mungtique
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: mungmung
-      TZ: Asia/Seoul
-    volumes:
-      - /postgresql/data:/var/lib/postgresql/data
-    networks:
-      - mungtique
+  # postgres:
+  #   image: postgres:latest
+  #   container_name: postgres
+  #   ports:
+  #     - "5432:5432"
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: mungtique
+  #     POSTGRES_PASSWORD: 1234
+  #     POSTGRES_DB: mungmung
+  #     TZ: Asia/Seoul
+  #   volumes:
+  #     - /postgresql/data:/var/lib/postgresql/data
+  #   networks:
+  #     - mungtique
 
-  pg_exporter:
-    image: prometheuscommunity/postgres-exporter:v0.11.1
-    container_name: pg_exporter
-    ports:
-      - "9187:9187"
-    environment:
-      - DATA_SOURCE_NAME=postgresql://mungtique:1234@postgres:5432/mungmung?sslmode=disable
-    networks:
-      - mungtique
+  # pg_exporter:
+  #   image: prometheuscommunity/postgres-exporter:v0.11.1
+  #   container_name: pg_exporter
+  #   ports:
+  #     - "9187:9187"
+  #   environment:
+  #     - DATA_SOURCE_NAME=postgresql://mungtique:1234@postgres:5432/mungmung?sslmode=disable
+  #   networks:
+  #     - mungtique
 
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./loki/loki-config.yml:/etc/loki/loki-config.yml
-    command: -config.file=/etc/loki/loki-config.yml
-    networks:
-      - mungtique
+  # loki:
+  #   image: grafana/loki:latest
+  #   container_name: loki
+  #   ports:
+  #     - "3100:3100"
+  #   volumes:
+  #     - ./loki/loki-config.yml:/etc/loki/loki-config.yml
+  #   command: -config.file=/etc/loki/loki-config.yml
+  #   networks:
+  #     - mungtique
 
-  promtail:
-    image: grafana/promtail:latest
-    container_name: promtail
-    volumes:
-      - ../service/logs:/var/logs
-      - ./loki/promtail-config.yml:/etc/promtail/promtail-config.yml
-    command: -config.file=/etc/promtail/promtail-config.yml
-    networks:
-      - mungtique
+  # promtail:
+  #   image: grafana/promtail:latest
+  #   container_name: promtail
+  #   volumes:
+  #     - ../service/logs:/var/logs
+  #     - ./loki/promtail-config.yml:/etc/promtail/promtail-config.yml
+  #   command: -config.file=/etc/promtail/promtail-config.yml
+  #   networks:
+  #     - mungtique
 
 networks:
   mungtique:

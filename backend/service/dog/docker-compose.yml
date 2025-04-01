@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
-      - DB_URL=${DOG_DB_URL}
+      - DOG_DB_URL=${DOG_DB_URL}
       - PG_ID=${PG_ID}
       - PG_PW=${PG_PW}
       - KAFKA_URI=${KAFKA_URI}
