@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${RESERVATION_DB_URL}:5432/postgres
+    username: ${PG_ID}
+    password: ${PG_PW}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  sql:
+    init:
+      mode: never
+
+  kafka:
+    bootstrap-servers: ${KAFKA_URI}
+    consumer:
+      group-id: ${KAFKA_GROUP_ID}
+
+management:
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_SERVER_URL}
