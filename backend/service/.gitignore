@@ -2,6 +2,8 @@
 **/application-prod.yml
 **/application-test.yml
 
+**/secret.yml
+
 **/mount/**
 .env
 .env.cpy
