@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: gaeun0811/payment-service:${MUNGTIQUE_VERSION}
+          image: gaeun0811/payment-service:1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8086

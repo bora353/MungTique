@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: gaeun0811/user-service:${MUNGTIQUE_VERSION}
+          image: gaeun0811/user-service:1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8082

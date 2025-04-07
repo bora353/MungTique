@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: dog-service
-          image: gaeun0811/dog-service:${MUNGTIQUE_VERSION}
+          image: gaeun0811/dog-service:1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8083
