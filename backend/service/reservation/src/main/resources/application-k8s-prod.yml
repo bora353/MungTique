@@ -23,3 +23,5 @@ management:
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_SERVER_URL}
+
+mungshop-service-url: ${MUNGSHOP_SERVICE_URL}

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 
 @Component
-@FeignClient(name = "mungshop-service")
+@FeignClient(name = "mungshop-service", url = "${mungshop-service-url}")
 public interface MungShopApi {
 
     @GetMapping("/api/v1/mungshops/{mungShopId}/check-availability")
