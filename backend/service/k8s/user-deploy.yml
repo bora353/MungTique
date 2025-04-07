@@ -1,0 +1,245 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deploy
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: gaeun0811/user-service:${MUNGTIQUE_VERSION}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1000Mi
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: SPRING_PROFILES_ACTIVE
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: USER_DB_URL
+            - name: KAFKA_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: KAFKA_URI
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: KAFKA_GROUP_ID
+            - name: EUREKA_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: EUREKA_SERVER_URL
+            - name: REDIS_IP
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: REDIS_IP
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: REDIS_PORT
+            - name: ZIPKIN_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: ZIPKIN_SERVER_URL
+            - name: ACCESS_EXPIRATION_TIME
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: ACCESS_EXPIRATION_TIME
+            - name: REFRESH_EXPIRATION_TIME
+              valueFrom:
+                configMapKeyRef:
+                  name: k8s-configmap
+                  key: REFRESH_EXPIRATION_TIME
+
+            # 🔒 Secret 값 적용
+            - name: PG_ID
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: PG_ID
+            - name: PG_PW
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: PG_PW
+            - name: TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: TOKEN_SECRET
+            - name: MAIL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: MAIL_HOST
+            - name: MAIL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: MAIL_PORT
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: MAIL_USERNAME
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: MAIL_PASSWORD
+
+            # 🔒 OAuth Secret 적용
+            - name: NAVER_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: NAVER_CLIENT_ID
+            - name: NAVER_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: NAVER_CLIENT_SECRET
+            - name: KAKAO_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: KAKAO_CLIENT_ID
+            - name: KAKAO_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: KAKAO_CLIENT_SECRET
+
+          volumeMounts:
+            - name: logs
+              mountPath: /logs
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: user-logs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  type: NodePort
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+      nodePort: 30002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+        - name: user-db
+          image: postgres:latest
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: PG_ID
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: PG_PW
+          volumeMounts:
+            - name: db-init
+              mountPath: /docker-entrypoint-initdb.d
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: db-init
+          persistentVolumeClaim:
+            claimName: user-db-init-pvc
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: user-db-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db
+spec:
+  type: NodePort
+  selector:
+    app: user-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+      nodePort: 31002
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: user-logs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: user-db-init-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: user-db-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
