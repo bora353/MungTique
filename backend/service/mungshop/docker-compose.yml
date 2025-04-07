@@ -14,6 +14,7 @@ services:
       - REDIS_IP=${REDIS_IP}
       - REDIS_PORT=${REDIS_PORT}
       - ZIPKIN_SERVER_URL=${ZIPKIN_SERVER_URL}
+      - MUNGSHOP_SERVICE_URL=${MUNGSHOP_SERVICE_URL}
     ports:
       - "8084:8080"
     volumes:
