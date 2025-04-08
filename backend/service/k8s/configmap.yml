@@ -4,7 +4,7 @@ metadata:
   name: k8s-configmap
 data:
   SPRING_PROFILES_ACTIVE: "k8s-prod"
-  KAFKA_URI: "http://192.168.49.2:29092,http://192.168.49.2:29093,http://192.168.49.2:29094"
+  KAFKA_URI: "192.168.49.2:29092,192.168.49.2:29093,192.168.49.2:29094"
   KAFKA_GROUP_ID: "mungtique-service"
   REDIS_IP: "192.168.49.2"
   REDIS_PORT: "6379"
