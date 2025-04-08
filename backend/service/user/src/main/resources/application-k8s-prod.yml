@@ -43,23 +43,37 @@ spring:
       client:
         registration:
           naver:
+            client-name: naver
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
             redirect-uri: ${NAVER_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            scope:
+              - name
+              - email
+              -
           kakao:
+            client-name: kakao
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
             redirect-uri: ${KAKAO_REDIRECT_URI}
             authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - profile_nickname
+              -
         provider:
           naver:
             authorization-uri: ${NAVER_AUTHORIZATION_URI}
             token-uri: ${NAVER_TOKEN_URI}
             user-info-uri: ${NAVER_USER_INFO_URI}
+            user-name-attribute: response
+
           kakao:
             authorization-uri: ${KAKAO_AUTHORIZATION_URI}
             token-uri: ${KAKAO_TOKEN_URI}
             user-info-uri: ${KAKAO_USER_INFO_URI}
+            user-name-attribute: id
 
 management:
   zipkin:
