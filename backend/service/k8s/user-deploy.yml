@@ -86,6 +86,11 @@ spec:
                 secretKeyRef:
                   name: k8s-secret
                   key: PG_PW
+            - name: CORS_ALLOWED_ORIGINS
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: CORS_ALLOWED_ORIGINS                  
             - name: TOKEN_SECRET
               valueFrom:
                 secretKeyRef:

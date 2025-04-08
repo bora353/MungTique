@@ -1,3 +1,6 @@
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -16,8 +19,8 @@ spring:
 
   jwt:
     secret: ${TOKEN_SECRET}
-    access-expiration: ${ACCESS_EXPIRATION_TIME} # 10분
-    refresh-expiration: ${REFRESH_EXPIRATION_TIME} # 24시간
+    access-expiration: ${ACCESS_EXPIRATION_TIME}
+    refresh-expiration: ${REFRESH_EXPIRATION_TIME}
 
   kafka:
     bootstrap-servers: ${KAFKA_URI}
