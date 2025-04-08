@@ -29,7 +29,7 @@ spec:
                 configMapKeyRef:
                   name: k8s-configmap
                   key: SPRING_PROFILES_ACTIVE
-            - name: DB_URL
+            - name: PAYMENT_DB_URL
               valueFrom:
                 configMapKeyRef:
                   name: k8s-configmap
