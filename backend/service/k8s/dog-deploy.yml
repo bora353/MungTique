@@ -70,6 +70,22 @@ spec:
                 secretKeyRef:
                   name: k8s-secret
                   key: PG_PW
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: AWS_ACCESS_KEY
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: AWS_SECRET_KEY
+            - name: FILE_SERVER_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-secret
+                  key: FILE_SERVER_BUCKET
+
           volumeMounts:
             - name: logs
               mountPath: /logs

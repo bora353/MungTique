@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: reservation-service
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${RESERVATION_DB_URL}:5432/postgres
@@ -19,13 +22,24 @@ spring:
     consumer:
       group-id: ${KAFKA_GROUP_ID}
 
+eureka:
+  client:
+    enabled: false
+
 management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: B3
+      produce: B3_MULTI
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_SERVER_URL}
 
-eureka:
-  client:
-    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh, info, metrics, prometheus
 
 mungshop-service-url: ${MUNGSHOP_SERVICE_URL}

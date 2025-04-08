@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: dog-service
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DOG_DB_URL}:5432/postgres
@@ -19,11 +22,34 @@ spring:
     consumer:
       group-id: ${KAFKA_GROUP_ID}
 
+cloud:
+  aws:
+    s3:
+      bucket: ${FILE_SERVER_BUCKET}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+
 eureka:
   client:
     enabled: false
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: B3
+      produce: B3_MULTI
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_SERVER_URL}
+
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh, info, metrics, prometheus

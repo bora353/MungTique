@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: mungshop-service
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${MUNGSHOP_DB_URL}:5432/postgres
@@ -29,6 +32,17 @@ eureka:
     enabled: false
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: B3
+      produce: B3_MULTI
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_SERVER_URL}
+
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh, info, metrics, prometheus
