@@ -24,6 +24,10 @@ spring:
       host: ${REDIS_IP}
       port: ${REDIS_PORT}
 
+eureka:
+  client:
+    enabled: false
+
 management:
   zipkin:
     tracing:

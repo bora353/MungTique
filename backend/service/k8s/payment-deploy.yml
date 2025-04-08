@@ -44,11 +44,6 @@ spec:
                 configMapKeyRef:
                   name: k8s-configmap
                   key: KAFKA_GROUP_ID
-            - name: EUREKA_SERVER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: k8s-configmap
-                  key: EUREKA_SERVER_URL
             - name: REDIS_IP
               valueFrom:
                 configMapKeyRef:
