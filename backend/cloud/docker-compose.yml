@@ -39,6 +39,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
+      - TOKEN_SECRET=${TOKEN_SECRET}
     networks:
       - mungtique
 

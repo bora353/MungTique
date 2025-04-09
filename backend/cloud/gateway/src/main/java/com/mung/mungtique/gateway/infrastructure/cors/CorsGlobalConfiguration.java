@@ -61,7 +61,7 @@ public class CorsGlobalConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://example.com")); // TODO : 배포시 변경
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://gateway.local")); // TODO : 배포시 변경
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
