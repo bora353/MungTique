@@ -1,5 +1,5 @@
 **/application.yml
-**/application-prod.yml
+#**/application-prod.yml
 **/application-test.yml
 
 **/secret.yml
