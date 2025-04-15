@@ -1,0 +1,131 @@
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(name: 'ONLY_DEPLOY_K8S', defaultValue: false, description: '✅ 체크 시: Build & Push를 건너뛰고 Kubernetes만 배포합니다.')
+    }
+
+    environment {
+        DOCKER_HUB = "gaeun0811"
+        IMAGE_VERSION = "1.0"
+        SERVICES = "user dog mungshop reservation payment"
+        DOCKER_USERNAME = credentials('dockerhub-username')
+        DOCKER_PASSWORD = credentials('dockerhub-password')
+        KUBECONFIG = "${env.WORKSPACE}/kubeconfig"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/bora353/MungTique.git'
+            }
+        }
+
+        stage('Prepare Gradle') {
+            steps {
+                    dir('backend/service') {
+                        sh 'echo "현재 경로: $(pwd)"'
+                        sh 'ls -al'
+                        sh 'chmod +x gradlew'
+                    }
+                }
+            }
+
+        stage('Check Docker PATH') {
+            steps {
+                sh 'echo $PATH'
+                sh 'which docker || echo "docker not found"'
+                sh 'docker --version || echo "docker command failed"'
+            }
+        }
+
+        stage('Build & Push All Services') {
+            when {
+                expression { return !params.ONLY_DEPLOY_K8S }
+            }
+            steps {
+                script {
+                    def services = SERVICES.split()
+                    for (svc in services) {
+                        dir("backend/service/${svc}") {
+                            echo "Building ${svc}..."
+                            sh '../gradlew build -x test'
+                            sh "docker build -t $DOCKER_HUB/${svc}-service:$IMAGE_VERSION ."
+                        }
+                    }
+
+                    echo "DockerHub 로그인"
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+
+                    for (svc in services) {
+                        sh "docker push $DOCKER_HUB/${svc}-service:$IMAGE_VERSION"
+                        echo "${svc} pushed!"
+                    }
+                }
+            }
+        }
+
+        stage('Setup Kubeconfig') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBE_CONF')]) {
+                    sh 'cp $KUBE_CONF kubeconfig'
+                }
+            }
+        }
+
+        stage('Create k8s-secret from .env') {
+            steps {
+                withCredentials([file(credentialsId: 'env-secret-file', variable: 'ENV_FILE')]) {
+                    sh '''
+                        echo "Deleting old secret if exists"
+                        kubectl delete secret k8s-secret --ignore-not-found
+
+                        echo "Creating k8s-secret from .env"
+
+                        echo "env file contents:"
+                        cat $ENV_FILE
+
+                        echo "Creating secret..."
+                        kubectl create secret generic k8s-secret \
+                            --from-env-file=$ENV_FILE \
+                            --dry-run=client -o yaml | kubectl apply -f -
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    echo 'Deploying all services to Kubernetes...'
+                    dir('backend/service/k8s') {
+                        sh 'kubectl apply -f configmap.yml'
+
+                        def services = SERVICES.split()
+                        for (svc in services) {
+                            def deployFile = "${svc}-deploy.yml"
+                            if (fileExists(deployFile)) {
+                                sh "kubectl apply -f ${deployFile}"
+                            } else {
+                                echo "${deployFile} not found, skipping."
+                            }
+                        }
+                    }
+                    echo 'All services deployed!'
+                }
+            }
+        }
+
+        stage('Cleanup Docker Images') {
+            steps {
+                sh 'docker images -qf dangling=true | xargs -r docker rmi || true'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

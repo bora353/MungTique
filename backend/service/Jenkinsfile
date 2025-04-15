@@ -1,0 +1,168 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB = "gaeun0811"
+        IMAGE_VERSION = "1.0"
+        GATEWAY_SERVICES = "eureka gateway"
+        SERVICES = "user dog mungshop reservation payment"
+        DOCKER_USERNAME = credentials('dockerhub-username')
+        DOCKER_PASSWORD = credentials('dockerhub-password')
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/bora353/MungTique.git'
+            }
+        }
+
+        stage('Copy .env Files') {
+            steps {
+                script {
+                    withCredentials([
+                        file(credentialsId: 'env-infra', variable: 'INFRA_ENV'),
+                        file(credentialsId: 'env-gateway', variable: 'GATEWAY_ENV'),
+                        file(credentialsId: 'env-service', variable: 'SERVICE_ENV')
+                    ]) {
+                        sh '''
+                            echo "복사 중..."
+
+                            cp $INFRA_ENV backend/infra/.env
+                            cp $GATEWAY_ENV backend/gateway/.env
+                            cp $SERVICE_ENV backend/service/.env
+
+                            echo ".env 파일 복사 완료"
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Docker Compose Up - Infra') {
+                steps {
+                    dir("backend/infra") {
+                        sh 'echo "현재 경로: $(pwd)"'
+                        sh 'docker-compose up -d'
+                        sh 'sleep 20'
+                    }
+                }
+        }
+
+
+        stage('Docker Compose Up - Monitoring') {
+            steps {
+                dir("backend/monitoring") {
+                    sh 'echo "현재 경로: $(pwd)"'
+                    sh 'docker-compose up -d'
+                    sh 'sleep 20'
+                }
+            }
+        }
+
+        stage('Prepare Gradle - Gateway') {
+            steps {
+                dir('backend/gateway') {
+                    sh 'echo "현재 경로: $(pwd)"'
+                    sh 'ls -al'
+                    sh 'chmod +x gradlew'
+                    sh 'sleep 10'
+                }
+            }
+        }
+
+        stage('Check Docker PATH') {
+            steps {
+                sh 'echo $PATH'
+                sh 'which docker || echo "docker not found"'
+                sh 'docker --version || echo "docker command failed"'
+            }
+        }
+
+        stage('Build & Push Gateway Services') {
+            steps {
+                script {
+                    def services = GATEWAY_SERVICES.split()
+                    for (svc in services) {
+                        dir("backend/gateway/${svc}") {
+                            echo "Building ${svc}..."
+                            sh '../gradlew build -x test'
+                            sh "docker build -t $DOCKER_HUB/${svc}-service:$IMAGE_VERSION ."
+                        }
+                    }
+
+                    echo "DockerHub 로그인"
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+
+                    for (svc in services) {
+                        sh "docker push $DOCKER_HUB/${svc}-service:$IMAGE_VERSION"
+                        echo "${svc} pushed!"
+                    }
+                }
+            }
+        }
+
+        stage('Docker Compose Up - Gateway') {
+            steps {
+                dir("backend/gateway") {
+                    sh 'echo "현재 경로: $(pwd)"'
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+
+        stage('Prepare Gradle - Service') {
+            steps {
+                    dir('backend/service') {
+                        sh 'echo "현재 경로: $(pwd)"'
+                        sh 'ls -al'
+                        sh 'chmod +x gradlew'
+                    }
+            }
+        }
+
+        stage('Build & Push All Services') {
+            steps {
+                script {
+                    def services = SERVICES.split()
+                    for (svc in services) {
+                        dir("backend/service/${svc}") {
+                            echo "Building ${svc}..."
+                            sh '../gradlew build -x test'
+                            sh "docker build -t $DOCKER_HUB/${svc}-service:$IMAGE_VERSION ."
+                        }
+                    }
+
+                    echo "DockerHub 로그인"
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+
+                    for (svc in services) {
+                        sh "docker push $DOCKER_HUB/${svc}-service:$IMAGE_VERSION"
+                        echo "${svc} pushed!"
+                    }
+                }
+            }
+        }
+
+        stage('Docker Compose Up - Services') {
+            steps {
+                dir("backend/service") {
+                    sh 'echo "현재 경로: $(pwd)"'
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+
+        stage('Cleanup Docker Images') {
+            steps {
+                sh 'docker images -qf dangling=true | xargs -r docker rmi || true'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
