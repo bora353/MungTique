@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { MungShop } from "../../../shared/types/mungshop.interface";
+import { MungShop } from "../../shared/types/mungshop.interface";
 
 interface NaverMapProps {
   currentPosition: GeolocationPosition | null;
