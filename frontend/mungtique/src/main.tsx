@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
 import { CookiesProvider } from "react-cookie";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
@@ -8,8 +7,7 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const queryClient = new QueryClient();
-
+// const queryClient = new QueryClient();
 // TODO : SnackbarProvider도 여기에 적용할 수 있으니 알아볼 것
 
 root.render(

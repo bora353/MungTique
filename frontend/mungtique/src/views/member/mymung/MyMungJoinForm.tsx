@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MyMung } from "../../../shared/types/mungjoin.interface";
+import { MyMungJoin } from "../../../shared/types/mungjoin.interface";
 
 interface MyMungJoinProps {
-  onsubmit: (mungJoinDTO: MyMung) => void;
+  onsubmit: (mungJoinDTO: MyMungJoin) => void;
 }
 
 export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarType, setSnackbarType] = useState<
-    "error" | "warning" | "info" | "success"
-  >("error");
 
   const [mungJoinForm, setMungJoinForm] = useState({
     dogName: "",
@@ -43,7 +40,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
       return;
     }
 
-    const mungJoinDTO: MyMung = {
+    const mungJoinDTO: MyMungJoin = {
       ...mungJoinForm,
       weight: Number(mungJoinForm.weight),
       age: Number(mungJoinForm.age),
@@ -52,7 +49,6 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
     console.log("mungJoinDTO", mungJoinDTO);
     onsubmit(mungJoinDTO);
-    setSnackbarType("info");
     setSnackbarMessage("등록 완료! 마이페이지로 이동합니다.");
     setOpenSnackbar(true);
 
@@ -222,7 +218,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
       {/* Snackbar 메시지 */}
       {openSnackbar && (
-        <div className="mt-4 p-1.5 bg-red-500 text-white text-center rounded-md">
+        <div className="mt-4 p-1.5 bg-green-500 text-white text-center rounded-md">
           {snackbarMessage}
         </div>
       )}

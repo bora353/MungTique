@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import Input from "@mui/joy/Input";
 
 export interface InputProps {

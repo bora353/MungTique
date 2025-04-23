@@ -1,12 +1,12 @@
 import { useMungJoinViewModelHook } from "./hook/useMungJoinViewModel.hook";
-import { MyMung } from "../../../shared/types/mungjoin.interface";
+import { MyMungJoin } from "../../../shared/types/mungjoin.interface";
 import MyMungJoinForm from "./MyMungJoinForm";
 import { useParams } from "react-router-dom";
 
 export default function MyMungUpdateContainer() {
   const { dogId } = useParams<{ dogId: string }>();
   const { mungJoinData } = useMungJoinViewModelHook();
-  const handleMungJoinSubmit = (mungJoinDTO: MyMung) =>
+  const handleMungJoinSubmit = (mungJoinDTO: MyMungJoin) =>
     mungJoinData(mungJoinDTO);
 
   return (

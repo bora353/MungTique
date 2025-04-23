@@ -15,7 +15,7 @@ export default function MungshopContainer() {
     setSelectedMarker,
   } = useSearchQueryHook(mungShops);
 
-  const { distance } = useCalculateDistance(
+  const distance = useCalculateDistance(
     selectedMarker?.latitude,
     selectedMarker?.longitude,
     currentPosition?.coords.latitude,

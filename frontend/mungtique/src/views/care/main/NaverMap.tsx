@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { MungShop } from "../../../shared/types/mungshop.interface";
 
 interface NaverMapProps {
@@ -35,7 +35,7 @@ export default function NaverMap({
           title: shop.storeName,
         });
 
-        naver.maps.Event.addListener(marker, "click", function (e) {
+        naver.maps.Event.addListener(marker, "click", function () {
           setSelectedMarker(shop);
         });
       });

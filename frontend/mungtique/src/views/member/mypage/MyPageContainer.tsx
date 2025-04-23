@@ -16,7 +16,7 @@ export default function MyPageContainer() {
   const { localLogoutData, oauth2LogoutData } = useLogoutViewModelHook();
   const [selectedMenu, setSelectedMenu] = useState<string>("home");
 
-  const handleLogout = async () => {
+  const handleLocalLogout = async () => {
     try {
       const logoutResult = await localLogoutData();
 
@@ -40,6 +40,7 @@ export default function MyPageContainer() {
 
       if (logoutResult?.status === 200) {
         localStorage.removeItem(OAUTH2_LOGIN_KEY);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
         localStorage.removeItem("userId");
         setIsOauth2Login(false);
         navigate("/");
@@ -88,7 +89,7 @@ export default function MyPageContainer() {
                 color="success"
                 type="button"
                 variant="outlined"
-                onClick={handleLogout}
+                onClick={handleLocalLogout}
               />
             )}
           </div>

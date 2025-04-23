@@ -52,7 +52,7 @@ export default function MyMungImageUploadForm({
     formData.append("dogId", dogId.toString());
 
     try {
-      const response = await api().post(
+      await api().post(
         `/dog-service/dogs/upload-image`,
         formData,
         {

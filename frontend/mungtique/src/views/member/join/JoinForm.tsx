@@ -53,12 +53,12 @@ export default function JoinForm({ onsubmit }: JoinProps) {
       const mailDTO: MailCheck = { email: email };
       const result = await userApi.mailSend(mailDTO);
       console.log("이메일 인증 요청 완료", result);
-
+      
       if (result.data === "duplicate email") {
-        showSnackbar("이미 사용된 이메일입니다.", "error");
+        showSnackbar("이미 가입된 이메일입니다.", "error");
         return;
       }
-
+      
       showSnackbar("인증 번호가 이메일로 전송되었습니다.", "info");
       setIsEmailVerified(true);
     } catch (error) {
