@@ -72,4 +72,9 @@ public class UserServiceImpl implements UserService {
         user.setLastLoginAt();
         userRepoPort.save(user);
     }
+
+    @Override
+    public boolean isEmailExists(String email) {
+        return userRepoPort.existsByEmail(email);
+    }
 }

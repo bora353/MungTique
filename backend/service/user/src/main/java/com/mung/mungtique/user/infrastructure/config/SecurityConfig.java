@@ -6,7 +6,7 @@ import com.mung.mungtique.user.application.port.in.UserService;
 import com.mung.mungtique.user.infrastructure.jwt.CustomLogoutHandler;
 import com.mung.mungtique.user.infrastructure.jwt.JwtUtil;
 import com.mung.mungtique.user.infrastructure.jwt.LoginFilter;
-import com.mung.mungtique.user.infrastructure.oauth2.CustomSuccessHandler;
+import com.mung.mungtique.user.infrastructure.oauth2.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +34,7 @@ public class SecurityConfig {
 
     private final CustomLogoutHandler logoutSuccessHandler;
     private final CustomOauth2UserService customOauth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
+    private final OAuth2SuccessHandler OAuth2SuccessHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -90,7 +90,7 @@ public class SecurityConfig {
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOauth2UserService))
-                        .successHandler(customSuccessHandler));
+                        .successHandler(OAuth2SuccessHandler));
 
         return http.build();
     }

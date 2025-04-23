@@ -39,14 +39,14 @@ public class JwtUtil {
         }
     }
 
-    public String extractUsername(String token) {
-        Claims claims = parseClaims(token);
-        return claims.get("username", String.class);
-    }
-
     public String extractSubject(String token) {
         Claims claims = parseClaims(token);
         return claims.getSubject();
+    }
+
+    public Long extractUserId(String token) {
+        Claims claims = parseClaims(token);
+        return claims.get("userId", Long.class);
     }
 
     public List<String> extractRoles(String token) {
@@ -69,7 +69,7 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public String createToken(String email, List<String> roles, String type) {
+    public String createLocalToken(String email, List<String> roles, String type) {
         Instant now = Instant.now();
         long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
@@ -83,18 +83,18 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createOAuth2Token(String username, String role, Long userId, String type) {
+    public String createOAuth2Token(String email, List<String> roles, Long userId, String type) {
         Instant now = Instant.now();
-        //long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
+        long expireTime = "access".equals(type) ? Long.parseLong(ACCESS_TOKEN_EXPIRATION_TIME) : Long.parseLong(REFRESH_TOKEN_EXPIRATION_TIME);
 
         // JWT 토큰 생성 및 서명하여 반환
         return Jwts.builder()
-                .subject(userId.toString())
-                .claim("username", username)
+                .subject(email)
                 .claim("category", "OAuth2") // JwtFilter에서 분류하기 위함
-                .claim("role", role)
+                .claim("userId", userId)
+                .claim("role", roles)
                 .issuedAt(Date.from(now)) // 토큰 발급 시간 설정
-                .expiration(Date.from(now.plusMillis(24 * 60 * 60 * 1000)))
+                .expiration(Date.from(now.plusMillis(expireTime)))
                 .signWith(secretKey) // 시크릿키로 서명
                 .compact();
     }

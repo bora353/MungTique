@@ -82,15 +82,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        log.info("successfulAuthentication - roles : {}", roles);
+        String accessToken = jwtUtil.createLocalToken(email, roles, "access");
+        String refreshToken = jwtUtil.createLocalToken(email, roles, "refresh");
 
-        String access = jwtUtil.createToken(email, roles, "access");
-        String refresh = jwtUtil.createToken(email, roles, "refresh");
+        tokenService.saveRefreshToken(email, refreshToken);
 
-        tokenService.saveRefreshToken(email, refresh);
-
-        response.setHeader("Authorization", "Bearer " + access);
-        response.addCookie(createCookie("refresh", refresh)); // refresh token -> 쿠키에
+        response.setHeader("Authorization", "Bearer " + accessToken);
+        response.addCookie(createCookie("refresh", refreshToken)); // refresh token -> 쿠키에
         response.setStatus(HttpStatus.OK.value()); // HTTP 상태코드 200 (OK) 설정
 
         Map<String, Object> responseBody = new HashMap<>();
@@ -100,8 +98,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), responseBody);
 
-        log.info("access : {}", access);
-        log.info("refresh : {}", refresh);
         log.info("successfulAuthentication - access, refresh token send Complete");
     }
 

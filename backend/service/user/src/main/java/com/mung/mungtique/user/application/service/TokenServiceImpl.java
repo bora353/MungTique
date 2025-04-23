@@ -35,8 +35,8 @@ public class TokenServiceImpl implements TokenService {
 
         String email = jwtUtil.extractSubject(refreshToken);
         List<String> roles = jwtUtil.extractRoles(refreshToken);
-        String newAccess = jwtUtil.createToken(email, roles,"access");
-        String newRefresh = jwtUtil.createToken(email, roles, "refresh");
+        String newAccess = jwtUtil.createLocalToken(email, roles,"access");
+        String newRefresh = jwtUtil.createLocalToken(email, roles, "refresh");
 
         // DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         saveRefreshToken(email, newRefresh);

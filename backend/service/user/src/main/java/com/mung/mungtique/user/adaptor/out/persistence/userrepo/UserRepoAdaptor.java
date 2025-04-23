@@ -32,4 +32,9 @@ public class UserRepoAdaptor implements UserRepoPort {
     public Optional<UserEntity> findById(Long userId) {
         return userRepo.findById(userId);
     }
+
+    @Override
+    public Optional<UserEntity> findByProviderAndProviderId(String provider, String providerId) {
+        return userRepo.findByProviderAndProviderId(provider, providerId);
+    }
 }

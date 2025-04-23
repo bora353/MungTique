@@ -10,4 +10,5 @@ public interface UserRepoPort {
     UserEntity save(UserEntity userEntity);
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findById(Long userId);
+    Optional<UserEntity> findByProviderAndProviderId(String provider, String providerId);
 }

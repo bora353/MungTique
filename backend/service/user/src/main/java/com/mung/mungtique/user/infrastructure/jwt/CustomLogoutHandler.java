@@ -25,19 +25,21 @@ public class CustomLogoutHandler implements LogoutHandler, LogoutSuccessHandler 
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> refreshTokenOpt = Optional.ofNullable(request.getCookies())
+        log.info("Local 로그아웃 요청됨");
+
+        String refreshToken = Optional.ofNullable(request.getCookies())
                 .flatMap(cookies -> Arrays.stream(cookies)
                         .filter(cookie -> "refresh".equals(cookie.getName()))
                         .map(Cookie::getValue)
-                        .findFirst());
+                        .findFirst()
+                ).orElse(null);
 
-        refreshTokenOpt.ifPresentOrElse(
-                refreshToken -> {
-                    tokenService.deleteRefreshToken(refreshToken);
-                    log.info("delete RefreshToken complete: {}", refreshToken);
-                },
-                () -> log.warn("Refresh token not found in cookies.")
-        );
+        if (refreshToken != null) {
+            tokenService.deleteRefreshToken(refreshToken);
+            //log.info("Deleted RefreshToken: {}", refreshToken);
+        } else {
+            log.warn("Refresh token not found in cookies.");
+        }
     }
 
     @Override

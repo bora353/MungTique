@@ -2,7 +2,7 @@ package com.mung.mungtique.user.application.service;
 
 import com.mung.mungtique.user.adaptor.in.web.dto.*;
 import com.mung.mungtique.user.application.port.in.CustomOauth2UserService;
-import com.mung.mungtique.user.application.port.out.UserOAuth2RepoPort;
+import com.mung.mungtique.user.application.port.out.UserRepoPort;
 import com.mung.mungtique.user.domain.Authority;
 import com.mung.mungtique.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService implements CustomOauth2UserService {
 
-    private final UserOAuth2RepoPort userOAuth2RepoPort;
+    private final UserRepoPort userRepoPort;
 
     @Override
     @Transactional
@@ -39,11 +39,11 @@ public class CustomOauth2UserServiceImpl extends DefaultOAuth2UserService implem
         String providerId = oAuth2Res.getProviderId();
 
         // 기존 사용자 조회 또는 신규 저장
-        UserEntity user = userOAuth2RepoPort.findByProviderAndProviderId(provider, providerId)
+        UserEntity user = userRepoPort.findByProviderAndProviderId(provider, providerId)
                 .orElseGet(() -> createNewOAuth2User(provider, providerId, oAuth2Res));
 
         user.setLastLoginAt();
-        userOAuth2RepoPort.save(user);
+        userRepoPort.save(user);
 
         Oauth2UserDTO oauth2UserDTO = Oauth2UserDTO.builder()
                 .username(user.getUsername())

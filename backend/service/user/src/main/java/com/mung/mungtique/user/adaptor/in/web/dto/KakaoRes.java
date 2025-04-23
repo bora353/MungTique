@@ -28,7 +28,7 @@ public class KakaoRes implements OAuth2Res {
 
     @Override
     public String getEmail() {
-        return "kakao_email_" + getProviderId();
+        return "kakao_email_" + getProviderId() + "@mungtique.com"; // 카카오는 비즈 회원만 이메일 제공함
         //return kakaoAccountAttributes.get("email").toString();
     }
 

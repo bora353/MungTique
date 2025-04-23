@@ -23,7 +23,7 @@ public class UserEntity extends BaseTime {
     @Setter
     private String password;
 
-    @Column(unique = true, length = 50, nullable = false)
+    @Column(length = 50, nullable = false)
     private String email;
 
     @Column(length = 20)
@@ -31,7 +31,7 @@ public class UserEntity extends BaseTime {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private Authority role;
+    private Authority role = Authority.ROLE_USER;
 
     @Column
     private String provider; // 카카오, 네이버 등 구분

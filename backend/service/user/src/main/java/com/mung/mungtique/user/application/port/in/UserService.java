@@ -11,4 +11,6 @@ public interface UserService extends UserDetailsService {
     UserEntity getUserDetailsByEmail(String email);
     UserRes getUserInfo(String userId);
     void updateLastLoginAt(UserEntity user);
+
+    boolean isEmailExists(String email);
 }
