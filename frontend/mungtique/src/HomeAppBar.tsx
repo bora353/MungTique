@@ -3,9 +3,9 @@ import MuiAppBar from "./components/bar/MuiAppBar";
 
 export default function HomeAppBar() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col overflow-hidden">
       <MuiAppBar />
-      <main style={{ marginTop: "80px" }}>
+      <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
     </div>

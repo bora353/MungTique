@@ -1,65 +1,30 @@
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaDog, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-interface PetShop {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  rating: number;
-}
+import { mungshopApi } from "../care/main/mungshop.api";
+import { MungShop } from "../../shared/types/mungshop.interface";
 
 export default function MainContainer() {
   const navigate = useNavigate();
-  const [featuredShops, setFeaturedShops] = useState<PetShop[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [mungShops, setMungShops] = useState<MungShop[]>([]);
 
   useEffect(() => {
-    // 실제 구현에서는 API에서 데이터를 가져올 수 있음
-    // 여기서는 예시 데이터 사용
-    const dummyData: PetShop[] = [
-      {
-        id: 1,
-        name: "멍멍살롱",
-        description: "프리미엄 애견 미용 서비스",
-        imageUrl: "/api/placeholder/300/200",
-        rating: 4.8,
-      },
-      {
-        id: 2,
-        name: "퍼피 스파",
-        description: "편안한 스파와 그루밍 서비스",
-        imageUrl: "/api/placeholder/300/200",
-        rating: 4.7,
-      },
-      {
-        id: 3,
-        name: "바우와우",
-        description: "전문 애견 케어 서비스",
-        imageUrl: "/api/placeholder/300/200",
-        rating: 4.9,
-      },
-      {
-        id: 4,
-        name: "해피테일",
-        description: "친절한 서비스와.편안한 환경",
-        imageUrl: "/api/placeholder/300/200",
-        rating: 4.6,
-      },
-    ];
+    const fetchMungShops = async () => {
+      const response = await mungshopApi.getMungShops();
+      setMungShops(response.data);
+    };
 
-    setFeaturedShops(dummyData);
+    fetchMungShops();
     setIsLoading(false);
   }, []);
 
-
   const handleClick = () => {
-    navigate("/mungshop"); 
+    navigate("/mungshop");
   };
 
   return (
-    <div className="min-h-screen bg-pink-50">
+    <div className="min-h-screen bg-pink-50 pt-[80px]">
       {/* 메인 배너 */}
       <section className="bg-gradient-to-r from-pink-300 to-purple-300 py-16">
         <div className="container mx-auto px-4 text-center">
@@ -70,8 +35,10 @@ export default function MainContainer() {
             뭉티끄에서 쉽고 빠르게 예약하고 사랑하는 반려견에게 최고의 케어를
             선물하세요
           </p>
-          <button className="bg-white text-pink-500 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-100 transition duration-300 flex items-center mx-auto"
-            onClick={handleClick}>
+          <button
+            className="bg-white text-pink-500 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-100 transition duration-300 flex items-center mx-auto"
+            onClick={handleClick}
+          >
             <FaCalendarAlt className="mr-2" />
             지금 예약하기
           </button>
@@ -127,30 +94,28 @@ export default function MainContainer() {
             <div className="text-center">로딩 중...</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredShops.map((shop) => (
+              {mungShops.slice(0, 4).map((mungshop) => (
                 <div
-                  key={shop.id}
+                  key={mungshop.mungShopId}
                   className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300"
                 >
                   <img
-                    src={shop.imageUrl}
-                    alt={shop.name}
+                    src={mungshop.storeImageUrl}
+                    alt={mungshop.storeName}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="text-lg font-bold text-gray-800">
-                        {shop.name}
+                        {mungshop.storeName}
                       </h3>
                       <div className="flex items-center text-yellow-500">
-                        <span className="text-sm font-medium ml-1">
-                          ★ {shop.rating}
-                        </span>
+                        {/* <span className="text-sm font-medium ml-1">
+                          ★ {mungshop.rating}
+                        </span> */}
                       </div>
                     </div>
-                    <p className="text-gray-600 text-sm mb-4">
-                      {shop.description}
-                    </p>
+                    {/* <p className="text-gray-600 text-sm mb-4">설명</p> */}
                     <button className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition duration-300">
                       예약하기
                     </button>
@@ -161,7 +126,7 @@ export default function MainContainer() {
           )}
           <div className="text-center mt-8">
             <a
-              href="/shops"
+              href="/mungshop"
               className="inline-block text-pink-500 font-medium hover:text-pink-600 hover:underline"
             >
               모든 애견샵 보기 →
@@ -178,11 +143,6 @@ export default function MainContainer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
-              <img
-                src="/api/placeholder/50/50"
-                alt="고객"
-                className="w-12 h-12 rounded-full mr-4"
-              />
               <div>
                 <h4 className="font-bold text-gray-800">김지민</h4>
                 <div className="flex text-yellow-500">★★★★★</div>
@@ -195,18 +155,13 @@ export default function MainContainer() {
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex items-center mb-4">
-              <img
-                src="/api/placeholder/50/50"
-                alt="고객"
-                className="w-12 h-12 rounded-full mr-4"
-              />
               <div>
                 <h4 className="font-bold text-gray-800">이민준</h4>
                 <div className="flex text-yellow-500">★★★★★</div>
               </div>
             </div>
             <p className="text-gray-600">
-              "mungtique 덕분에 집 근처에 있는 좋은 애견샵을 알게 되었어요. 이제
+              "뭉티끄 덕분에 집 근처에 있는 좋은 애견샵을 알게 되었어요. 이제
               정기적으로 이용하고 있습니다. 편리한 예약 시스템이 정말 좋아요!"
             </p>
           </div>
