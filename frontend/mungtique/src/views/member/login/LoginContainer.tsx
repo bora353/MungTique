@@ -4,8 +4,10 @@ import { Login } from "../../../shared/types/login.interface";
 import { useLoginViewModelHook } from "./hook/useLoginViewModel.hook";
 import { useAuthStore } from "./hook/login.store";
 import { useNavigate } from "react-router-dom";
+import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
 
 export default function LoginContainer() {
+  const { showNotificationAndRedirect } = useNotificationRedirect();
   const navigate = useNavigate();
 
   const AUTH_TOKEN_KEY = "access";
@@ -26,9 +28,14 @@ export default function LoginContainer() {
       }
       navigate("/");
     } catch (error) {
-      alert("아이디 또는 비밀번호가 일치하지 않습니다.");
       console.error("로그인 중 오류 발생:", error);
-      navigate("/login");
+
+      showNotificationAndRedirect(
+        "아이디 또는 비밀번호가 일치하지 않습니다.", 
+        "warning",     
+        "/login",      
+        2000        
+      ); 
     }
   };
 

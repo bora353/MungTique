@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Login } from "../../../shared/types/login.interface";
-import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
+import { useSnackbar } from "notistack";
 
 interface LoginProps {
   onsubmit: (loginDTO: Login) => void;
 }
 
 export default function LoginForm({ onsubmit }: LoginProps) {
+  const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -30,8 +29,9 @@ export default function LoginForm({ onsubmit }: LoginProps) {
     };
 
     if (!(email && password)) {
-      setSnackbarMessage("모든 값을 입력해주세요");
-      setOpenSnackbar(true);
+      enqueueSnackbar("모든 값을 입력해주세요", {
+        variant: "error",
+      });
       return;
     }
 
@@ -39,8 +39,9 @@ export default function LoginForm({ onsubmit }: LoginProps) {
       //console.log("loginDTO", loginDTO);
       await onsubmit(loginDTO);
     } catch (error) {
-      setSnackbarMessage("로그인에 실패했습니다.");
-      setOpenSnackbar(true);
+      enqueueSnackbar("로그인에 실패했습니다.", {
+        variant: "error",
+      });
     }
   };
 
@@ -49,14 +50,6 @@ export default function LoginForm({ onsubmit }: LoginProps) {
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-pink-500">반갑습니다!</h2>
       </div>
-
-      {/* Snackbar */}
-      <MuiSnackbar
-        message={snackbarMessage}
-        severity={"error"}
-        open={openSnackbar}
-        onClose={() => setOpenSnackbar(false)}
-      />
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">

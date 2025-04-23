@@ -6,11 +6,10 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MuiButton from "../../../components/buttons/MuiButton";
 import { api } from "../../../shared/api/ApiInterceptor";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
 import MyMungImageUploadForm from "./MyMungImageUploadForm";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 export default function MyMungCard() {
   const navigate = useNavigate();
@@ -119,16 +118,17 @@ export default function MyMungCard() {
                   </CardContent>
                 </CardActionArea>
                 <CardContent className="flex justify-center">
-                  <MuiButton
+                  <Button
                     color="info"
                     type="button"
-                    value="이미지 등록"
                     variant="contained"
                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                       e.stopPropagation();
                       handleImageUploadClick(mung.dogId);
                     }}
-                  />
+                  >
+                    이미지 등록
+                  </Button>
                 </CardContent>
               </Card>
             </Grid>

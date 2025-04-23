@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaDog, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { mungshopApi } from "../care/main/mungshop.api";
 import { MungShop } from "../../shared/types/mungshop.interface";
+import { mungshopApi } from "../mungshop/mungshop.api";
 
 export default function MainContainer() {
   const navigate = useNavigate();

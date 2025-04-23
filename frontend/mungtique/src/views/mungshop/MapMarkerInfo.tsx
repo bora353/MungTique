@@ -3,7 +3,6 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { MungShop } from "../../../shared/types/mungshop.interface";
 import ShopLike from "./ShopLike";
 import SearchBar from "./SearchBar";
 import { useState } from "react";
@@ -12,7 +11,10 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useReservationStore } from "../reservation/reservation.store";
-import { api } from "../../../shared/api/ApiInterceptor";
+import { MungShop } from "../../shared/types/mungshop.interface";
+import { api } from "../../shared/api/ApiInterceptor";
+import useNotificationRedirect from "../../components/snackbar/useNotificationRedirect";
+import { useSnackbar } from "notistack";
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -25,6 +27,9 @@ export default function MapMarkerInfo({
   distance,
   onSearch,
 }: MarkerInfoProps) {
+  const { enqueueSnackbar } = useSnackbar();
+  const { showNotificationAndRedirect } = useNotificationRedirect();
+
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const [activeTab, setActiveTab] = useState("홈");
@@ -32,13 +37,20 @@ export default function MapMarkerInfo({
 
   const handleReservationClick = async () => {
     if (!userId) {
-      alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-      navigate("/login");
+      showNotificationAndRedirect(
+        "로그인이 필요합니다. 로그인 페이지로 이동합니다.",
+        "info",
+        "/login",
+        2000
+      );
+
       return;
     }
 
     if (!selectedMarker) {
-      alert("매장이 선택되지 않았습니다.");
+      enqueueSnackbar("매장이 선택되지 않았습니다.", {
+        variant: "warning",
+      });
       return;
     }
 
@@ -48,8 +60,12 @@ export default function MapMarkerInfo({
       console.log(response.data);
 
       if (response.data.length === 0) {
-        alert("마이뭉 먼저 등록해주세요.");
-        navigate("/mypage");
+        showNotificationAndRedirect(
+          "마이뭉 먼저 등록해주세요.",
+          "info",
+          "/mypage",
+          2000
+        );
         return;
       }
 
@@ -154,7 +170,7 @@ export default function MapMarkerInfo({
             </CardContent>
           </>
         ) : (
-          <CardContent className="flex flex-col items-center justify-center text-center py-10">
+          <CardContent className="flex flex-col items-center justify-center text-center py-10 mt-10">
             <StorefrontIcon sx={{ fontSize: 50, color: "#A0A0A0" }} />
             <Typography variant="h6" color="text.primary" className="mt-2">
               매장을 선택해 주세요

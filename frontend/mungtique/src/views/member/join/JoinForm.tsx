@@ -1,11 +1,11 @@
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
 import { Join } from "./join.interface";
 import { userApi } from "./user.api";
+import { useSnackbar } from "notistack";
+import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
@@ -29,62 +29,69 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function JoinForm({ onsubmit }: JoinProps) {
-  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { showNotificationAndRedirect } = useNotificationRedirect();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarType, setSnackbarType] = useState<
-    "error" | "warning" | "info" | "success"
-  >("error");
-
-  const showSnackbar = (message: string, type: "info" | "error") => {
-    setSnackbarMessage(message);
-    setSnackbarType(type);
-    setOpenSnackbar(true);
-  };
 
   const handleMailCheck = async (email: string) => {
     try {
       if (!email) {
-        showSnackbar("이메일을 입력해주세요.", "error");
+        enqueueSnackbar("이메일을 입력해주세요.", {
+          variant: "error",
+        });
         return;
       }
 
       const mailDTO: MailCheck = { email: email };
       const result = await userApi.mailSend(mailDTO);
       console.log("이메일 인증 요청 완료", result);
-      
+
       if (result.data === "duplicate email") {
-        showSnackbar("이미 가입된 이메일입니다.", "error");
+        enqueueSnackbar("이미 가입된 이메일입니다.", {
+          variant: "error",
+        });
         return;
       }
-      
-      showSnackbar("인증 번호가 이메일로 전송되었습니다.", "info");
+
+      enqueueSnackbar("인증 번호가 이메일로 전송되었습니다.", {
+        variant: "info",
+      });
+
       setIsEmailVerified(true);
     } catch (error) {
       console.error("이메일 인증 요청 실패:", error);
-      showSnackbar("이메일 인증 요청 중 오류가 발생했습니다.", "error");
+      enqueueSnackbar("이메일 인증 요청 중 오류가 발생했습니다.", {
+        variant: "error",
+      });
     }
   };
 
   const handleMailCheckOK = async (email: string, emailVerify: string) => {
     try {
       if (!emailVerify) {
-        showSnackbar("인증 코드를 입력해주세요.", "error");
+        enqueueSnackbar("인증 코드를 입력해주세요.", {
+          variant: "error",
+        });
         return;
       }
 
       const response = await userApi.mailCheck(email, emailVerify);
 
       if (response.data === true) {
-        showSnackbar("메일 인증이 완료되었습니다 :)", "info");
+        enqueueSnackbar("메일 인증이 완료되었습니다 :)", {
+          variant: "success",
+        });
         setIsEmailVerified(true);
       } else {
-        showSnackbar("올바르지 않은 인증 코드입니다.", "error");
+        enqueueSnackbar("올바르지 않은 인증 코드입니다.", {
+          variant: "error",
+        });
       }
     } catch (error) {
       console.error("인증 코드 확인 실패:", error);
-      showSnackbar("인증 코드 확인 중 오류가 발생했습니다.", "error");
+      enqueueSnackbar("인증 코드 확인 중 오류가 발생했습니다.", {
+        variant: "error",
+      });
     }
   };
 
@@ -101,17 +108,27 @@ export default function JoinForm({ onsubmit }: JoinProps) {
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
         if (!isEmailVerified) {
-          showSnackbar("이메일 인증을 완료해야 합니다.", "error");
+          enqueueSnackbar("이메일 인증을 완료해야 합니다.", {
+            variant: "error",
+          });
           setSubmitting(false);
           return;
         }
 
         try {
           onsubmit(values);
-          showSnackbar("회원 가입 성공!", "info");
-          navigate("/joinsuccess");
+
+          showNotificationAndRedirect(
+            "회원가입 성공", 
+            "success",     
+            "/joinsuccess",      
+            2000        
+          );
+
         } catch (error) {
-          showSnackbar("회원 가입에 실패했습니다.", "error");
+          enqueueSnackbar("회원 가입에 실패했습니다.", {
+            variant: "error",
+          });
         } finally {
           setSubmitting(false);
         }
@@ -319,23 +336,16 @@ export default function JoinForm({ onsubmit }: JoinProps) {
           </div>
 
           <button
-              type="submit"
-              disabled={isSubmitting || !isEmailVerified}
-              className={`w-full py-3 px-4 mt-6 rounded-md font-medium text-white transition duration-200 ${
-                isSubmitting || !isEmailVerified
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600"
-              }`}
-            >
-              가입하기
-            </button>
-
-          <MuiSnackbar
-            message={snackbarMessage}
-            severity={snackbarType}
-            open={openSnackbar}
-            onClose={() => setOpenSnackbar(false)}
-          />
+            type="submit"
+            disabled={isSubmitting || !isEmailVerified}
+            className={`w-full py-3 px-4 mt-6 rounded-md font-medium text-white transition duration-200 ${
+              isSubmitting || !isEmailVerified
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            가입하기
+          </button>
         </Form>
       )}
     </Formik>

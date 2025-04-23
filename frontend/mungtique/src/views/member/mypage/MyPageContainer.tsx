@@ -1,13 +1,15 @@
 import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
 import { useAuthStore } from "../login/hook/login.store";
-import MuiButton from "../../../components/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import MyMungCard from "../mymung/MyMungCard";
 import MyReservationList from "./MyReservationList";
+import { Button } from "@mui/material";
+import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
 
 export default function MyPageContainer() {
+  const { showNotificationAndRedirect } = useNotificationRedirect();
   const navigate = useNavigate();
   const AUTH_TOKEN_KEY = "access";
   const OAUTH2_LOGIN_KEY = "oauth2";
@@ -16,42 +18,49 @@ export default function MyPageContainer() {
   const { localLogoutData, oauth2LogoutData } = useLogoutViewModelHook();
   const [selectedMenu, setSelectedMenu] = useState<string>("home");
 
-  const handleLocalLogout = async () => {
-    try {
-      const logoutResult = await localLogoutData();
-
-      if (logoutResult?.status === 200) {
-        localStorage.removeItem(AUTH_TOKEN_KEY);
-        localStorage.removeItem("userId");
-        setIsLocalLogin(false);
-        navigate("/");
-      } else {
-        alert("로그아웃 실패");
-        console.error("로그아웃 실패: 서버 응답 없음");
-      }
-    } catch (error) {
-      console.error("로그아웃 중 오류 발생:", error);
-    }
+  const clientLogoutCleanup = () => {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(OAUTH2_LOGIN_KEY);
+    localStorage.removeItem("userId");
+    setIsLocalLogin(false);
+    setIsOauth2Login(false);
   };
 
-  const handleOauth2Logout = async () => {
-    try {
-      const logoutResult = await oauth2LogoutData();
+const handleLocalLogout = async () => {
+  let logoutSuccess = false;
 
-      if (logoutResult?.status === 200) {
-        localStorage.removeItem(OAUTH2_LOGIN_KEY);
-        localStorage.removeItem(AUTH_TOKEN_KEY);
-        localStorage.removeItem("userId");
-        setIsOauth2Login(false);
-        navigate("/");
-      } else {
-        alert("로그아웃 실패");
-        console.error("OAuth2 로그아웃 실패: 서버 응답 없음");
-      }
-    } catch (error) {
-      console.error("OAuth2 로그아웃 중 오류 발생:", error);
+  try {
+    const result = await localLogoutData();
+    logoutSuccess = result?.status === 200;
+  } catch (error) {
+    console.error("로컬 로그아웃 중 오류 발생:", error);
+  } finally {
+    clientLogoutCleanup();
+    if (logoutSuccess) {
+      showNotificationAndRedirect("로그아웃되었습니다.", "success", "/", 2000);
+    } else {
+      showNotificationAndRedirect("로그아웃되었습니다.", "info", "/", 2000);
     }
-  };
+  }
+};
+
+const handleOauth2Logout = async () => {
+  let logoutSuccess = false;
+
+  try {
+    const result = await oauth2LogoutData();
+    logoutSuccess = result?.status === 200;
+  } catch (error) {
+    console.error("OAuth2 로그아웃 중 오류 발생:", error);
+  } finally {
+    clientLogoutCleanup();
+    if (logoutSuccess) {
+      showNotificationAndRedirect("로그아웃되었습니다.", "success", "/");
+    } else {
+      showNotificationAndRedirect("로그아웃되었습니다 (서버 응답 없음 또는 오류)", "info", "/");
+    }
+  }
+};
 
   const handleMyMung = () => {
     navigate("/mymung/register");
@@ -68,29 +77,33 @@ export default function MyPageContainer() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">나의 뭉티끄</h1>
           <div className="flex space-x-2">
-            <MuiButton
-              value="🐶 등록"
+            <Button
               color="warning"
               type="button"
               variant="contained"
               onClick={handleMyMung}
-            />
+            >
+              🐶 등록
+            </Button>
+
             {isOauth2Login ? (
-              <MuiButton
-                value="로그아웃"
+              <Button
                 color="success"
                 type="button"
                 variant="outlined"
                 onClick={handleOauth2Logout}
-              />
+              >
+                로그아웃
+              </Button>
             ) : (
-              <MuiButton
-                value="로그아웃"
+              <Button
                 color="success"
                 type="button"
                 variant="outlined"
                 onClick={handleLocalLogout}
-              />
+              >
+                로그아웃
+              </Button>
             )}
           </div>
         </div>

@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { MyMungJoin } from "../../../shared/types/mungjoin.interface";
+import { useSnackbar } from "notistack";
+import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
 
 interface MyMungJoinProps {
   onsubmit: (mungJoinDTO: MyMungJoin) => void;
 }
 
 export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
-  const navigate = useNavigate();
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-
+  const { enqueueSnackbar } = useSnackbar();
+  const { showNotificationAndRedirect } = useNotificationRedirect();
   const [mungJoinForm, setMungJoinForm] = useState({
     dogName: "",
     breedType: "",
@@ -35,8 +34,9 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
       !mungJoinForm.gender ||
       !mungJoinForm.fixed
     ) {
-      setSnackbarMessage("모든 값을 입력해주세요");
-      setOpenSnackbar(true);
+      enqueueSnackbar("모든 값을 입력해주세요", {
+        variant: "warning",
+      });
       return;
     }
 
@@ -49,12 +49,13 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
 
     console.log("mungJoinDTO", mungJoinDTO);
     onsubmit(mungJoinDTO);
-    setSnackbarMessage("등록 완료! 마이페이지로 이동합니다.");
-    setOpenSnackbar(true);
 
-    setTimeout(() => {
-      navigate("/mypage");
-    }, 2000);
+    showNotificationAndRedirect(
+      "등록 완료! 마이페이지로 이동합니다.", 
+      "success",     
+      "/mypage",      
+      2000        
+    );
   };
 
   return (
@@ -215,13 +216,6 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
           </button>
         </div>
       </form>
-
-      {/* Snackbar 메시지 */}
-      {openSnackbar && (
-        <div className="mt-4 p-1.5 bg-green-500 text-white text-center rounded-md">
-          {snackbarMessage}
-        </div>
-      )}
     </div>
   );
 }

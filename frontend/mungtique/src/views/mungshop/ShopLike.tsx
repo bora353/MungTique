@@ -2,22 +2,17 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { api } from "../../../shared/api/ApiInterceptor";
-import MuiSnackbar from "../../../components/snackbar/MuiSnackbar";
+import { api } from "../../shared/api/ApiInterceptor";
+import { useSnackbar } from "notistack";
 
 interface ShopLikeProps {
   mungShopId: number;
 }
 
 export default function ShopLike({ mungShopId }: ShopLikeProps) {
+  const { enqueueSnackbar } = useSnackbar();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarType, setSnackbarType] = useState<
-    "error" | "warning" | "info" | "success"
-  >("error");
-
   const userId = localStorage.getItem("userId");
 
   const fetchLikeStatus = async () => {
@@ -29,7 +24,9 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
       );
       setIsLiked(statusResponse.data);
 
-      const countResponse = await api().get<number>(`/mungshop-service/mungshops/like-status?mungShopId=${mungShopId}`);
+      const countResponse = await api().get<number>(
+        `/mungshop-service/mungshops/like-status?mungShopId=${mungShopId}`
+      );
       setLikeCount(countResponse.data);
     } catch (error) {
       console.error("Error fetching like status:", error);
@@ -38,9 +35,9 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
 
   const handleLikeClick = async () => {
     if (!userId) {
-      setSnackbarMessage("로그인이 필요한 서비스입니다.");
-      setSnackbarType("warning");
-      setOpenSnackbar(true);
+      enqueueSnackbar("로그인이 필요한 서비스입니다.", {
+        variant: "warning",
+      });
       return;
     }
 
@@ -75,14 +72,8 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
         ) : (
           <FavoriteBorderIcon sx={{ color: "tomato" }} />
         )}
-      <span className="ml-2 text-sm text-[tomato]">{likeCount} </span>
+        <span className="ml-2 text-sm text-[tomato]">{likeCount} </span>
       </Button>
-      <MuiSnackbar
-        message={snackbarMessage}
-        severity={snackbarType}
-        open={openSnackbar}
-        onClose={() => setOpenSnackbar(false)}
-      />
     </div>
   );
 }

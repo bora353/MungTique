@@ -28,7 +28,7 @@ export default function MungshopContainer() {
 
   return (
     <div>
-      <div style={{ height: "91vh", display: "flex" }}>
+      <div style={{ height: "100vh", display: "flex" }}>
         <MapMarkerInfo
           selectedMarker={selectedMarker}
           distance={distance}

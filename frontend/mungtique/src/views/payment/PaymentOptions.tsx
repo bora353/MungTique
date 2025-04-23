@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { PaymentInfo, PaymentMethod } from "./payment.interface";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../shared/api/ApiInterceptor";
+import { api } from "../../shared/api/ApiInterceptor";
+import { useSnackbar } from "notistack";
 
 interface PaymentOptionsProps {
   reservationId: number | undefined;
@@ -12,6 +13,7 @@ export default function PaymentOptions({
   reservationId,
   amount,
 }: PaymentOptionsProps) {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,18 +71,18 @@ export default function PaymentOptions({
         .replace(/(\d{4})/g, "$1-") // 4자리마다 '-' 추가
         .replace(/-$/, ""); // 마지막 '-' 제거
     };
-  
+
     const formatExpiryDate = (date: string) => {
       return date
         .replace(/\D/g, "") // 숫자만 남김
         .slice(0, 4) // 4자리로 제한 (MMYY 형식)
         .replace(/(\d{2})(\d{1,2})?/, (_, m, y) => (y ? `${m}/${y}` : m));
     };
-  
+
     const formatCVC = (cvc: string) => {
       return cvc.replace(/\D/g, "").slice(0, 3); // 숫자만, 3자리 제한
     };
-  
+
     setCardInfo({
       ...cardInfo,
       [name]:
@@ -108,17 +110,24 @@ export default function PaymentOptions({
     // 결제 수단별 유효성 검사
     if (paymentInfo.paymentMethod === "CARD") {
       if (!/^\d{4}-\d{4}-\d{4}-\d{4}$/.test(cardInfo.cardNumber)) {
-        alert("카드번호는 16자리 숫자여야 합니다.");
-    return;
-  }
-  if (!/^\d{2}\/\d{2}$/.test(cardInfo.cardExpiry)) {
-    alert("유효기간은 MM/YY 형식이어야 합니다.");
-    return;
-  }
-  if (!/^\d{3}$/.test(cardInfo.cardCVC)) {
-    alert("CVC는 3자리 숫자여야 합니다.");
-    return;
-  }
+        enqueueSnackbar("카드번호는 16자리 숫자여야 합니다.", {
+          variant: "warning",
+        });
+
+        return;
+      }
+      if (!/^\d{2}\/\d{2}$/.test(cardInfo.cardExpiry)) {
+        enqueueSnackbar("유효기간은 MM/YY 형식이어야 합니다.", {
+          variant: "warning",
+        });
+        return;
+      }
+      if (!/^\d{3}$/.test(cardInfo.cardCVC)) {
+        enqueueSnackbar("CVC는 3자리 숫자여야 합니다.", {
+          variant: "warning",
+        });
+        return;
+      }
 
       // 카드 정보 추가
       setPaymentInfo({
@@ -133,7 +142,9 @@ export default function PaymentOptions({
         !bankInfo.bankName ||
         !bankInfo.accountNumber
       ) {
-        alert("계좌 정보를 모두 입력해주세요.");
+        enqueueSnackbar("계좌 정보를 모두 입력해주세요.", {
+          variant: "warning",
+        });
         return;
       }
 

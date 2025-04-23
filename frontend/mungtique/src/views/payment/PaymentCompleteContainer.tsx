@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { api } from "../../../shared/api/ApiInterceptor";
 import { PaymentInfo, PaymentMethod, ReservationInfo } from "./payment.interface";
+import { api } from "../../shared/api/ApiInterceptor";
 
 export default function PaymentCompleteContainer() {
   const navigate = useNavigate();

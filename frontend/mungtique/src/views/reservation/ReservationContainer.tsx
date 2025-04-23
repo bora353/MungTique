@@ -4,10 +4,12 @@ import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../shared/api/ApiInterceptor";
 import { useReservationStore } from "./reservation.store";
+import { api } from "../../shared/api/ApiInterceptor";
+import { useSnackbar } from "notistack";
 
 export default function ReservationContainer() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const {
@@ -62,7 +64,9 @@ export default function ReservationContainer() {
 
   const handleNext = () => {
     if (!selectedDate || !selectedTime) {
-      alert("날짜와 시간을 선택해주세요!");
+      enqueueSnackbar("날짜와 시간을 선택해주세요!", {
+        variant: "info",
+      });
       return;
     }
 

@@ -3,7 +3,7 @@ import PaymentOptions from "./PaymentOptions";
 import ReservationSummary from "./ReservationSummary";
 import { useEffect, useState } from "react";
 import { ReservationInfo } from "./payment.interface";
-import { api } from "../../../shared/api/ApiInterceptor";
+import { api } from "../../shared/api/ApiInterceptor";
 
 export default function PaymentContainer() {
   const location = useLocation();

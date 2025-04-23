@@ -1,12 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import HomeAppBar from "./HomeAppBar";
-import MungshopContainer from "./views/care/main/MungshopContainer";
-import PaymentCompleteContainer from "./views/care/payment/PaymentCompleteContainer";
-import PaymentContainer from "./views/care/payment/PaymentContainer";
-import ReservationConfirmContainer from "./views/care/reservation/ReservationConfirmContainer";
-import ReservationContainer from "./views/care/reservation/ReservationContainer";
-import ReservationMungContainer from "./views/care/reservation/ReservationMungContainer";
+import HomeAppBar from "./views/main/HomeAppBar";
 import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
 import JoinContainer from "./views/member/join/JoinContainer";
 import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";
@@ -19,10 +13,17 @@ import OAuth2RedirectPage from "./views/member/login/OAuth2RedirectPage";
 import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
 import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
-import LoadingScreen from "./views/mungtiqueMain/LoadingScreen";
-import MainContainer from "./views/mungtiqueMain/MainContainer";
-import NotFound from "./views/mungtiqueMain/NotFound";
+
 import { ReactNode } from "react";
+import LoadingScreen from "./views/common/LoadingScreen";
+import NotFound from "./views/common/NotFound";
+import MainContainer from "./views/main/MainContainer";
+import MungshopContainer from "./views/mungshop/MungshopContainer";
+import PaymentCompleteContainer from "./views/payment/PaymentCompleteContainer";
+import PaymentContainer from "./views/payment/PaymentContainer";
+import ReservationContainer from "./views/reservation/ReservationContainer";
+import ReservationMungContainer from "./views/reservation/ReservationMungContainer";
+import ReservationConfirmContainer from "./views/reservation/ReservationConfirmContainer";
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const { isLocalLogin, isOauth2Login } = useAuthStore();

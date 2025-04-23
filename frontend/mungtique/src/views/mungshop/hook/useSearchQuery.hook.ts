@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { MungShop } from "../../../../shared/types/mungshop.interface";
-import { api } from "../../../../shared/api/ApiInterceptor";
+import { MungShop } from "../../../shared/types/mungshop.interface";
+import { api } from "../../../shared/api/ApiInterceptor";
+
 
 export const useSearchQueryHook = (mungShops : MungShop[]) => {
   const [searchQuery, setSearchQuery] = useState("");

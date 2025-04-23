@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useReservationStore } from "./reservation.store";
-import { api } from "../../../shared/api/ApiInterceptor";
 import { useEffect } from "react";
-import { UserDto } from "../../../shared/types/user.interface";
+import { api } from "../../shared/api/ApiInterceptor";
+import { UserDto } from "../../shared/types/user.interface";
+import useNotificationRedirect from "../../components/snackbar/useNotificationRedirect";
 
-export default function ReservationConfirm() {
+export default function ReservationConfirmContainer() {
+  const { showNotificationAndRedirect } = useNotificationRedirect();
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
@@ -58,15 +60,24 @@ export default function ReservationConfirm() {
       navigate("/payment", { state: { reservationId } });
     } catch (error) {
       console.error("예약 실패:", error);
-      alert("예약에 실패했습니다. 다시 시도해주세요.");
-      navigate("/mungshop");
+
+      showNotificationAndRedirect(
+        "예약에 실패했습니다. 다시 시도해주세요.", 
+        "error",     
+        "/mungshop",      
+        2000        
+      );
     }
   };
 
   useEffect(() => {
     if (!userId) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
+      showNotificationAndRedirect(
+        "로그인이 필요합니다.", 
+        "warning",     
+        "/login",      
+        2000        
+      );
       return;
     }
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { ReservationInfo } from "../../care/payment/payment.interface";
 import { api } from "../../../shared/api/ApiInterceptor";
 import { useNavigate } from "react-router-dom";
+import { ReservationInfo } from "../../payment/payment.interface";
+import { useSnackbar } from "notistack";
 
 export default function MyReservationList() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -130,7 +132,9 @@ export default function MyReservationList() {
         );
       } catch (error) {
         console.error("예약 취소에 실패했습니다:", error);
-        alert("예약 취소에 실패했습니다. 다시 시도해주세요.");
+        enqueueSnackbar("예약 취소에 실패했습니다. 다시 시도해주세요.", {
+          variant: "error",
+        });
       }
     }
   };

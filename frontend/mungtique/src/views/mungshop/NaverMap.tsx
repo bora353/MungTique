@@ -50,7 +50,7 @@ export default function NaverMap({
       }
 
       const infowindow = new naver.maps.InfoWindow({
-        content: '<div style="padding:5px;">' + "현위치" + "</div>",
+        content: '<div style="padding:5px; font-size: 13px;">' + "현위치" + "</div>",
       });
 
       if (currentPosition) {

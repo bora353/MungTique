@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-
-export interface ApiInterceptor {}
+import { useAuthStore } from "../../views/member/login/hook/login.store";
 
 const serverUrl = import.meta.env.VITE_GATEWAY_SERVER;
 const AUTH_TOKEN_KEY = "access";
@@ -19,19 +18,12 @@ const apiClient = (baseUrl: string): AxiosInstance => {
     // timeout: 3000,
   });
 
-  // console.log("API Client created with configuration:", {
-  //   baseURL: instance.defaults.baseURL,
-  //   headers: instance.defaults.headers,
-  //   responseType: instance.defaults.responseType,
-  //   timeout: instance.defaults.timeout,
-  // });
-
   return instance;
 };
 
 const apiInterceptor = (baseUrl: string) => {
   const axiosInstance = apiClient(baseUrl);
-  // console.log("apiInterceptor start");
+  console.log("apiInterceptor start");
 
   axiosInstance.interceptors.response.use(
     (response) => response,
@@ -42,9 +34,11 @@ const apiInterceptor = (baseUrl: string) => {
         console.log("401 error message! : " + message);
 
         // accessToken 만료시 재발급
-        if (message === "Invalid or expired JWT token") {
+        if (message === "Invalid or expired JWT token" && !error.config._retry) {
+          error.config._retry = true;
+
           try {
-            const response = await axiosInstance.post("/user-service/reissue", {
+            const response = await axiosInstance.post("/user-service/reissue", {}, {
               withCredentials: true,
             });
 
@@ -54,25 +48,22 @@ const apiInterceptor = (baseUrl: string) => {
               localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
               console.log("Received new access token");
 
-              axiosInstance.defaults.headers.common[
-                "Authorization"
-              ] = `Bearer ${accessToken}`;
+              axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
               error.config.headers["Authorization"] = `Bearer ${accessToken}`;
+
+              return axiosInstance(error.config); // 토큰 발행 후 원래 요청 다시
             }
-            return axiosInstance(error.config); // 토큰 발행 후 원래 요청 다시
           } catch (err) {
             console.error("Error during token reissue", err);
-            alert("Session expired. Please log in again.");
+            alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
             signOut();
           }
         } else if (message === "No Authorization header") {
-          alert("Session expired. Please log in again.");
+          alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
           signOut();
         }
-      } else {
-        //signOut();
-        return Promise.reject(error); // 401이 아닌 오류에 대한 처리
-      }
+      } 
+      return Promise.reject(error); // 401이 아닌 오류에 대한 처리
     }
   );
 
@@ -80,19 +71,42 @@ const apiInterceptor = (baseUrl: string) => {
 };
 
 function signOut() {
+  const { setIsLocalLogin, setIsOauth2Login } = useAuthStore();
   const axiosInstance = apiClient(serverUrl);
-  localStorage.removeItem(AUTH_TOKEN_KEY);
-  localStorage.removeItem(OAUTH2_LOGIN_KEY);
+  const isOauth2Login = localStorage.getItem(OAUTH2_LOGIN_KEY) === "true";
   localStorage.removeItem("userId");
+  localStorage.removeItem(AUTH_TOKEN_KEY);
 
-  axiosInstance
-    .post("/user-service/logout")
-    .then(() => {
-      console.log("Logout from server");
-    })
-    .catch((err) => console.error("Server logout failed", err));
+  if (isOauth2Login) {
+    // OAuth2 로그아웃
+    localStorage.removeItem(OAUTH2_LOGIN_KEY);
+    setIsLocalLogin(false);
 
-  window.location.replace("/login"); // 뒤로 가기 방지
+    axiosInstance
+      .post("/user-service/oauth2/logout")
+      .then(() => {
+        console.log("OAuth2 Logout");
+      })
+      .catch((err) => {
+        console.error("OAuth2 Logout failed", err);
+      }).finally(() => {
+        window.location.replace("/login");
+      });
+  } else {
+    // 로컬 로그아웃
+    setIsOauth2Login(false);
+
+    axiosInstance
+      .post("/user-service/logout")
+      .then(() => {
+        console.log("Local Logout");
+      })
+      .catch((err) => {
+        console.error("Logout failed", err);
+      }).finally(() => {
+        window.location.replace("/login");
+      });
+  }
 }
 
 export const api = () => apiInterceptor(serverUrl);

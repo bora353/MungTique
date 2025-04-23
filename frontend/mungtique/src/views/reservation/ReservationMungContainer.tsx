@@ -1,20 +1,38 @@
 import { useNavigate } from "react-router-dom";
 import { useReservationStore } from "./reservation.store";
 import { useEffect, useState } from "react";
-import { api } from "../../../shared/api/ApiInterceptor";
-import { MyMung } from "../../../shared/types/mungjoin.interface";
+import { api } from "../../shared/api/ApiInterceptor";
+import { MyMung } from "../../shared/types/mungjoin.interface";
+import useNotificationRedirect from "../../components/snackbar/useNotificationRedirect";
+import { useSnackbar } from "notistack";
 
 export default function ReservationMungContainer() {
+  const { enqueueSnackbar } = useSnackbar();
+  const { showNotificationAndRedirect } = useNotificationRedirect();
+
   const navigate = useNavigate();
-  const { selectedDog, breedType, selectedService, setSelectedDogId, setSelectedDog, setBreedType, setSelectedService } =
-    useReservationStore();
-  const [dogs, setDogs] = useState<{ dogId: number; dogName: string, breedType: string }[]>([]);
+  const {
+    selectedDog,
+    breedType,
+    selectedService,
+    setSelectedDogId,
+    setSelectedDog,
+    setBreedType,
+    setSelectedService,
+  } = useReservationStore();
+  const [dogs, setDogs] = useState<
+    { dogId: number; dogName: string; breedType: string }[]
+  >([]);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     if (!userId) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
+      showNotificationAndRedirect(
+        "로그인이 필요합니다.", 
+        "warning",     
+        "/login",      
+        2000        
+      );
       return;
     }
 
@@ -24,7 +42,7 @@ export default function ReservationMungContainer() {
         const dogData = response.data.map((dog: MyMung) => ({
           dogId: dog.dogId,
           dogName: dog.dogName,
-          breedType: dog.breedType
+          breedType: dog.breedType,
         }));
         setDogs(dogData);
       })
@@ -35,7 +53,9 @@ export default function ReservationMungContainer() {
 
   const handleNext = () => {
     if (!selectedDog || !selectedService) {
-      alert("강아지와 서비스를 선택해주세요!");
+      enqueueSnackbar("강아지와 서비스를 선택해주세요!", {
+        variant: "info",
+      });
       return;
     }
 
@@ -71,10 +91,11 @@ export default function ReservationMungContainer() {
                     ? "bg-blue-500 text-white"
                     : "bg-gray-100 text-gray-700"
                 }`}
-                onClick={() => {setSelectedDog(dog.dogName);
-                                setSelectedDogId(dog.dogId);
-                                setBreedType(dog.breedType)}
-                        }
+                onClick={() => {
+                  setSelectedDog(dog.dogName);
+                  setSelectedDogId(dog.dogId);
+                  setBreedType(dog.breedType);
+                }}
               >
                 {dog.dogName}
               </button>
@@ -86,19 +107,20 @@ export default function ReservationMungContainer() {
         <div className="mt-6">
           <h3 className="text-lg font-semibold">서비스 선택</h3>
           <div className="grid grid-cols-3 gap-2 mt-2">
-          {[
-          { label: "목욕", value: "WASH" },
-          { label: "커트", value: "CUT" },
-          { label: "목욕+커트", value: "FULL" },
-          ].map(({ label, value }) => (
-          <button
-            key={value}
-            className={`p-3 border rounded-lg text-center ${
-              selectedService === value
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700"
-            }`}
-            onClick={() => setSelectedService(value)}>
+            {[
+              { label: "목욕", value: "WASH" },
+              { label: "커트", value: "CUT" },
+              { label: "목욕+커트", value: "FULL" },
+            ].map(({ label, value }) => (
+              <button
+                key={value}
+                className={`p-3 border rounded-lg text-center ${
+                  selectedService === value
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+                onClick={() => setSelectedService(value)}
+              >
                 {label}
               </button>
             ))}
