@@ -21,6 +21,7 @@ import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import LoadingScreen from "./views/mungtiqueMain/LoadingScreen";
 import MainContainer from "./views/mungtiqueMain/MainContainer";
+import NotFound from "./views/mungtiqueMain/NotFound";
 
 function App() {
   useAuthInit();
@@ -69,15 +70,19 @@ function App() {
                   element={<ReservationConfirmContainer />}
                 />
                 <Route path="/payment" element={<PaymentContainer />} />
-                <Route path="/payment/complete" element={<PaymentCompleteContainer />} />
+                <Route
+                  path="/payment/complete"
+                  element={<PaymentCompleteContainer />}
+                />
                 {/* <Route
                   path="/mungimage/:dogId"
                   element={<MyMungImageUploadContainer />}
                 /> */}
               </>
             ) : (
-              <Route path="*" element={<Navigate to="/login" />} />
+              <Route path="/login" element={<Navigate to="/login" />} />
             )}
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>
