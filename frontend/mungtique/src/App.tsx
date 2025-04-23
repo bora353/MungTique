@@ -22,13 +22,23 @@ import MyPageContainer from "./views/member/mypage/MyPageContainer";
 import LoadingScreen from "./views/mungtiqueMain/LoadingScreen";
 import MainContainer from "./views/mungtiqueMain/MainContainer";
 import NotFound from "./views/mungtiqueMain/NotFound";
+import { ReactNode } from "react";
+
+const PrivateRoute = ({ children }: { children: ReactNode }) => {
+  const { isLocalLogin, isOauth2Login } = useAuthStore();
+  const isAuthenticated = isLocalLogin || isOauth2Login;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  return <>{children}</>;
+};
 
 function App() {
   useAuthInit();
-  const { isLocalLogin, isOauth2Login, isInitialized } = useAuthStore();
-  const isAuthenticated = isLocalLogin || isOauth2Login;
+  const { isInitialized } = useAuthStore();
 
-  console.log("login status : ", isAuthenticated);
   console.log("initialized : ", isInitialized);
 
   if (!isInitialized) {
@@ -40,48 +50,88 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomeAppBar />}>
-            {/* <Route path="*" element={<Navigate to="/login" />} /> */}
+            {/* 인증이 필요하지 않은 페이지 */}
             <Route path="/" element={<MainContainer />} />
             <Route path="/login" element={<LoginContainer />} />
             <Route path="/join" element={<JoinContainer />} />
-            <Route path="/mungshop" element={<MungshopContainer />} />
             <Route path="/joinsuccess" element={<JoinSuccessContainer />} />
-
+            <Route path="/mungshop" element={<MungshopContainer />} />
             <Route path="/oauth2/redirect" element={<OAuth2RedirectPage />} />
-            {isAuthenticated ? (
-              <>
-                <Route path="/findinfo" element={<FindInfoContainer />} />
-                <Route path="/mypage" element={<MyPageContainer />} />
-                <Route
-                  path="/mymung/register"
-                  element={<MyMungJoinContainer />}
-                />
-                <Route
-                  path="/mymung/:dogId"
-                  element={<MyMungUpdateContainer />}
-                />
-                <Route path="/reservation" element={<ReservationContainer />} />
-                <Route
-                  path="/reservation-mung"
-                  element={<ReservationMungContainer />}
-                />
-                <Route
-                  path="/reservation-confirm"
-                  element={<ReservationConfirmContainer />}
-                />
-                <Route path="/payment" element={<PaymentContainer />} />
-                <Route
-                  path="/payment/complete"
-                  element={<PaymentCompleteContainer />}
-                />
-                {/* <Route
-                  path="/mungimage/:dogId"
-                  element={<MyMungImageUploadContainer />}
-                /> */}
-              </>
-            ) : (
-              <Route path="/login" element={<Navigate to="/login" />} />
-            )}
+
+            {/* 인증이 필요한 페이지 */}
+            <Route
+              path="/findinfo"
+              element={
+                <PrivateRoute>
+                  <FindInfoContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/mypage"
+              element={
+                <PrivateRoute>
+                  <MyPageContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/mymung/register"
+              element={
+                <PrivateRoute>
+                  <MyMungJoinContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/mymung/:dogId"
+              element={
+                <PrivateRoute>
+                  <MyMungUpdateContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/reservation"
+              element={
+                <PrivateRoute>
+                  <ReservationContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/reservation-mung"
+              element={
+                <PrivateRoute>
+                  <ReservationMungContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/reservation-confirm"
+              element={
+                <PrivateRoute>
+                  <ReservationConfirmContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/payment"
+              element={
+                <PrivateRoute>
+                  <PaymentContainer />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/payment/complete"
+              element={
+                <PrivateRoute>
+                  <PaymentCompleteContainer />
+                </PrivateRoute>
+              }
+            />
+
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
