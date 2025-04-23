@@ -46,36 +46,36 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             ServerHttpRequest request = exchange.getRequest();
             log.info("Request Path: {}", request.getURI().getPath());
 
-            HttpCookie oauth2AccessCookie = request.getCookies().getFirst("Oauth2-Access-Token");
-
-            // 1. OAuth 인증 (쿠키)
-            if (oauth2AccessCookie != null) {
-                log.info("OAuth Access Cookie 인증: {}", oauth2AccessCookie);
-                if (parseClaims(oauth2AccessCookie.getValue()) == null) {
-                    return onError(exchange, "Invalid OAuth JWT Token");
-                }
-                return chain.filter(exchange);
-            }
-
-            // 2. 로컬 JWT 인증 (헤더)
+            // 1. JWT 추출
             String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 return onError(exchange, "No Authorization header");
             }
 
-            String jwt = authorizationHeader.substring(7);
-            Claims claims = parseClaims(jwt);
+            String jwtToken = authorizationHeader.substring(7);
+
+            // 2. JWT 검증
+            Claims claims = parseClaims(jwtToken);
             if (claims == null) {
                 return onError(exchange, "Invalid or expired JWT token");
             }
+            String userEmail = claims.getSubject();
+            Long userId = claims.get("userId", Long.class);
 
-            return chain.filter(exchange);
+            log.info("User Email: {}", userEmail);
+
+            // 3. 사용자 정보를 헤더로 추가하여 다음 서비스로 전달
+            ServerHttpRequest mutatedRequest = request.mutate()
+                    .header("X-User-Email", userEmail)
+                    .build();
+
+            return chain.filter(exchange.mutate().request(mutatedRequest).build());
         });
     }
 
     // JWT를 검증하고, 유효하면 Claims 객체를 반환. 유효하지 않으면 null 반환
     private Claims parseClaims(String token) {
-        log.info("JWT Token: {}", token);
+        //log.info("JWT Token: {}", token);
         try {
             return Jwts.parser()
                     .verifyWith(secretKey)
@@ -92,9 +92,10 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     // Mono, Flux -> Spring WebFlux (클라이언트 요청에 대한 반환값)
     private Mono<Void> onError(ServerWebExchange exchange, String error) {
+        log.error("Authorization error: {}", error);
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
-        log.error(error);
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
 
         String jsonResponse = generateErrorResponse(error);
         DataBuffer buffer = response.bufferFactory().wrap(jsonResponse.getBytes(StandardCharsets.UTF_8));
@@ -112,6 +113,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
     }
 
+    // Config 클래스 (사용 안 해도 필수로 필요)
     public static class Config {
     }
 }
