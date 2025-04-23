@@ -1,12 +1,12 @@
 import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
-import { useAuthStore } from "../login/hook/login.store";
+import { useAuthStore } from "../../../shared/store/login.store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import MyMungCard from "../mymung/MyMungCard";
 import MyReservationList from "./MyReservationList";
 import { Button } from "@mui/material";
-import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
+import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
 
 export default function MyPageContainer() {
   const { showNotificationAndRedirect } = useNotificationRedirect();
@@ -26,41 +26,50 @@ export default function MyPageContainer() {
     setIsOauth2Login(false);
   };
 
-const handleLocalLogout = async () => {
-  let logoutSuccess = false;
+  const handleLocalLogout = async () => {
+    let logoutSuccess = false;
 
-  try {
-    const result = await localLogoutData();
-    logoutSuccess = result?.status === 200;
-  } catch (error) {
-    console.error("로컬 로그아웃 중 오류 발생:", error);
-  } finally {
-    clientLogoutCleanup();
-    if (logoutSuccess) {
-      showNotificationAndRedirect("로그아웃되었습니다.", "success", "/", 2000);
-    } else {
-      showNotificationAndRedirect("로그아웃되었습니다.", "info", "/", 2000);
+    try {
+      const result = await localLogoutData();
+      logoutSuccess = result?.status === 200;
+    } catch (error) {
+      console.error("로컬 로그아웃 중 오류 발생:", error);
+    } finally {
+      clientLogoutCleanup();
+      if (logoutSuccess) {
+        showNotificationAndRedirect(
+          "로그아웃되었습니다.",
+          "success",
+          "/",
+          2000
+        );
+      } else {
+        showNotificationAndRedirect("로그아웃되었습니다.", "info", "/", 2000);
+      }
     }
-  }
-};
+  };
 
-const handleOauth2Logout = async () => {
-  let logoutSuccess = false;
+  const handleOauth2Logout = async () => {
+    let logoutSuccess = false;
 
-  try {
-    const result = await oauth2LogoutData();
-    logoutSuccess = result?.status === 200;
-  } catch (error) {
-    console.error("OAuth2 로그아웃 중 오류 발생:", error);
-  } finally {
-    clientLogoutCleanup();
-    if (logoutSuccess) {
-      showNotificationAndRedirect("로그아웃되었습니다.", "success", "/");
-    } else {
-      showNotificationAndRedirect("로그아웃되었습니다 (서버 응답 없음 또는 오류)", "info", "/");
+    try {
+      const result = await oauth2LogoutData();
+      logoutSuccess = result?.status === 200;
+    } catch (error) {
+      console.error("OAuth2 로그아웃 중 오류 발생:", error);
+    } finally {
+      clientLogoutCleanup();
+      if (logoutSuccess) {
+        showNotificationAndRedirect("로그아웃되었습니다.", "success", "/");
+      } else {
+        showNotificationAndRedirect(
+          "로그아웃되었습니다 (서버 응답 없음 또는 오류)",
+          "info",
+          "/"
+        );
+      }
     }
-  }
-};
+  };
 
   const handleMyMung = () => {
     navigate("/mymung/register");

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useReservationStore } from "./reservation.store";
+import { useReservationStore } from "../../shared/store/reservation.store";
 import { useEffect } from "react";
-import { api } from "../../shared/api/ApiInterceptor";
+import { api } from "../../shared/api/apiInterceptor";
 import { UserDto } from "../../shared/types/user.interface";
-import useNotificationRedirect from "../../components/snackbar/useNotificationRedirect";
+import useNotificationRedirect from "../../hooks/useNotificationRedirect";
 
 export default function ReservationConfirmContainer() {
   const { showNotificationAndRedirect } = useNotificationRedirect();
@@ -25,7 +25,7 @@ export default function ReservationConfirmContainer() {
     setReserveUserName,
     setReserveUserPhone,
     setRequestMessage,
-    resetStore
+    resetStore,
   } = useReservationStore();
 
   const handleReservationSubmit = async () => {
@@ -62,10 +62,10 @@ export default function ReservationConfirmContainer() {
       console.error("예약 실패:", error);
 
       showNotificationAndRedirect(
-        "예약에 실패했습니다. 다시 시도해주세요.", 
-        "error",     
-        "/mungshop",      
-        2000        
+        "예약에 실패했습니다. 다시 시도해주세요.",
+        "error",
+        "/mungshop",
+        2000
       );
     }
   };
@@ -73,10 +73,10 @@ export default function ReservationConfirmContainer() {
   useEffect(() => {
     if (!userId) {
       showNotificationAndRedirect(
-        "로그인이 필요합니다.", 
-        "warning",     
-        "/login",      
-        2000        
+        "로그인이 필요합니다.",
+        "warning",
+        "/login",
+        2000
       );
       return;
     }

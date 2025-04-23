@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MyMungJoin } from "../../../shared/types/mungjoin.interface";
 import { useSnackbar } from "notistack";
-import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
+import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
 
 interface MyMungJoinProps {
   onsubmit: (mungJoinDTO: MyMungJoin) => void;
@@ -51,10 +51,10 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
     onsubmit(mungJoinDTO);
 
     showNotificationAndRedirect(
-      "등록 완료! 마이페이지로 이동합니다.", 
-      "success",     
-      "/mypage",      
-      2000        
+      "등록 완료! 마이페이지로 이동합니다.",
+      "success",
+      "/mypage",
+      2000
     );
   };
 

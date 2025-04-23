@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { MungShop } from "../../../shared/types/mungshop.interface";
-import { api } from "../../../shared/api/ApiInterceptor";
+import { api } from "../../../shared/api/apiInterceptor";
 
-
-export const useSearchQueryHook = (mungShops : MungShop[]) => {
+export const useSearchQueryHook = (mungShops: MungShop[]) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMarker, setSelectedMarker] = useState<MungShop | null>(null);
   const [filteredMungShops, setFilteredMungShops] =
@@ -28,5 +27,11 @@ export const useSearchQueryHook = (mungShops : MungShop[]) => {
     }
   };
 
-  return { mungShops, setSearchQuery, filteredMungShops, selectedMarker, setSelectedMarker };
+  return {
+    mungShops,
+    setSearchQuery,
+    filteredMungShops,
+    selectedMarker,
+    setSelectedMarker,
+  };
 };

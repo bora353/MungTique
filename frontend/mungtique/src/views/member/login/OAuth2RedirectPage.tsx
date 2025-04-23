@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../shared/api/ApiInterceptor";
-import { useAuthStore } from "./hook/login.store";
-import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
+import { api } from "../../../shared/api/apiInterceptor";
+import { useAuthStore } from "../../../shared/store/login.store";
+import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
 
 export default function OAuth2RedirectPage() {
   const { showNotificationAndRedirect } = useNotificationRedirect();

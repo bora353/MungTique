@@ -1,5 +1,5 @@
-import { useJoinViewModelHook } from "./useJoinViewModel.hook";
-import { Join } from "./join.interface";
+import { useJoinViewModelHook } from "./hook/useJoinViewModel.hook";
+import { Join } from "../../../shared/types/join.interface";
 import JoinForm from "./JoinForm";
 
 export default function JoinContainer() {

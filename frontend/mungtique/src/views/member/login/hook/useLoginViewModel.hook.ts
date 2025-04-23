@@ -1,5 +1,5 @@
 import { Login } from "../../../../shared/types/login.interface";
-import { userApi } from "../../join/user.api";
+import { userApi } from "../../../../shared/api/user.api";
 
 export const useLoginViewModelHook = () => {
   const loginData = async (loginDTO: Login) => {

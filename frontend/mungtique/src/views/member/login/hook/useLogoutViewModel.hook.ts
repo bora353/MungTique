@@ -1,4 +1,4 @@
-import { userApi } from "../../join/user.api";
+import { userApi } from "../../../../shared/api/user.api";
 
 export const useLogoutViewModelHook = () => {
   const localLogoutData = async () => {
@@ -10,7 +10,7 @@ export const useLogoutViewModelHook = () => {
     }
     return { status };
   };
-1
+  1;
   const oauth2LogoutData = async () => {
     const { data, status } = await userApi.oauth2Logout();
 
@@ -21,5 +21,5 @@ export const useLogoutViewModelHook = () => {
     return { status };
   };
 
-  return { localLogoutData, oauth2LogoutData};
+  return { localLogoutData, oauth2LogoutData };
 };

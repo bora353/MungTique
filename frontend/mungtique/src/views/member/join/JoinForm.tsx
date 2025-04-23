@@ -2,10 +2,10 @@ import { Form, Formik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
-import { Join } from "./join.interface";
-import { userApi } from "./user.api";
+import { Join } from "../../../shared/types/join.interface";
+import { userApi } from "../../../shared/api/user.api";
 import { useSnackbar } from "notistack";
-import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
+import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
@@ -119,12 +119,11 @@ export default function JoinForm({ onsubmit }: JoinProps) {
           onsubmit(values);
 
           showNotificationAndRedirect(
-            "회원가입 성공", 
-            "success",     
-            "/joinsuccess",      
-            2000        
+            "회원가입 성공",
+            "success",
+            "/joinsuccess",
+            2000
           );
-
         } catch (error) {
           enqueueSnackbar("회원 가입에 실패했습니다.", {
             variant: "error",

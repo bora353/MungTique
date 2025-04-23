@@ -6,7 +6,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../shared/api/ApiInterceptor";
+import { api } from "../../../shared/api/apiInterceptor";
 import { MyMung } from "../../../shared/types/mungjoin.interface";
 import MyMungImageUploadForm from "./MyMungImageUploadForm";
 import { Box, Button } from "@mui/material";
@@ -42,7 +42,7 @@ export default function MyMungCard() {
 
   return (
     <div className="p-6 bg-gray-50 rounded-lg shadow-md">
-       <Grid container spacing={3}>
+      <Grid container spacing={3}>
         {myMungs.length === 0 ? (
           <Grid item xs={12} className="flex justify-center">
             <Card
@@ -75,27 +75,29 @@ export default function MyMungCard() {
                     alt={mung.dogName}
                     sx={{ objectFit: "cover" }}
                   /> */}
-                  <Box sx={{ 
-                  width: "100%", 
-                  height: "200px", 
-                  overflow: "hidden",
-                  position: "relative"
-                }}>
-                  <CardMedia
-                    component="img"
-                    image={mung.imageUrl || "https://placehold.co/200x150"}
-                    alt={mung.dogName}
-                    sx={{ 
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
+                  <Box
+                    sx={{
                       width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      objectPosition: "center"
+                      height: "200px",
+                      overflow: "hidden",
+                      position: "relative",
                     }}
-                  />
-                </Box>
+                  >
+                    <CardMedia
+                      component="img"
+                      image={mung.imageUrl || "https://placehold.co/200x150"}
+                      alt={mung.dogName}
+                      sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        objectPosition: "center",
+                      }}
+                    />
+                  </Box>
                   <CardContent>
                     <Typography variant="h6" fontWeight="bold" color="primary">
                       {mung.dogName}

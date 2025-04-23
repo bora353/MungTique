@@ -1,5 +1,5 @@
 import { MyMungJoin } from "../../../../shared/types/mungjoin.interface";
-import { mungApi } from "../mung.api";
+import { mungApi } from "../../../../shared/api/mung.api";
 
 export const useMungJoinViewModelHook = () => {
   const mungJoinData = async (mungJoinDTO: MyMungJoin) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { PaymentInfo, PaymentMethod } from "./payment.interface";
+import { PaymentInfo, PaymentMethod } from "../../shared/api/payment.interface";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../shared/api/ApiInterceptor";
+import { api } from "../../shared/api/apiInterceptor";
 import { useSnackbar } from "notistack";
 
 interface PaymentOptionsProps {

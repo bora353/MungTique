@@ -2,7 +2,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { api } from "../../shared/api/apiInterceptor";
+import { api } from "../../../shared/api/apiInterceptor";
 import { useSnackbar } from "notistack";
 
 interface ShopLikeProps {

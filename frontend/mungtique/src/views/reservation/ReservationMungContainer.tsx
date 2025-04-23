@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useReservationStore } from "./reservation.store";
+import { useReservationStore } from "../../shared/store/reservation.store";
 import { useEffect, useState } from "react";
-import { api } from "../../shared/api/ApiInterceptor";
+import { api } from "../../shared/api/apiInterceptor";
 import { MyMung } from "../../shared/types/mungjoin.interface";
-import useNotificationRedirect from "../../components/snackbar/useNotificationRedirect";
+import useNotificationRedirect from "../../hooks/useNotificationRedirect";
 import { useSnackbar } from "notistack";
 
 export default function ReservationMungContainer() {
@@ -28,10 +28,10 @@ export default function ReservationMungContainer() {
   useEffect(() => {
     if (!userId) {
       showNotificationAndRedirect(
-        "로그인이 필요합니다.", 
-        "warning",     
-        "/login",      
-        2000        
+        "로그인이 필요합니다.",
+        "warning",
+        "/login",
+        2000
       );
       return;
     }

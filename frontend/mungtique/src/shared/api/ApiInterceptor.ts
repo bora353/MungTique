@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { useAuthStore } from "../../views/member/login/hook/login.store";
+import { useAuthStore } from "../store/login.store";
 
 const serverUrl = import.meta.env.VITE_GATEWAY_SERVER;
 const AUTH_TOKEN_KEY = "access";
@@ -34,13 +34,20 @@ const apiInterceptor = (baseUrl: string) => {
         console.log("401 error message! : " + message);
 
         // accessToken 만료시 재발급
-        if (message === "Invalid or expired JWT token" && !error.config._retry) {
+        if (
+          message === "Invalid or expired JWT token" &&
+          !error.config._retry
+        ) {
           error.config._retry = true;
 
           try {
-            const response = await axiosInstance.post("/user-service/reissue", {}, {
-              withCredentials: true,
-            });
+            const response = await axiosInstance.post(
+              "/user-service/reissue",
+              {},
+              {
+                withCredentials: true,
+              }
+            );
 
             const authorizationHeader = response.headers["authorization"];
             if (authorizationHeader) {
@@ -48,7 +55,9 @@ const apiInterceptor = (baseUrl: string) => {
               localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
               console.log("Received new access token");
 
-              axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+              axiosInstance.defaults.headers.common[
+                "Authorization"
+              ] = `Bearer ${accessToken}`;
               error.config.headers["Authorization"] = `Bearer ${accessToken}`;
 
               return axiosInstance(error.config); // 토큰 발행 후 원래 요청 다시
@@ -62,7 +71,7 @@ const apiInterceptor = (baseUrl: string) => {
           alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
           signOut();
         }
-      } 
+      }
       return Promise.reject(error); // 401이 아닌 오류에 대한 처리
     }
   );
@@ -89,7 +98,8 @@ function signOut() {
       })
       .catch((err) => {
         console.error("OAuth2 Logout failed", err);
-      }).finally(() => {
+      })
+      .finally(() => {
         window.location.replace("/login");
       });
   } else {
@@ -103,7 +113,8 @@ function signOut() {
       })
       .catch((err) => {
         console.error("Logout failed", err);
-      }).finally(() => {
+      })
+      .finally(() => {
         window.location.replace("/login");
       });
   }

@@ -1,8 +1,8 @@
-import { Join } from "./join.interface";
-import { UserEntity } from "../../../shared/types/user.interface";
-import { Login } from "../../../shared/types/login.interface";
-import { MailCheck } from "../../../shared/types/mailcheck.interface";
-import { api } from "../../../shared/api/ApiInterceptor";
+import { Join } from "../types/join.interface";
+import { UserEntity } from "../types/user.interface";
+import { Login } from "../types/login.interface";
+import { MailCheck } from "../types/mailcheck.interface";
+import { api } from "./apiInterceptor";
 
 const join = async (joinDTO: Join) =>
   await api().post<UserEntity>(`/user-service/join`, joinDTO);

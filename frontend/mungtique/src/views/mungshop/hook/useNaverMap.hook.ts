@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { mungshopApi } from "../mungshop.api";
+import { mungshopApi } from "../../../shared/api/mungshop.api";
 import { MungShop } from "../../../shared/types/mungshop.interface";
 
 export const useNaverMapHook = () => {

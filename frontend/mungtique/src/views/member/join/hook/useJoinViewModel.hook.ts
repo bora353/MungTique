@@ -1,5 +1,5 @@
-import { Join } from "./join.interface";
-import { userApi } from "./user.api";
+import { Join } from "../../../../shared/types/join.interface";
+import { userApi } from "../../../../shared/api/user.api";
 
 export const useJoinViewModelHook = () => {
   const joinData = async (joinDTO: Join) => {
@@ -15,4 +15,3 @@ export const useJoinViewModelHook = () => {
 
   return { joinData };
 };
-

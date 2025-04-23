@@ -4,16 +4,12 @@ import HomeAppBar from "./views/main/HomeAppBar";
 import FindInfoContainer from "./views/member/findinfo/FindInfoContainer";
 import JoinContainer from "./views/member/join/JoinContainer";
 import JoinSuccessContainer from "./views/member/join/JoinSuccessContainer";
-import {
-  useAuthInit,
-  useAuthStore,
-} from "./views/member/login/hook/login.store";
+import { useAuthInit, useAuthStore } from "./shared/store/login.store";
 import LoginContainer from "./views/member/login/LoginContainer";
 import OAuth2RedirectPage from "./views/member/login/OAuth2RedirectPage";
 import MyMungJoinContainer from "./views/member/mymung/MyMungJoinContainer";
 import MyMungUpdateContainer from "./views/member/mymung/MyMungUpdateContainer";
 import MyPageContainer from "./views/member/mypage/MyPageContainer";
-
 import { ReactNode } from "react";
 import LoadingScreen from "./views/common/LoadingScreen";
 import NotFound from "./views/common/NotFound";

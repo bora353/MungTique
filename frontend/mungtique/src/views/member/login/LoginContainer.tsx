@@ -2,9 +2,9 @@ import LoginOptions from "./LoginOptions";
 import LoginForm from "./LoginForm";
 import { Login } from "../../../shared/types/login.interface";
 import { useLoginViewModelHook } from "./hook/useLoginViewModel.hook";
-import { useAuthStore } from "./hook/login.store";
+import { useAuthStore } from "../../../shared/store/login.store";
 import { useNavigate } from "react-router-dom";
-import useNotificationRedirect from "../../../components/snackbar/useNotificationRedirect";
+import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
 
 export default function LoginContainer() {
   const { showNotificationAndRedirect } = useNotificationRedirect();
@@ -31,11 +31,11 @@ export default function LoginContainer() {
       console.error("로그인 중 오류 발생:", error);
 
       showNotificationAndRedirect(
-        "아이디 또는 비밀번호가 일치하지 않습니다.", 
-        "warning",     
-        "/login",      
-        2000        
-      ); 
+        "아이디 또는 비밀번호가 일치하지 않습니다.",
+        "warning",
+        "/login",
+        2000
+      );
     }
   };
 

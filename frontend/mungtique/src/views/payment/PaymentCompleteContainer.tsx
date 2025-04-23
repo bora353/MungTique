@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PaymentInfo, PaymentMethod, ReservationInfo } from "./payment.interface";
-import { api } from "../../shared/api/ApiInterceptor";
+import {
+  PaymentInfo,
+  PaymentMethod,
+  ReservationInfo,
+} from "../../shared/api/payment.interface";
+import { api } from "../../shared/api/apiInterceptor";
 
 export default function PaymentCompleteContainer() {
   const navigate = useNavigate();
@@ -30,7 +34,7 @@ export default function PaymentCompleteContainer() {
         setReservation(reservationRes.data);
         setPayment(paymentRes.data);
 
-        console.log(payment)
+        console.log(payment);
       } catch (error) {
         console.error("데이터를 불러오는데 실패했습니다:", error);
       } finally {
@@ -68,7 +72,7 @@ export default function PaymentCompleteContainer() {
   };
 
   const handleReservation = () => {
-    navigate("/mypage"); 
+    navigate("/mypage");
   };
 
   return (
@@ -197,8 +201,10 @@ export default function PaymentCompleteContainer() {
           </div>
 
           <div className="mt-6 text-center">
-            <button className="px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors shadow-md"
-            onClick={handleReservation}>
+            <button
+              className="px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors shadow-md"
+              onClick={handleReservation}
+            >
               예약 내역 보기
             </button>
             <div className="mt-3">

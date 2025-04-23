@@ -10,10 +10,10 @@ import MapTabMenu from "./MapTabMenu";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import { useReservationStore } from "../reservation/reservation.store";
+import { useReservationStore } from "../../shared/store/reservation.store";
 import { MungShop } from "../../shared/types/mungshop.interface";
-import { api } from "../../shared/api/ApiInterceptor";
-import useNotificationRedirect from "../../components/snackbar/useNotificationRedirect";
+import { api } from "../../shared/api/apiInterceptor";
+import useNotificationRedirect from "../../hooks/useNotificationRedirect";
 import { useSnackbar } from "notistack";
 
 interface MarkerInfoProps {

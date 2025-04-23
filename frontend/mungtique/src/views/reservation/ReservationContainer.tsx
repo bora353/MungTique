@@ -4,8 +4,8 @@ import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useReservationStore } from "./reservation.store";
-import { api } from "../../shared/api/ApiInterceptor";
+import { useReservationStore } from "../../shared/store/reservation.store";
+import { api } from "../../shared/api/apiInterceptor";
 import { useSnackbar } from "notistack";
 
 export default function ReservationContainer() {
@@ -24,7 +24,7 @@ export default function ReservationContainer() {
 
   useEffect(() => {
     if (!selectedDate) {
-      setSelectedDate(dayjs().add(1, "day")); 
+      setSelectedDate(dayjs().add(1, "day"));
     }
   }, [selectedDate, setSelectedDate]);
 
@@ -37,7 +37,10 @@ export default function ReservationContainer() {
       .then((response) => {
         console.log(response.data);
         const times = response.data.map(
-          (reservation: { reservationDate: string; reservationTime: string }) => {
+          (reservation: {
+            reservationDate: string;
+            reservationTime: string;
+          }) => {
             return {
               date: reservation.reservationDate,
               time: reservation.reservationTime,
@@ -111,8 +114,13 @@ export default function ReservationContainer() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <StaticDatePicker
               value={selectedDate}
-              onChange={(newDate) => {setSelectedDate(newDate); setSelectedTime(null);}}
-              shouldDisableDate={(date) => date.isBefore(dayjs(), "day") || date.isSame(dayjs(), "day")} 
+              onChange={(newDate) => {
+                setSelectedDate(newDate);
+                setSelectedTime(null);
+              }}
+              shouldDisableDate={(date) =>
+                date.isBefore(dayjs(), "day") || date.isSame(dayjs(), "day")
+              }
               slots={{ actionBar: () => null }}
             />
           </LocalizationProvider>
