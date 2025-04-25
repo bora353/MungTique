@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { ReservationInfo } from "../../shared/api/payment.interface";
+import { ReservationInfo } from "../../shared/types/payment.interface";
 
 interface ReservationSummaryProps {
   reservation: ReservationInfo | undefined;

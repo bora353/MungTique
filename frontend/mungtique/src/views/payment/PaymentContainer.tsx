@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import PaymentOptions from "./PaymentOptions";
 import ReservationSummary from "./ReservationSummary";
 import { useEffect, useState } from "react";
-import { ReservationInfo } from "../../shared/api/payment.interface";
+import { ReservationInfo } from "../../shared/types/payment.interface";
 import { api } from "../../shared/api/apiInterceptor";
 
 export default function PaymentContainer() {

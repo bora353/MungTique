@@ -4,7 +4,7 @@ import {
   PaymentInfo,
   PaymentMethod,
   ReservationInfo,
-} from "../../shared/api/payment.interface";
+} from "../../shared/types/payment.interface";
 import { api } from "../../shared/api/apiInterceptor";
 
 export default function PaymentCompleteContainer() {

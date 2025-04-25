@@ -24,7 +24,7 @@ export default function MainContainer() {
   };
 
   return (
-    <div className="min-h-screen bg-pink-50 pt-[80px]">
+    <div className="min-h-screen bg-pink-50">
       {/* 메인 배너 */}
       <section className="bg-gradient-to-r from-pink-300 to-purple-300 py-16">
         <div className="container mx-auto px-4 text-center">

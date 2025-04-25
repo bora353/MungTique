@@ -4,43 +4,32 @@ import { Login } from "../types/login.interface";
 import { MailCheck } from "../types/mailcheck.interface";
 import { api } from "./apiInterceptor";
 
-const join = async (joinDTO: Join) =>
-  await api().post<UserEntity>(`/user-service/join`, joinDTO);
-
-const login = async (loginDTO: Login) => {
-  const formData = new FormData();
-  formData.append("email", loginDTO.email);
-  formData.append("password", loginDTO.password);
-  return await api().post(`/user-service/login`, formData, {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    withCredentials: true,
-  });
-};
-
-const localLogout = async () => await api().post(`/user-service/logout`, null);
-const oauth2Logout = async () => {
-  return await api().post(`/user-service/oauth2/logout`, null, {
-    withCredentials: true,
-  });
-};
-
-const mailSend = async (mailDTO: MailCheck) => {
-  console.log("mailDTO", mailDTO);
-  return await api().post<string>(`/user-service/mail-send`, mailDTO);
-};
-
-const mailCheck = async (email: string, providedVerificationCode: string) =>
-  await api().get<boolean>(`/user-service/mail-check`, {
-    params: { email, providedVerificationCode },
-  });
+const USER_BASE_URL = '/user-service';
 
 export const userApi = {
-  join,
-  login,
-  localLogout,
-  oauth2Logout,
-  mailSend,
-  mailCheck,
+  join: (joinDTO: Join) =>
+    api().post<UserEntity>(`${USER_BASE_URL}/join`, joinDTO),
+
+  login: (loginDTO: Login) => {
+    const formData = new FormData();
+    formData.append("email", loginDTO.email);
+    formData.append("password", loginDTO.password);
+    return api().post(`${USER_BASE_URL}/login`, formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+  },
+
+  localLogout: () => api().post(`${USER_BASE_URL}/logout`),
+
+  oauth2Logout: () => api().post(`${USER_BASE_URL}/oauth2/logout`),
+
+  sendMail: (mailDTO: MailCheck) =>
+    api().post<string>(`${USER_BASE_URL}/mail-send`, mailDTO),
+
+  checkMail: (email: string, providedVerificationCode: string) =>
+    api().get<boolean>(`${USER_BASE_URL}/mail-check`, {
+      params: { email, providedVerificationCode },
+    }),
 };

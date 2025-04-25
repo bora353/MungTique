@@ -15,7 +15,7 @@ const apiClient = (baseUrl: string): AxiosInstance => {
       "Content-Type": "application/json",
       Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
     },
-    // timeout: 3000,
+    timeout: 5000,
   });
 
   return instance;
@@ -83,40 +83,28 @@ function signOut() {
   const { setIsLocalLogin, setIsOauth2Login } = useAuthStore();
   const axiosInstance = apiClient(serverUrl);
   const isOauth2Login = localStorage.getItem(OAUTH2_LOGIN_KEY) === "true";
-  localStorage.removeItem("userId");
+
+  // 공통 로컬 클리어
   localStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem("userId");
 
-  if (isOauth2Login) {
-    // OAuth2 로그아웃
-    localStorage.removeItem(OAUTH2_LOGIN_KEY);
-    setIsLocalLogin(false);
+  if (isOauth2Login) localStorage.removeItem(OAUTH2_LOGIN_KEY);
 
-    axiosInstance
-      .post("/user-service/oauth2/logout")
-      .then(() => {
-        console.log("OAuth2 Logout");
-      })
-      .catch((err) => {
-        console.error("OAuth2 Logout failed", err);
-      })
-      .finally(() => {
-        window.location.replace("/login");
-      });
-  } else {
-    // 로컬 로그아웃
-    setIsOauth2Login(false);
+  // 상태 업데이트
+  setIsLocalLogin(false);
+  setIsOauth2Login(false);
 
-    axiosInstance
-      .post("/user-service/logout")
-      .then(() => {
-        console.log("Local Logout");
-      })
-      .catch((err) => {
-        console.error("Logout failed", err);
-      })
-      .finally(() => {
-        window.location.replace("/login");
-      });
+  // 서버 로그아웃 시도
+  try {
+    if (isOauth2Login) {
+      axiosInstance.post("/user-service/oauth2/logout");
+    } else {
+      axiosInstance.post("/user-service/logout");
+    }
+  } catch (err) {
+    console.error("로그아웃 실패", err); // 실패해도 무시 가능
+  } finally {
+    window.location.replace("/login"); // 뒤로가기 방지
   }
 }
 

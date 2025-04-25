@@ -18,21 +18,24 @@ export default function LoginContainer() {
     try {
       const { userId, accessToken } = await loginData(loginDTO);
 
-      if (userId) {
+      if (userId && accessToken) {
         localStorage.setItem("userId", userId);
-      }
-
-      if (accessToken) {
         localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
         setIsLocalLogin(true, accessToken);
+        navigate("/");
+      } else {
+        showNotificationAndRedirect(
+          "아이디 또는 비밀번호가 일치하지 않습니다.",
+          "warning",
+          "/login",
+          2000
+        );
       }
-      navigate("/");
     } catch (error) {
       console.error("로그인 중 오류 발생:", error);
-
       showNotificationAndRedirect(
-        "아이디 또는 비밀번호가 일치하지 않습니다.",
-        "warning",
+        "로그인 중 오류가 발생했습니다.",
+        "error",
         "/login",
         2000
       );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../shared/api/apiInterceptor";
 import { useNavigate } from "react-router-dom";
-import { ReservationInfo } from "../../../shared/api/payment.interface";
+import { ReservationInfo } from "../../../shared/types/payment.interface";
 import { useSnackbar } from "notistack";
 
 export default function MyReservationList() {

@@ -1,4 +1,3 @@
-import { useLogoutViewModelHook } from "../login/hook/useLogoutViewModel.hook";
 import { useAuthStore } from "../../../shared/store/login.store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import MyMungCard from "../mymung/MyMungCard";
 import MyReservationList from "./MyReservationList";
 import { Button } from "@mui/material";
 import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
+import { useUserApi } from "../../../hooks/useUserApi";
 
 export default function MyPageContainer() {
   const { showNotificationAndRedirect } = useNotificationRedirect();
@@ -15,7 +15,7 @@ export default function MyPageContainer() {
   const OAUTH2_LOGIN_KEY = "oauth2";
 
   const { setIsLocalLogin, isOauth2Login, setIsOauth2Login } = useAuthStore();
-  const { localLogoutData, oauth2LogoutData } = useLogoutViewModelHook();
+  const { logoutLocal, logoutOauth2 } = useUserApi();
   const [selectedMenu, setSelectedMenu] = useState<string>("home");
 
   const clientLogoutCleanup = () => {
@@ -30,7 +30,7 @@ export default function MyPageContainer() {
     let logoutSuccess = false;
 
     try {
-      const result = await localLogoutData();
+      const result = await logoutLocal();
       logoutSuccess = result?.status === 200;
     } catch (error) {
       console.error("로컬 로그아웃 중 오류 발생:", error);
@@ -53,7 +53,7 @@ export default function MyPageContainer() {
     let logoutSuccess = false;
 
     try {
-      const result = await oauth2LogoutData();
+      const result = await logoutOauth2();
       logoutSuccess = result?.status === 200;
     } catch (error) {
       console.error("OAuth2 로그아웃 중 오류 발생:", error);

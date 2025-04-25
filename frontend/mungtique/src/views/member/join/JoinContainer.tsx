@@ -1,10 +1,10 @@
-import { useJoinViewModelHook } from "./hook/useJoinViewModel.hook";
+import { useUserApi } from "../../../hooks/useUserApi";
 import { Join } from "../../../shared/types/join.interface";
 import JoinForm from "./JoinForm";
 
 export default function JoinContainer() {
-  const { joinData } = useJoinViewModelHook();
-  const handleJoinSubmit = (joinDTO: Join) => joinData(joinDTO);
+  const { joinUser } = useUserApi();
+  const handleJoinSubmit = (joinDTO: Join) => joinUser(joinDTO);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-pink-50">

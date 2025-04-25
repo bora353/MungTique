@@ -3,9 +3,9 @@ import { useState } from "react";
 import * as Yup from "yup";
 import { MailCheck } from "../../../shared/types/mailcheck.interface";
 import { Join } from "../../../shared/types/join.interface";
-import { userApi } from "../../../shared/api/user.api";
 import { useSnackbar } from "notistack";
 import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
+import { useUserApi } from "../../../hooks/useUserApi";
 
 interface JoinProps {
   onsubmit: (joinDTO: Join) => void;
@@ -31,6 +31,7 @@ const validationSchema = Yup.object().shape({
 export default function JoinForm({ onsubmit }: JoinProps) {
   const { enqueueSnackbar } = useSnackbar();
   const { showNotificationAndRedirect } = useNotificationRedirect();
+  const { sendVerificationMail, verifyMailCode } = useUserApi();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const handleMailCheck = async (email: string) => {
@@ -43,7 +44,7 @@ export default function JoinForm({ onsubmit }: JoinProps) {
       }
 
       const mailDTO: MailCheck = { email: email };
-      const result = await userApi.mailSend(mailDTO);
+      const result = await sendVerificationMail(mailDTO);
       console.log("이메일 인증 요청 완료", result);
 
       if (result.data === "duplicate email") {
@@ -75,7 +76,7 @@ export default function JoinForm({ onsubmit }: JoinProps) {
         return;
       }
 
-      const response = await userApi.mailCheck(email, emailVerify);
+      const response = await verifyMailCode(email, emailVerify);
 
       if (response.data === true) {
         enqueueSnackbar("메일 인증이 완료되었습니다 :)", {
