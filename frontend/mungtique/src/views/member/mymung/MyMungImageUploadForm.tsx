@@ -7,7 +7,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { useState } from "react";
-import { api } from "../../../shared/api/apiInterceptor";
+import { useDogApi } from "../../../hooks/useDogApi";
 
 interface MyMungImageUploadFormProps {
   open: boolean;
@@ -20,6 +20,7 @@ export default function MyMungImageUploadForm({
   onClose,
   dogId,
 }: MyMungImageUploadFormProps) {
+  const { uploadDogImage } = useDogApi();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
@@ -47,24 +48,17 @@ export default function MyMungImageUploadForm({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("dogId", dogId.toString());
+    const success = await uploadDogImage(dogId, file);
 
-    try {
-      await api().post(`/dog-service/dogs/upload-image`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    if (success) {
       setMessage("Image uploaded successfully");
       setOpenSnackbar(true);
-
+  
       setTimeout(() => {
         onClose();
         window.location.reload();
       }, 1000);
-    } catch (error) {
+    } else {
       setMessage("Image upload failed");
       setOpenSnackbar(true);
     }

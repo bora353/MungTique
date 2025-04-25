@@ -1,4 +1,4 @@
-export interface MyMung {
+export interface UserDog {
   dogId: number;
   imageUrl?: string;
 
@@ -11,7 +11,7 @@ export interface MyMung {
   userId: number;
 }
 
-export interface MyMungJoin {
+export interface RegisterDogDTO {
   imageUrl?: string;
 
   dogName: string;

@@ -1,17 +1,16 @@
-import { MyMungJoin } from "../../../shared/types/mungjoin.interface";
-import { useMungJoinViewModelHook } from "./hook/useMungJoinViewModel.hook";
+import { useDogApi } from "../../../hooks/useDogApi";
+import { RegisterDogDTO } from "../../../shared/types/mungjoin.interface";
 import MyMungJoinForm from "./MyMungJoinForm";
 
 export default function MyMungJoinContainer() {
-  const { mungJoinData } = useMungJoinViewModelHook();
-  const handleMungJoinSubmit = (mungJoinDTO: MyMungJoin) =>
-    mungJoinData(mungJoinDTO);
+  const { registerDog } = useDogApi();
+  const handleDogRegisterSubmit = (mungJoinDTO: RegisterDogDTO) => registerDog(mungJoinDTO);
 
   return (
     <div>
       <div className="flex justify-center items-center min-h-screen bg-pink-50">
         <div className="text-center">
-          <MyMungJoinForm onsubmit={handleMungJoinSubmit} />
+          <MyMungJoinForm onsubmit={handleDogRegisterSubmit} />
         </div>
       </div>
     </div>

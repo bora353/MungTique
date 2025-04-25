@@ -2,20 +2,21 @@ import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaDog, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MungShop } from "../../shared/types/mungshop.interface";
-import { mungshopApi } from "../../shared/api/mungshop.api";
+import { useMungshopApi } from "../../hooks/useMungShopApi";
 
 export default function MainContainer() {
   const navigate = useNavigate();
+  const { fetchMungShops } = useMungshopApi();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [mungShops, setMungShops] = useState<MungShop[]>([]);
 
   useEffect(() => {
-    const fetchMungShops = async () => {
-      const response = await mungshopApi.getMungShops();
-      setMungShops(response.data);
+    const loadMungShops = async () => {
+      const result = await fetchMungShops();
+      setMungShops(result);
     };
 
-    fetchMungShops();
+    loadMungShops();
     setIsLoading(false);
   }, []);
 

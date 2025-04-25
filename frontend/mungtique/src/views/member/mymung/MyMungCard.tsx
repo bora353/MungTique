@@ -6,30 +6,28 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../../shared/api/apiInterceptor";
-import { MyMung } from "../../../shared/types/mungjoin.interface";
+import { UserDog } from "../../../shared/types/mungjoin.interface";
 import MyMungImageUploadForm from "./MyMungImageUploadForm";
 import { Box, Button } from "@mui/material";
+import { useDogApi } from "../../../hooks/useDogApi";
 
 export default function MyMungCard() {
   const navigate = useNavigate();
-  const [myMungs, setMyMungs] = useState<MyMung[]>([]);
+  const { getMyDogs } = useDogApi();
+  const [myMungs, setMyMungs] = useState<UserDog[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedDogId, setSelectedDogId] = useState<number | null>(null);
-  const userId = localStorage.getItem("userId");
-
-  const getMyMungs = async () => {
-    try {
-      const response = await api().get<MyMung[]>(`/dog-service/dogs/${userId}`);
-      setMyMungs(response.data);
-    } catch (error) {
-      console.error("Error getMyMungs : ", error);
-    }
-  };
 
   useEffect(() => {
-    getMyMungs();
-  }, [userId]);
+    const userId = Number(localStorage.getItem("userId"));
+
+    const fetchMyDogs = async () => {
+      const myDogs = await getMyDogs(userId);
+      setMyMungs(myDogs);
+    };
+  
+    fetchMyDogs();
+  }, []);
 
   const handleCardClick = (dogId: number) => {
     navigate(`/mymung/${dogId}`);

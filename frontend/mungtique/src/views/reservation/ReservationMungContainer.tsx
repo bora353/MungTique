@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useReservationStore } from "../../shared/store/reservation.store";
 import { useEffect, useState } from "react";
 import { api } from "../../shared/api/apiInterceptor";
-import { MyMung } from "../../shared/types/mungjoin.interface";
+import { UserDog } from "../../shared/types/mungjoin.interface";
 import useNotificationRedirect from "../../hooks/useNotificationRedirect";
 import { useSnackbar } from "notistack";
 
@@ -37,9 +37,9 @@ export default function ReservationMungContainer() {
     }
 
     api()
-      .get<MyMung[]>(`/dog-service/dogs/${userId}`)
+      .get<UserDog[]>(`/dog-service/dogs/${userId}`)
       .then((response) => {
-        const dogData = response.data.map((dog: MyMung) => ({
+        const dogData = response.data.map((dog: UserDog) => ({
           dogId: dog.dogId,
           dogName: dog.dogName,
           breedType: dog.breedType,

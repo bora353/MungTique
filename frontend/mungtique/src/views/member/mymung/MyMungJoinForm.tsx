@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { MyMungJoin } from "../../../shared/types/mungjoin.interface";
+import { RegisterDogDTO } from "../../../shared/types/mungjoin.interface";
 import { useSnackbar } from "notistack";
 import useNotificationRedirect from "../../../hooks/useNotificationRedirect";
 
 interface MyMungJoinProps {
-  onsubmit: (mungJoinDTO: MyMungJoin) => void;
+  onsubmit: (mungJoinDTO: RegisterDogDTO) => void;
 }
 
 export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
@@ -23,7 +23,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
     setMungJoinForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -40,7 +40,7 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
       return;
     }
 
-    const mungJoinDTO: MyMungJoin = {
+    const mungJoinDTO: RegisterDogDTO = {
       ...mungJoinForm,
       weight: Number(mungJoinForm.weight),
       age: Number(mungJoinForm.age),
@@ -48,14 +48,21 @@ export default function MyMungJoinForm({ onsubmit }: MyMungJoinProps) {
     };
 
     console.log("mungJoinDTO", mungJoinDTO);
-    onsubmit(mungJoinDTO);
-
-    showNotificationAndRedirect(
-      "등록 완료! 마이페이지로 이동합니다.",
-      "success",
-      "/mypage",
-      2000
-    );
+  
+    try {
+      await onsubmit(mungJoinDTO);
+      showNotificationAndRedirect(
+        "등록 완료! 마이페이지로 이동합니다.",
+        "success",
+        "/mypage",
+        2000
+      );
+    } catch (error) {
+      console.error("강아지 등록 실패:", error);
+      enqueueSnackbar("강아지 등록에 실패했습니다. 다시 시도해주세요.", {
+        variant: "error",
+      });
+    }
   };
 
   return (

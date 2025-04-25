@@ -12,9 +12,9 @@ import { useNavigate } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { useReservationStore } from "../../shared/store/reservation.store";
 import { MungShop } from "../../shared/types/mungshop.interface";
-import { api } from "../../shared/api/apiInterceptor";
 import useNotificationRedirect from "../../hooks/useNotificationRedirect";
 import { useSnackbar } from "notistack";
+import { useDogApi } from "../../hooks/useDogApi";
 
 interface MarkerInfoProps {
   selectedMarker: MungShop | null;
@@ -31,6 +31,7 @@ export default function MapMarkerInfo({
   const { showNotificationAndRedirect } = useNotificationRedirect();
 
   const navigate = useNavigate();
+  const { getMyDogs } = useDogApi();
   const userId = localStorage.getItem("userId");
   const [activeTab, setActiveTab] = useState("홈");
   const { setSelectedMungShop, setSelectedMungShopId } = useReservationStore();
@@ -55,11 +56,9 @@ export default function MapMarkerInfo({
     }
 
     try {
-      const response = await api().get(`/dog-service/dogs/${userId}`);
+      const dogs = await getMyDogs(Number(userId));
 
-      console.log(response.data);
-
-      if (response.data.length === 0) {
+      if (dogs.length === 0) {
         showNotificationAndRedirect(
           "마이뭉 먼저 등록해주세요.",
           "info",
