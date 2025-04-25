@@ -3,7 +3,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
-import { useMungshopApi } from "../../../hooks/useMungShopApi";
+import { useMungshopApi } from "../../../hooks/useMungshopApi";
 
 interface ShopLikeProps {
   mungShopId: number;

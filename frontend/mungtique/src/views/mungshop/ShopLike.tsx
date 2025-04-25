@@ -2,8 +2,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { api } from "../../shared/api/apiInterceptor";
 import { useSnackbar } from "notistack";
+import { useMungshopApi } from "../../hooks/useMungshopApi";
 
 interface ShopLikeProps {
   mungShopId: number;
@@ -13,24 +13,17 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
   const { enqueueSnackbar } = useSnackbar();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const { getLikeStatus, getLikeCount, toggleLikeStatus } = useMungshopApi();
   const userId = localStorage.getItem("userId");
 
   const fetchLikeStatus = async () => {
     if (!userId) return;
 
-    try {
-      const statusResponse = await api().get<boolean>(
-        `/mungshop-service/mungshops/${mungShopId}/like-status/${userId}`
-      );
-      setIsLiked(statusResponse.data);
-
-      const countResponse = await api().get<number>(
-        `/mungshop-service/mungshops/like-status?mungShopId=${mungShopId}`
-      );
-      setLikeCount(countResponse.data);
-    } catch (error) {
-      console.error("Error fetching like status:", error);
-    }
+    const status = await getLikeStatus(mungShopId, Number(userId));
+    const count = await getLikeCount(mungShopId);
+    
+    if (status !== null) setIsLiked(status);
+    if (count !== null) setLikeCount(count);
   };
 
   const handleLikeClick = async () => {
@@ -41,22 +34,15 @@ export default function ShopLike({ mungShopId }: ShopLikeProps) {
       return;
     }
 
-    try {
-      let response;
+    const response = await toggleLikeStatus(
+      mungShopId,
+      Number(userId),
+      isLiked
+    );
 
-      if (isLiked) {
-        response = await api().delete<number>(
-          `/mungshop-service/mungshops/${mungShopId}/unlike/${userId}`
-        );
-      } else {
-        response = await api().post<number>(
-          `/mungshop-service/mungshops/${mungShopId}/like/${userId}`
-        );
-      }
-      setIsLiked((prev) => !prev);
+    if (response !== null) {
+      setIsLiked(!isLiked);
       setLikeCount(response.data);
-    } catch (error) {
-      console.error("Error handling like/unlike:", error);
     }
   };
 

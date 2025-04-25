@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { api } from "../../../shared/api/apiInterceptor";
 import { useNavigate } from "react-router-dom";
 import { ReservationInfo } from "../../../shared/types/payment.interface";
-import { useSnackbar } from "notistack";
+import { useReservationApi } from "../../../hooks/useReservationApi";
 
 export default function MyReservationList() {
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const { fetchReservationByUserId } = useReservationApi();
   const [reservations, setReservations] = useState<ReservationInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("upcoming");
@@ -20,17 +19,15 @@ export default function MyReservationList() {
     const fetchReservations = async () => {
       try {
         setIsLoading(true);
-        const response = await api().get(
-          `/reservation-service/reservations/${userId}`
-        );
+        const data = await fetchReservationByUserId(Number(userId));
 
         // 응답 데이터가 배열인지 확인하고 배열로 변환
-        if (Array.isArray(response.data)) {
-          setReservations(response.data);
-          console.log("API 응답 데이터(배열):", response.data);
+        if (Array.isArray(data)) {
+          setReservations(data);
+          console.log("API 응답 데이터(배열):", data);
         } else {
           // 단일 객체인 경우 배열로 변환
-          const dataArray = [response.data];
+          const dataArray = [data];
           setReservations(dataArray);
           console.log("API 응답 데이터(단일 객체를 배열로 변환):", dataArray);
         }
@@ -115,28 +112,29 @@ export default function MyReservationList() {
     }
   };
 
-  // 예약 취소 기능
+  // 예약 취소 기능 (서버 미구현)
   const handleCancelReservation = async (reservationId: number) => {
-    if (window.confirm("예약을 취소하시겠습니까?")) {
-      try {
-        await api().patch(
-          `/reservation-service/reservations/${reservationId}/cancel`
-        );
+    console.log(reservationId);
+    // if (window.confirm("예약을 취소하시겠습니까?")) {
+    //   try {
+    //     await api().patch(
+    //       `/reservation-service/reservations/${reservationId}/cancel`
+    //     );
 
-        setReservations(
-          reservations.map((reservation) =>
-            reservation.reservationId === reservationId
-              ? { ...reservation, reservationStatus: "CANCELED" }
-              : reservation
-          )
-        );
-      } catch (error) {
-        console.error("예약 취소에 실패했습니다:", error);
-        enqueueSnackbar("예약 취소에 실패했습니다. 다시 시도해주세요.", {
-          variant: "error",
-        });
-      }
-    }
+    //     setReservations(
+    //       reservations.map((reservation) =>
+    //         reservation.reservationId === reservationId
+    //           ? { ...reservation, reservationStatus: "CANCELED" }
+    //           : reservation
+    //       )
+    //     );
+    //   } catch (error) {
+    //     console.error("예약 취소에 실패했습니다:", error);
+    //     enqueueSnackbar("예약 취소에 실패했습니다. 다시 시도해주세요.", {
+    //       variant: "error",
+    //     });
+    //   }
+    // }
   };
 
   const upcomingReservations = filterReservations("upcoming");

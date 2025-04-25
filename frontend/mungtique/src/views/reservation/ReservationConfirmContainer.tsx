@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import { api } from "../../shared/api/apiInterceptor";
 import { UserDto } from "../../shared/types/user.interface";
 import useNotificationRedirect from "../../hooks/useNotificationRedirect";
+import { useReservationApi } from "../../hooks/useReservationApi";
 
 export default function ReservationConfirmContainer() {
   const { showNotificationAndRedirect } = useNotificationRedirect();
+  const { createReservation } = useReservationApi();
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
@@ -47,11 +49,7 @@ export default function ReservationConfirmContainer() {
     console.log("예약 요청 데이터:", reservationData);
 
     try {
-      const response = await api().post(
-        "/reservation-service/reservations",
-        reservationData
-      );
-      const reservationId = response.data;
+      const reservationId = await createReservation(reservationData);
       console.log("예약 성공:", reservationId);
 
       localStorage.removeItem("reservation-storage");

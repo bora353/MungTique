@@ -5,13 +5,16 @@ import {
   PaymentMethod,
   ReservationInfo,
 } from "../../shared/types/payment.interface";
-import { api } from "../../shared/api/apiInterceptor";
+import { useReservationApi } from "../../hooks/useReservationApi";
+import { usePaymentApi } from "../../hooks/usePaymentApi";
 
 export default function PaymentCompleteContainer() {
   const navigate = useNavigate();
 
   const location = useLocation();
   const { paymentId, reservationId } = location.state || {};
+  const { fetchReservationById } = useReservationApi();
+  const { fetchPayment } = usePaymentApi();
   const [reservation, setReservation] = useState<ReservationInfo>();
   const [payment, setPayment] = useState<PaymentInfo>();
   const [isLoading, setIsLoading] = useState(true);
@@ -24,15 +27,13 @@ export default function PaymentCompleteContainer() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [reservationRes, paymentRes] = await Promise.all([
-          api().get<ReservationInfo>(
-            `/reservation-service/reservations/${reservationId}`
-          ),
-          api().get<PaymentInfo>(`/payment-service/payments/${paymentId}`),
+        const [reservationData, paymentData] = await Promise.all([
+          fetchReservationById(reservationId),
+          fetchPayment(paymentId),
         ]);
 
-        setReservation(reservationRes.data);
-        setPayment(paymentRes.data);
+        setReservation(reservationData);
+        setPayment(paymentData);
 
         console.log(payment);
       } catch (error) {
