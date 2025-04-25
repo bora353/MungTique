@@ -1,0 +1,8 @@
+### GET All Mung Shops
+GET http://{{baseUrl}}/api/v1/mungshops
+
+### GET Mung Shops by Search Query
+GET http://{{baseUrl}}/api/v1/mungshops/search?searchQuery={{searchQuery}}
+
+### GET Price from Mung Shop
+GET http://{{baseUrl}}/api/v1/mungshops/price?mungShopId={{mungShopId}}&breedType={{breedType}}&serviceType={{serviceType}}
